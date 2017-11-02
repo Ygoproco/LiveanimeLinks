@@ -20,11 +20,12 @@ function c100000508.filter(c,e,sp)
 end
 function c100000508.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c100000508.filter(chkc,e,tp) end
-	if chk==0 then return Duel.IsExistingTarget(c100000508.filter,tp,LOCATION_SZONE,0,2,nil,e,tp)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if e:GetHandler():GetSequence()<5 then ft=ft+1 end
+	if chk==0 then return ft>1 and Duel.IsExistingTarget(c100000508.filter,tp,LOCATION_SZONE,0,2,nil,e,tp) and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c100000508.filter,tp,LOCATION_SZONE,0,2,2,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,2,0,0)
 end
 function c100000508.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)	

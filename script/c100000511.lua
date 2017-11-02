@@ -41,17 +41,17 @@ function c100000511.pop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 	Duel.RaiseEvent(c,47408488,e,0,tp,0,0)
 end
-function c100000511.costfilter(c)
-	return c:IsSetCard(0x5008) or c:IsCode(27780618)
+function c100000511.costfilter(c,ft,tp)
+	return (c:IsSetCard(0x5008) or c:IsCode(27780618)) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
 end
 function c100000511.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c100000511.costfilter,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,c100000511.costfilter,1,1,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE,0)
+	if chk==0 then return ft>-1 and Duel.CheckReleaseGroup(tp,c100000511.costfilter,1,nil,ft,tp) end
+	local g=Duel.SelectReleaseGroup(tp,c100000511.costfilter,1,1,nil,ft,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c100000511.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c100000511.spop(e,tp,eg,ep,ev,re,r,rp,c)
@@ -74,15 +74,10 @@ function c100000511.spop(e,tp,eg,ep,ev,re,r,rp,c)
 			e2:SetValue(tc:GetDefense()/2)
 			tc:RegisterEffect(e2)
 		end
-	else
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
-			Duel.SendtoGrave(c,REASON_RULE)
-		end
 	end
 end
-
 function c100000511.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetPreviousLocation()==LOCATION_SZONE
+	return e:GetHandler():IsPreviousLocation(LOCATION_SZONE)
 end
 function c100000511.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
@@ -92,7 +87,7 @@ function c100000511.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c100000511.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local atk=tc:GetAttack()
 		local def=tc:GetDefence()
 		local e1=Effect.CreateEffect(e:GetHandler())

@@ -24,18 +24,21 @@ function c100001006.initial_effect(c)
 	e3:SetTarget(c100001006.target)
 	e3:SetOperation(c100001006.operation)
 	c:RegisterEffect(e3)
+	aux.CallToken(419)
 end
 function c100001006.spcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-2
-		and Duel.CheckReleaseGroup(c:GetControler(),Card.IsRace,2,nil,0x80000000)
+	local tp=c:GetControler()
+	local rg=Duel.GetReleaseGroup(tp):Filter(Card.IsRace,nil,RACE_YOKAI)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and rg:GetCount()>1 and aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),0)
 end
 function c100001006.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectReleaseGroup(tp,Card.IsRace,2,2,nil,0x80000000)
-	Duel.Release(g,REASON_COST)
+	local rg=Duel.GetReleaseGroup(tp):Filter(Card.IsRace,nil,RACE_YOKAI)
+	local sg=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_RELEASE)
+	Duel.Release(sg,REASON_COST)
 end
 function c100001006.pcon(e)
-	return e:GetHandler():GetPreviousLocation()==LOCATION_GRAVE
+	return e:GetHandler():IsPreviousLocation(LOCATION_GRAVE)
 end
 function c100001006.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -44,7 +47,7 @@ function c100001006.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100001006.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return false end
 	if ft<2 then return end
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,100001007,0,0x4011,500,500,2,RACE_BEAST,ATTRIBUTE_EARTH) then return end
 	for i=1,2 do
