@@ -39,14 +39,11 @@ function c511600001.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
-function c511600001.filter(c)
-	return c:GetSequence()==6 or c:GetSequence()==7
-end
 function c511600001.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c511600001.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511600001.filter,tp,LOCATION_SZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_PZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c511600001.filter,tp,LOCATION_SZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_PZONE,0,1,1,nil)
 end
 function c511600001.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
