@@ -40,13 +40,13 @@ function c511000061.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_SELF_TURN,3)
 	c:RegisterEffect(e2)
 end
-function c511000061.activate(e,te)
+function c511000061.efilter(e,te)
 	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP)
 end
-function c511000061.rop(e,tp,eg,ep,ev,re,r,rp)
+function c511000061.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
