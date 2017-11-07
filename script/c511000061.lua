@@ -8,6 +8,7 @@ function c511000061.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetTarget(c511000061.target)
 	e2:SetOperation(c511000061.activate)
+	e2:SetValue(LOCATION_SZONE)
 	c:RegisterEffect(e2)
 end
 function c511000061.rfilter(c)

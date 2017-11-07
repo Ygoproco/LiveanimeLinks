@@ -10,6 +10,7 @@ function c511000793.initial_effect(c)
 	e1:SetCost(c511000793.cost)
 	e1:SetTarget(c511000793.target)
 	e1:SetOperation(c511000793.activate)
+	e1:SetValue(LOCATION_SZONE)
 	c:RegisterEffect(e1)
 	if not c511000793.global_check then
 		c511000793.global_check=true

@@ -10,6 +10,7 @@ function c511000244.initial_effect(c)
 	e1:SetCost(c511000244.cost)
 	e1:SetTarget(c511000244.target)
 	e1:SetOperation(c511000244.activate)
+	e1:SetValue(LOCATION_SZONE)
 	c:RegisterEffect(e1)
 end
 function c511000244.condition(e,tp,eg,ep,ev,re,r,rp)
