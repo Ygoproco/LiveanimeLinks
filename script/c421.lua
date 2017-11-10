@@ -100,31 +100,28 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 	local tg=g:Filter(aux.NOT(c421.lastfilter),nil)
 	tg:ForEach(function(c)
 		c:RegisterFlagEffect(51300065,RESET_EVENT+0x1fe0000,0,1)
-		--If Special Summoned: Send to previous location
+		--If Special Summoned: Send to previous location/Effects only last for 1 turn
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(421,0))
-		e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_TODECK)
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-		e1:SetRange(LOCATION_MZONE)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetCountLimit(1)
+		e1:SetRange(LOCATION_MZONE)
 		e1:SetCode(EVENT_PHASE+PHASE_END)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetCountLimit(1)
 		e1:SetCondition(c421.stgcon)
-		e1:SetTarget(c421.stgtg)
 		e1:SetOperation(c421.stgop)
 		c:RegisterEffect(e1)
-		--effects are only applied until the End Phase
+		--Negate attack due to Hierarchy
 		local e2=Effect.CreateEffect(c)
-		e2:SetDescription(aux.Stringid(421,2))
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		e2:SetDescription(aux.Stringid(421,1))
+		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+		e2:SetCode(EVENT_BE_BATTLE_TARGET)
 		e2:SetRange(LOCATION_MZONE)
-		e2:SetCode(EVENT_PHASE+PHASE_END)
+		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
-		e2:SetCountLimit(1)
-		e2:SetCondition(c421.atkdefresetcon)
-		e2:SetOperation(c421.atkdefresetop)
+		e2:SetCondition(c421.negatkcon)
+		e2:SetOperation(c421.negatkop)
 		c:RegisterEffect(e2)
 		--release limit
 		local e3=Effect.CreateEffect(c)
@@ -139,16 +136,6 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 		e4:SetCondition(c421.recon2)
 		e4:SetCode(EFFECT_UNRELEASABLE_NONSUM)
 		c:RegisterEffect(e4)
-		local e5=Effect.CreateEffect(c)
-		e5:SetDescription(aux.Stringid(421,1))
-		e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-		e5:SetCode(EVENT_BE_BATTLE_TARGET)
-		e5:SetRange(LOCATION_MZONE)
-		e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e5:SetReset(RESET_EVENT+0x1fe0000)
-		e5:SetCondition(c421.negatkcon)
-		e5:SetOperation(c421.negatkop)
-		c:RegisterEffect(e5)
 	end)
 end
 function c421.negatkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -165,10 +152,10 @@ end
 function c421.recon2(e)
 	return e:GetHandler():IsHasEffect(513000065) and Duel.GetTurnPlayer()~=e:GetOwnerPlayer()
 end
-function c421.atkdefresetcon(e,tp,eg,ep,ev,re,r,rp)
+function c421.stgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsHasEffect(513000065)
 end
-function c421.atkdefresetop(e,tp,eg,ep,ev,re,r,rp)
+function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(nil,tp,0xff,0xff,c)
 	for tc in aux.Next(g) do
@@ -177,35 +164,15 @@ function c421.atkdefresetop(e,tp,eg,ep,ev,re,r,rp)
 			tc:ResetFlagEffect(128)
 		end
 	end
-end
-function c421.stgcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
-		and e:GetHandler():IsHasEffect(513000065)
-end
-function c421.stgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local c=e:GetHandler()
-	if c:IsPreviousLocation(LOCATION_GRAVE) then
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,c,1,0,0)
-	elseif c:IsPreviousLocation(LOCATION_DECK) then
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,c,1,0,0)
-	elseif c:IsPreviousLocation(LOCATION_HAND) then
-		Duel.SetOperationInfo(0,CATEGORY_TOHAND,c,1,0,0)
-	elseif c:IsPreviousLocation(LOCATION_REMOVED) then
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,c,1,0,0)
-	end
-end
-function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
+	if c:IsSummonType(SUMMON_TYPE_SPECIAL) then
 		if c:IsPreviousLocation(LOCATION_GRAVE) then
 			Duel.SendtoGrave(c,REASON_EFFECT)
 		elseif c:IsPreviousLocation(LOCATION_DECK) then
-			Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+			Duel.SendtoDeck(c,nil,2,REASON_RULE)
 		elseif c:IsPreviousLocation(LOCATION_HAND) then
-			Duel.SendtoHand(c,nil,REASON_EFFECT)
+			Duel.SendtoHand(c,nil,REASON_RULE)
 		elseif c:IsPreviousLocation(LOCATION_REMOVED) then
-			Duel.Remove(c,c:GetPreviousPosition(),REASON_EFFECT)
+			Duel.Remove(c,c:GetPreviousPosition(),REASON_RULE)
 		end
 	end
 end
