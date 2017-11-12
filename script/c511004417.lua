@@ -23,7 +23,7 @@ function c511004417.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and Duel.IsPlayerCanDraw(1-tp,2) end
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,0,0,PLAYER_ALL,2)
 end
-function c511004417.operation(e,tp,eg,ep,ev,re,r,rp,rp)
+function c511004417.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDraw(tp,2) or not Duel.IsPlayerCanDraw(1-tp,2) then return end
 	local g1=Group.CreateGroup()
 	local g2=Group.CreateGroup()
