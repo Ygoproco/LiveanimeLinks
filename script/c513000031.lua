@@ -34,15 +34,16 @@ function c513000031.initial_effect(c)
 	e4:SetTarget(c513000031.sumtg)
 	e4:SetOperation(c513000031.sumop)
 	c:RegisterEffect(e4)
-	--destroy
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e7:SetCode(EVENT_DAMAGE_STEP_END)
-	e7:SetRange(LOCATION_MZONE)
-	e7:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e7:SetCondition(c513000031.descon)
-	e7:SetOperation(c513000031.desop)
-	c:RegisterEffect(e7)
+	--always Battle destroy
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(511010508)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetTargetRange(0,LOCATION_MZONE)
+	e5:SetTarget(c511010508.battg)
+	e5:SetValue(c511010508.batval)
+	c:RegisterEffect(e5)
+	aux.CallToken(419)
 	--reduce
 	local e8=Effect.CreateEffect(c)
 	e8:SetType(EFFECT_TYPE_FIELD)
@@ -107,45 +108,6 @@ end
 function c513000031.desfilter(c,ca)
 	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and (not ca or ca==c)
 end
-function c513000031.desop(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local d=Duel.GetAttackTarget()
-	if not a:IsStatus(STATUS_BATTLE_DESTROYED) or not d:IsStatus(STATUS_BATTLE_DESTROYED) then
-		local g=Group.FromCards(a,d)
-		if a:IsAttackPos() and d:IsAttackPos() then
-			if a:GetAttack()==d:GetAttack()  then
-				g=g:Filter(c513000031.desfilter,nil,nil)
-			elseif a:GetAttack()<d:GetAttack() then
-				g=g:Filter(c513000031.desfilter,nil,a)
-			elseif a:GetAttack()>d:GetAttack() then
-				g=g:Filter(c513000031.desfilter,nil,d)
-			else
-				g=Group.CreateGroup()
-			end
-		elseif a:IsAttackPos() and d:IsDefensePos() then
-			if a:GetAttack()>d:GetDefense() then
-				g=g:Filter(c513000031.desfilter,nil,d)
-			else
-				g=Group.CreateGroup()
-			end
-		else
-			g=Group.CreateGroup()
-		end
-		local tc=g:GetFirst()
-		while tc do
-			if tc:GetControler()~=e:GetHandler():GetControler() then
-				Duel.Hint(HINT_CARD,0,513000031)
-				if tc:SetStatus(STATUS_BATTLE_DESTROYED,true)~=0 and tc:IsLocation(LOCATION_ONFIELD) then
-					Duel.Destroy(tc,REASON_BATTLE)
-					if tc:SetStatus(STATUS_BATTLE_DESTROYED,true)~=0 and tc:IsLocation(LOCATION_ONFIELD) then
-						Duel.SendtoGrave(tc,REASON_DESTROY+REASON_BATTLE)
-					end
-				end
-			end
-			tc=g:GetNext()
-		end
-	end
-end
 function c513000031.damcon(e)
 	local ph=Duel.GetCurrentPhase()
 	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
@@ -158,4 +120,10 @@ function c513000031.damval(e,re,val,r,rp,rc)
 end
 function c513000031.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and re:IsActiveType(TYPE_MONSTER)
+end
+function c511010508.battg(e,c)
+	return not c:IsStatus(STATUS_BATTLE_DESTROYED)
+end
+function c511010508.batval(e,re)
+	return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
