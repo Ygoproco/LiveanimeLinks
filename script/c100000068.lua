@@ -59,6 +59,7 @@ function c100000068.cost(e,tp,eg,ep,ev,re,r,rp,chk)
  		and aux.SelectUnselectGroup(g,e,tp,3,3,c100000068.rescon,0) end
 	local sg=aux.SelectUnselectGroup(g,e,tp,3,3,c100000068.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
+	aux.RemainFieldCost(e,tp,eg,ep,ev,re,r,rp,1)
 end
 function c100000068.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -70,12 +71,11 @@ function c100000068.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000068.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tc=Duel.SelectMatchingCard(tp,c100000068.filter,tp,0x13,0,1,1,nil,e,tp):GetFirst()
-		if not tc or Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)==0 then return end
+	if not c:IsRelateToEffect(e) or c:IsStatus(STATUS_LEAVE_CONFIRMED) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tc=Duel.SelectMatchingCard(tp,c100000068.filter,tp,0x13,0,1,1,nil,e,tp):GetFirst()
+	if tc and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)>0 then
 		Duel.Equip(tp,c,tc)
-		c:CancelToGrave()
 		--Equip limit
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -84,6 +84,8 @@ function c100000068.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(c100000068.eqlimit)
 		e1:SetReset(RESET_EVENT+0x1fe0000)		
 		c:RegisterEffect(e1)
+	else
+		c:CancelToGrave(false)
 	end
 end
 function c100000068.eqlimit(e,c)
