@@ -21,14 +21,6 @@ if chk==0 then return Duel.CheckReleaseGroup(tp,c511005713.costfilter,1,nil) end
 local g=Duel.SelectReleaseGroup(tp,c511005713.costfilter,1,1,nil)
 Duel.Release(g,REASON_COST)
 end
-
-function c511005713.tg123(e,tp,eg,ep,ev,re,r,rp)
-return Duel.GetMatchingGroup(c511005713.filter,tp,0,LOCATION_MZONE,nil)
-end
-
-function c511005713.filter(c)
-return (c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:GetAttack()<=2000 and c:GetCounter(0x1108)==0 )
-end
     
 function c511005713.activate(e,tp,eg,ep,ev,re,r,rp)
 --atk to 0 when summoned
@@ -37,14 +29,14 @@ e1:SetType(EFFECT_TYPE_FIELD)
 e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 e1:SetTargetRange(0,LOCATION_MZONE)
-e1:SetTarget(c511005713.tg123)
+e1:SetTarget(aux.TargetBoolFunction(Card.IsDefenseBelow,2000))
 e1:SetValue(0)
 e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
 Duel.RegisterEffect(e1,tp)
 local e2=Effect.CreateEffect(e:GetHandler())
 e2:SetType(EFFECT_TYPE_FIELD)
 e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-e2:SetTarget(c511005713.tg123)
+e2:SetTarget(aux.TargetBoolFunction(Card.IsDefenseBelow,2000))
 e2:SetCode(EFFECT_DISABLE)
 e2:SetTargetRange(0,LOCATION_MZONE)
 e2:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
