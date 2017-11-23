@@ -129,11 +129,6 @@ function c511005711.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
-function c511005711.endtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)
-	c511005711[cid]=rp
-end
 function c511005711.negop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) then
 		Duel.BreakEffect()
@@ -149,6 +144,11 @@ function c511005711.negop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
+end
+function c511005711.endtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)
+	c511005711[cid]=rp
 end
 function c511005711.endop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -193,6 +193,7 @@ function c511005711.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511005711.filter(c)
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
 end
 function c511005711.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511005711.filter,tp,LOCATION_MZONE,0,5,nil)
