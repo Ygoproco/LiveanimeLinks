@@ -40,8 +40,8 @@ function c513000031.initial_effect(c)
 	e5:SetCode(511010508)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetTargetRange(0,LOCATION_MZONE)
-	e5:SetTarget(c511010508.battg)
-	e5:SetValue(c511010508.batval)
+	e5:SetTarget(c513000031.battg)
+	e5:SetValue(c513000031.batval)
 	c:RegisterEffect(e5)
 	aux.CallToken(419)
 	--reduce
@@ -121,9 +121,9 @@ end
 function c513000031.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
-function c511010508.battg(e,c)
+function c513000031.battg(e,c)
 	return not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
-function c511010508.batval(e,re)
+function c513000031.batval(e,re)
 	return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
