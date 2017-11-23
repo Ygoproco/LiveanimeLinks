@@ -14,7 +14,7 @@ function c511015104.initial_effect(c)
 	Duel.AddCustomActivityCounter(511015104,ACTIVITY_SPSUMMON,c511015104.counterfilter)
 end
 function c511015104.counterfilter(c)
-	return c:IsSummonType(SUMMON_TYPE_PENDULUM)
+	return not c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function c511015104.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return sumtype&SUMMON_TYPE_PENDULUM==SUMMON_TYPE_PENDULUM
@@ -67,20 +67,7 @@ function c511015104.activate(e,tp,eg,ep,ev,re,r,rp)
 		or Duel.GetLocationCountFromEx(tp)<=0 or Duel.GetUsableMZoneCount(tp)<=1 then return false end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	local tc=sg:GetFirst()
-	while tc do
-		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		tc:RegisterEffect(e2)
-		tc=sg:GetNext()
-	end
-	Duel.SpecialSummonComplete()
+	if not aux.MainAndExtraSpSummonLoop(c511015104.disop,0,0,0,false,false)(e,tp,eg,ep,ev,re,r,rp,sg) then return end
 	Duel.BreakEffect()
 	local sc=Duel.SelectMatchingCard(tp,c511015104.filter3,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,sg,nil):GetFirst()
 	if sc then
@@ -104,6 +91,16 @@ function c511015104.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetLabelObject(sc)
 		c:RegisterEffect(e1)
 	end
+end
+function c511015104.disop(e,tp,eg,ep,ev,re,r,rp,tc)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	tc:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_DISABLE_EFFECT)
+	tc:RegisterEffect(e2)
 end
 function c511015104.descon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
