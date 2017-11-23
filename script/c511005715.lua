@@ -12,7 +12,7 @@ c:RegisterEffect(e1)
 end
 
 function c511005715.filter2(c)
-return (c:IsAbleToHand() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x547)) 
+return c:IsAbleToHand() and c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x547) or c:IsShark()) 
 end
 
 function c511005715.condition(e,c)
