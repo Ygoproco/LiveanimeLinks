@@ -67,6 +67,9 @@ function c513000118.initial_effect(c)
 	end
 	local f=Card.IsCanBeSpecialSummoned
 	Card.IsCanBeSpecialSummoned=function(c,e,tpe,tp,con,conr,sump,smp,zone)
+		if not sump then sump=POS_FACEUP end
+		if not smp then smp=tp end
+		if not zone then zone=0xff end
 		if Duel.IsPlayerAffectedByEffect(tp,513000118) then
 			return c:IsType(TYPE_MONSTER) and f(c,e,tpe,tp,true,conr,sump,smp,zone)
 		end
@@ -74,6 +77,8 @@ function c513000118.initial_effect(c)
 	end
 	local proc=Duel.SpecialSummonStep
 	Duel.SpecialSummonStep=function(tc,tpe,sump,tp,check,limit,pos,zone)
+		if not pos then pos=POS_FACEUP end
+		if not zone then zone=0xff end
 		if Duel.IsPlayerAffectedByEffect(sump,513000118) then
 			return proc(tc,tpe,sump,tp,true,limit,pos,zone)
 		else
@@ -82,6 +87,8 @@ function c513000118.initial_effect(c)
 	end
 	local proc2=Duel.SpecialSummon
 	Duel.SpecialSummon=function(g,tpe,sump,tp,check,limit,pos,zone)
+		if not pos then pos=POS_FACEUP end
+		if not zone then zone=0xff end
 		if Duel.IsPlayerAffectedByEffect(sump,513000118) then
 			return proc2(g,tpe,sump,tp,true,limit,pos,zone)
 		else
