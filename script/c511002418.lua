@@ -47,6 +47,13 @@ function c511002418.initial_effect(c)
 	e5:SetTarget(c511002418.destg)
 	e5:SetOperation(c511002418.desop)
 	c:RegisterEffect(e5)
+  --Double Snare
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_SINGLE)
+	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCode(3682106)
+	c:RegisterEffect(e6)
 end
 function c511002418.spfilter(c,ft,tp)
 	return c:IsCode(23995346) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
