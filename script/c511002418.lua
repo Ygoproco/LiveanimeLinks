@@ -55,12 +55,17 @@ function c511002418.initial_effect(c)
 	e6:SetCode(3682106)
 	c:RegisterEffect(e6)
 end
+function c511002418.spfilter(c,ft,tp)
+	return c:IsCode(23995346) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
+end
 function c511002418.spcon(e,c)
 	if c==nil then return true end
-	return Duel.CheckReleaseGroup(c:GetControler(),Card.IsCode,1,nil,23995346)
+	local tp=c:GetControler()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-1 and Duel.CheckReleaseGroup(tp,c511002418.spfilter,1,nil,ft,tp)
 end
 function c511002418.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectReleaseGroup(c:GetControler(),Card.IsCode,1,1,nil,23995346)
+	local g=Duel.SelectReleaseGroup(tp,c511002418.spfilter,1,1,nil,Duel.GetLocationCount(tp,LOCATION_MZONE),tp)
 	Duel.Release(g,REASON_COST)
 end
 function c511002418.val(e,c)
