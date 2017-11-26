@@ -36,7 +36,6 @@ function c511000829.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=tc.minxyzct
 	local ct2=tc.maxxyzct
 	g:RemoveCard(tc)
-	Duel.Hint(HINT_SELECTMSG,tp,)
 	local g=aux.SelectUnselectGroup(g,e,tp,ct,ct2,c511000829.rescon(pg),1,tp,HINTMSG_XMATERIAL,c511000829.rescon(pg))
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
