@@ -1,6 +1,7 @@
 --Dual Assembwurm
 --デュアル・アセンブルム
 --scripted by Larry126
+--fixed by MLD
 function c511600025.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -29,12 +30,10 @@ function c511600025.cfilter(c)
 	return c:IsRace(RACE_CYBERSE) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511600025.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c511600025.cfilter,tp,LOCATION_GRAVE,0,2,c) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c511600025.cfilter,tp,LOCATION_GRAVE,0,2,2,c)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	local g=Duel.GetMatchingGroup(c511600025.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,e:GetHandler())
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and g:GetCount()>1 and aux.SelectUnselectGroup(g,e,tp,2,2,aux.ChkfMMZ(1),0) end
+	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
+	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
 function c511600025.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
@@ -42,8 +41,7 @@ function c511600025.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511600025.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
+	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
 		local atk=c:GetAttack()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
