@@ -191,20 +191,25 @@ function c511001781.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return tp==Duel.GetTurnPlayer() and c:GetOverlayCount()==0
 end
-function c511001781.spfilter(c,e,tp,mc)
-	return c:IsCode(9161357) and mc:IsCanBeXyzMaterial(c,tp) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,true)
+function c511001781.spfilter(c,e,tp,mc,pg)
+	return c:IsCode(9161357) and mc:IsCanBeXyzMaterial(c,tp) and (pg:GetCount()<=0 or pg:IsContains(mc)) 
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,true)
 end
 function c511001781.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 
-		and Duel.IsExistingMatchingCard(c511001781.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c) end
+	if chk==0 then
+		local pg=aux.GetMustBeMaterialGroup(tp,Group.FromCards(c),tp,nil,nil,REASON_XYZ)
+		return pg:GetCount()<=1 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 
+			and Duel.IsExistingMatchingCard(c511001781.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c,pg)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c511001781.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsControler(1-tp) or c:IsImmuneToEffect(e) then return end
+	local pg=aux.GetMustBeMaterialGroup(tp,Group.FromCards(c),tp,nil,nil,REASON_XYZ)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511001781.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,c)
+	local g=Duel.SelectMatchingCard(tp,c511001781.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,c,pg)
 	local sc=g:GetFirst()
 	if sc then
 		local mg=c:GetOverlayGroup()

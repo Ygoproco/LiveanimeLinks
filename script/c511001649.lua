@@ -25,7 +25,7 @@ function c511001649.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabelObject(tc)
 end
 function c511001649.filter(c,e,tp)
-	return c:IsCode(511001648) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
+	return c:IsCode(511001648) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial()
 end
 function c511001649.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCountFromEx(tp,tp,e:GetHandler())>0 
