@@ -34,11 +34,12 @@ function c511600019.atktg(e,c)
 end
 function c511600019.cfilter(c,e,tp,sc)
 	local zone=c:GetLinkedZone(tp)
-	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK) and c:IsControler(tp)
-		and zone~=0 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
+	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK)
+		and c:IsControler(tp) and zone~=0
+		and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c511600019.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511600019.cfilter,1,nil,e,tp,e:GetHandler()) and aux.exccon()
+	return eg:IsExists(c511600019.cfilter,1,nil,e,tp,e:GetHandler()) and aux.exccon(e)
 end
 function c511600019.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRelateToEffect(e) end
