@@ -7,7 +7,6 @@ function c511002651.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCondition(c511002651.spcon)
 	e2:SetTarget(c511002651.sptg)
 	e2:SetOperation(c511002651.spop)
 	c:RegisterEffect(e2)
@@ -22,27 +21,22 @@ function c511002651.initial_effect(c)
 	e3:SetOperation(c511002651.disop)
 	c:RegisterEffect(e3)
 end
-function c511002651.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_CHAINING)
-end
 function c511002651.pfilter(c)
 	return c:IsSetCard(0x99) and c:IsType(TYPE_PENDULUM)
 end
 function c511002651.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-		and Duel.IsExistingMatchingCard(c511002651.pfilter,tp,LOCATION_MZONE,0,1,nil) end
+    	if chk==0 then return Duel.IsExistingMatchingCard(c511002651.pfilter,tp,LOCATION_MZONE,0,1,c) end
 end
 function c511002651.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.MoveToField(c,tp,tp,LOCATION_MZONE,POS_FACEUP,true)~=0 then
-		c:SetStatus(STATUS_SPSUMMON_TURN,true)
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local tc=Duel.SelectMatchingCard(tp,c511002651.pfilter,tp,LOCATION_MZONE,0,1,1,c):GetFirst()
-		if tc then
-			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		end
+	if not c:IsRelateToEffect(e) then return end
+	local g=Duel.SelectMatchingCard(tp,c511002651.pfilter,tp,LOCATION_MZONE,0,1,1,c)
+	local tc=g:GetFirst()
+	Duel.HintSelection(g)
+	local sg=Group.FromCards(c,tc):Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
+	if sg:GetCount()>1 and Duel.SendtoDeck(sg,nil,-2,REASON_EFFECT)>1 then
+		Duel.MoveToField(c,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
+		Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
 function c511002651.distg(e,tp,eg,ep,ev,re,r,rp,chk)
