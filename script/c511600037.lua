@@ -40,13 +40,12 @@ function c511600037.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc=Duel.GetFirstTarget()
 		if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0
 			and rc:IsRace(RACE_CYBERSE) and Duel.SelectYesNo(tp,aux.Stringid(1953925,0)) then
-				Duel.BreakEffect()
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-				local dg=Duel.SelectMatchingCard(tp,c511600037.dfilter,tp,0,LOCATION_SZONE,1,1,nil)
-				if dg:GetCount()>0 then
-					Duel.HintSelectiond(dg)
-					Duel.Destroy(dg,REASON_EFFECT)
-				end
+			Duel.BreakEffect()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+			local dg=Duel.SelectMatchingCard(tp,c511600037.dfilter,tp,0,LOCATION_SZONE,1,1,nil)
+			if dg:GetCount()>0 then
+				Duel.HintSelection(dg)
+				Duel.Destroy(dg,REASON_EFFECT)
 			end
 		end
 	end
