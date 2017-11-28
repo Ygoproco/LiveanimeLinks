@@ -30,6 +30,7 @@ function c511004423.op(e,tp,eg,ev,ep,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(-ct)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		tc=g:GetNext()
 	end
