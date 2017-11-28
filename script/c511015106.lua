@@ -13,7 +13,7 @@ function c511015106.initial_effect(c)
 	Duel.AddCustomActivityCounter(511015106,ACTIVITY_SPSUMMON,c511015106.counterfilter)
 end
 function c511015106.counterfilter(c)
-	return c:IsSummonType(SUMMON_TYPE_PENDULUM)
+	return not c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function c511015106.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return sumtype&SUMMON_TYPE_PENDULUM==SUMMON_TYPE_PENDULUM
@@ -72,33 +72,7 @@ function c511015106.activate(e,tp,eg,ep,ev,re,r,rp)
 		or Duel.GetLocationCountFromEx(tp)<=0 or Duel.GetUsableMZoneCount(tp)<=1 then return false end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	local tc=sg:GetFirst()
-	while tc do
-		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		tc:RegisterEffect(e2)
-		if tc:IsType(TYPE_XYZ) then
-			local e3=Effect.CreateEffect(c)
-			e3:SetType(EFFECT_TYPE_SINGLE)
-			e3:SetCode(EFFECT_RANK_LEVEL_S)
-			e3:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e3)
-			local e4=Effect.CreateEffect(c)
-			e4:SetType(EFFECT_TYPE_SINGLE)
-			e4:SetCode(EFFECT_CHANGE_LEVEL)
-			e4:SetValue(7)
-			e4:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e4)
-		end
-		tc=sg:GetNext()
-	end
-	Duel.SpecialSummonComplete()
+	if not aux.MainAndExtraSpSummonLoop(c511015106.disop,0,0,0,false,false)(e,tp,eg,ep,ev,re,r,rp,sg) then return end
 	Duel.BreakEffect()
 	local g=Duel.GetMatchingGroup(function(sc) return sc:IsType(TYPE_PENDULUM) and sc:IsType(TYPE_XYZ) and sc:IsXyzSummonable(sg,2,2) end,tp,LOCATION_EXTRA,0,nil)
 	if g:GetCount()>0 then
@@ -123,8 +97,32 @@ function c511015106.activate(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 	end
 end
+function c511015106.disop(e,tp,eg,ep,ev,re,r,rp,tc)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	tc:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_DISABLE_EFFECT)
+	tc:RegisterEffect(e2)
+	if tc:IsType(TYPE_XYZ) then
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_RANK_LEVEL_S)
+		e3:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e3)
+		local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_SINGLE)
+		e4:SetCode(EFFECT_CHANGE_LEVEL)
+		e4:SetValue(7)
+		e4:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e4)
+	end
+end
 function c511015106.atkcon(e,tp,eg,ev,ep,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and bit.band(Duel.GetCurrentPhase(),0x38)~=0 
+	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()&0x38~=0 
 		and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function c511015106.costfilter(c,code)
