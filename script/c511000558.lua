@@ -38,16 +38,16 @@ function c511000558.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c511000558.lpcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO and (Duel.GetLP(tp)<4000 or Duel.GetLP(1-tp)<4000)
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO and (Duel.GetLP(tp)<2000 or Duel.GetLP(1-tp)<2000)
 end
 function c511000558.lpop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLP(tp)<4000 and Duel.SelectYesNo(tp,aux.Stringid(511000558,1)) then
+	if Duel.GetLP(tp)<2000 and Duel.SelectYesNo(tp,aux.Stringid(511000558,1)) then
 		Duel.BreakEffect()
-		Duel.SetLP(tp,4000)
+		Duel.SetLP(tp,2000)
 	end
-	if Duel.GetLP(1-tp)<4000 and Duel.SelectYesNo(tp,aux.Stringid(511000558,2)) then
+	if Duel.GetLP(1-tp)<2000 and Duel.SelectYesNo(tp,aux.Stringid(511000558,2)) then
 		Duel.BreakEffect()
-		Duel.SetLP(1-tp,4000)
+		Duel.SetLP(1-tp,2000)
 	end
 end
 function c511000558.damval(e,re,val,r,rp,rc)
