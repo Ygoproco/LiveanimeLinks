@@ -57,6 +57,20 @@ function c419.initial_effect(c)
 		Duel.RegisterEffect(indes2,0)
 		IndesTable={}
 		
+		--Relay Soul/Zero Gate
+		local rs1=Effect.CreateEffect(c)
+		rs1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		rs1:SetCode(EVENT_ADJUST)
+		rs1:SetOperation(c419.relayop)
+		Duel.RegisterEffect(rs1,0)
+		local rs2=rs1:Clone()
+		rs2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		rs2:SetCode(EVENT_CHAIN_SOLVED)
+		Duel.RegisterEffect(rs2,0)
+		local rs3=rs2:Clone()
+		rs3:SetCode(EVENT_DAMAGE)
+		Duel.RegisterEffect(rs3,0)
+		
 		--Anime card constants
 		TYPE_ARMOR		=	0x10000000
 		TYPE_PLUS		=	0x20000000
@@ -405,4 +419,55 @@ function c419.batend(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	IndesTable={}
+end
+
+function c419.relayop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetLP(0)<=0 and not Duel.IsPlayerAffectedByEffect(0,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(0,511002521)==0 then
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD)
+		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
+		ge1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		ge1:SetTargetRange(1,0)
+		Duel.RegisterEffect(ge1,0)
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetLabelObject(ge1)
+		ge2:SetLabel(0)
+		ge2:SetOperation(c419.relayresetop)
+		Duel.RegisterEffect(ge2,0)
+		Duel.RaiseEvent(Duel.GetMatchingGroup(aux.TRUE,0,0xff,0,nil),511002521,nil,0,0,0,0)
+		Duel.RegisterFlagEffect(0,511002521,0,0,1)
+	end
+	if Duel.GetLP(1)<=0 and not Duel.IsPlayerAffectedByEffect(1,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(1,511002521)==0 then
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD)
+		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
+		ge1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		ge1:SetTargetRange(1,0)
+		Duel.RegisterEffect(ge1,1)
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetLabelObject(ge1)
+		ge2:SetLabel(0)
+		ge2:SetOperation(c419.relayresetop)
+		Duel.RegisterEffect(ge2,1)
+		Duel.RaiseEvent(Duel.GetMatchingGroup(aux.TRUE,0,0xff,0,nil),511002521,nil,0,0,1,0)
+		Duel.RegisterFlagEffect(1,511002521,0,0,1)
+	end
+end
+function c419.relayresetop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetCurrentChain()==0 or e:GetLabel()>0 then
+		local ct=e:GetLabel()+1
+		e:SetLabel(ct)
+	end
+	if (e:GetLabel()==2 and Duel.GetCurrentPhase()&PHASE_DAMAGE==0) or e:GetLabel()==3 then
+		e:GetLabelObject():Reset()
+		e:Reset()
+		Duel.ResetFlagEffect(tp,511002521)
+	end
 end
