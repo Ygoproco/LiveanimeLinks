@@ -31,7 +31,7 @@ function c511005712.cfilter(c,sc,tp)
 	return c:IsFaceup() and (c:IsControler(1-tp) or c==sc) and c:GetAttack()>val
 end
 function c511005712.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ct=eg:FilterCount(c511002470.cfilter,nil,e:GetHandler(),tp)
+	local ct=eg:FilterCount(c511005712.cfilter,nil,e:GetHandler(),tp)
 	if chk==0 then return ct>0 end
 	Duel.SetTargetParam(ct)
 end
