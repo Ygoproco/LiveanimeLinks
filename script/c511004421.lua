@@ -12,7 +12,7 @@ function c511004421.initial_effect(c)
 end
 function c511004421.filter(c,e,tp)
 	local pg=aux.GetMustBeMaterialGroup(tp,Group.FromCards(c),tp,nil,nil,REASON_XYZ)
-	return pg:GetCount()<=1 and c:IsSetCard(0xe5) and c:IsCanBeEffectTarget(e) and (rk>0 or c:IsStatus(STATUS_NO_LEVEL)) 
+	return pg:GetCount()<=1 and c:IsSetCard(0xe5) and c:IsCanBeEffectTarget(e) and (c:GetRank()>0 or c:IsStatus(STATUS_NO_LEVEL)) 
 		and Duel.IsExistingMatchingCard(c511004421.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+1,pg)
 end
 function c511004421.spfilter(c,e,tp,mc,rk,pg)
