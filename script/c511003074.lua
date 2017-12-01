@@ -18,7 +18,7 @@ end
 function c511003074.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511003074.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511003074.filter,tp,LOCATION_MZONE,0,1,nil) 
-		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c511003074.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end

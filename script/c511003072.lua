@@ -18,9 +18,6 @@ end
 function c511003072.filter(c,tp,tc)
 	return c:IsType(TYPE_TUNER) and Duel.IsExistingMatchingCard(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,1,nil,nil,Group.FromCards(c,tc))
 end
-function c511003072.spfilter(c,g)
-	return c:IsSynchroSummonable(nil,g)
-end
 function c511003072.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tc=Duel.GetAttackTarget()
 	if chkc then return chkc==tc end
