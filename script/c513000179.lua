@@ -1,21 +1,21 @@
 --決戦融合－ファイナル・フュージョン
-function c511010509.initial_effect(c)
+function c513000179.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e1:SetCondition(c511010509.condition)
-	e1:SetTarget(c511010509.target)
-	e1:SetOperation(c511010509.activate)
+	e1:SetCondition(c513000179.condition)
+	e1:SetTarget(c513000179.target)
+	e1:SetOperation(c513000179.activate)
 	c:RegisterEffect(e1)
 end
-function c511010509.condition(e,tp,eg,ep,ev,re,r,rp)
+function c513000179.condition(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	return a and d and a:IsFaceup() and d:IsFaceup()
 end
-function c511010509.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c513000179.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if chk==0 then return a:IsOnField() and d:IsOnField() end
@@ -23,7 +23,7 @@ function c511010509.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,a:GetAttack()+d:GetAttack())
 end
-function c511010509.activate(e,tp,eg,ep,ev,re,r,rp)
+function c513000179.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local g=tg:Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsFaceup,nil)
 	if g:GetCount()<=1 then return end
