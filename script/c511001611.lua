@@ -60,6 +60,10 @@ function c511001611.filter0(c,e,tp,sum,g,spg)
 	g:RemoveCard(c)
 	return res
 end
+function c511001611.spfilter(c,e,tp)
+	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x48) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+		and c.xyz_number
+end
 function c511001611.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg=Duel.GetMatchingGroup(c511001611.filter,tp,LOCATION_EXTRA,0,nil,false)
