@@ -102,7 +102,7 @@ function c511009441.fscon(e,g,gc,chkfnf)
 	return false
 end
 function c511009441.splimit(e,se,sp,st)
-	return se:GetHandler():IsCode(76794549)
+	return se and se:GetHandler():IsCode(76794549)
 end
 function c511009441.cfilter(c,ft,tp)
 	return c:IsSetCard(0xf8) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
