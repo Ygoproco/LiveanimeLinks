@@ -32,7 +32,7 @@ function c511000829.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsExistingTarget(c511000829.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,g,pg) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectTarget(tp,c511000829.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
+	local tc=Duel.SelectTarget(tp,c511000829.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,g,pg):GetFirst()
 	local ct=tc.minxyzct
 	local ct2=tc.maxxyzct
 	g:RemoveCard(tc)
