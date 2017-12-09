@@ -32,17 +32,19 @@ function c511000829.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsExistingTarget(c511000829.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,g,pg) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectTarget(tp,c511000829.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
+	local tc=Duel.SelectTarget(tp,c511000829.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,g,pg):GetFirst()
+	tc:RegisterFlagEffect(511000829,RESET_EVENT+0x1fe0000,0,0)
 	local ct=tc.minxyzct
 	local ct2=tc.maxxyzct
 	g:RemoveCard(tc)
-	local g=aux.SelectUnselectGroup(g,e,tp,ct,ct2,c511000829.rescon(pg),1,tp,HINTMSG_XMATERIAL,c511000829.rescon(pg))
+	local sg=aux.SelectUnselectGroup(g,e,tp,ct,ct2,c511000829.rescon(pg),1,tp,HINTMSG_XMATERIAL,c511000829.rescon(pg))
+	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c511000829.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,tc,e)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local sg=g:Filter(aux.FilterEqualFunction(Card.GetFlagEffect,0,511000829),nil)
+	local tc=g:Filter(aux.TRUE,sg):GetFirst()
 	local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
 	if tc and tc:IsRelateToEffect(e) and sg:GetCount()>0 and sg:Includes(pg) then
 		tc:SetMaterial(sg)
