@@ -37,7 +37,7 @@ function c100333003.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsContains(e:GetHandler())
 end
 function c55063681.filter(c,ec)
-	return c:IsFaceup() and and c:IsType(TYPE_LINK)  and c:GetLinkedGroup():IsContains(ec)
+	return c:IsFaceup() and c:IsType(TYPE_LINK)  and c:GetLinkedGroup():IsContains(ec)
 	-- ((ec==c and c:GetFlagEffect(55063681)==0) or (ec~=c and not ec:IsHasCardTarget(c)))
 end
 function c55063681.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
