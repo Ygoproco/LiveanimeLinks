@@ -39,7 +39,7 @@ function c100000186.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCountFromEx(tp)<=0 or pg:GetCount()>0 then return end
 	local g=Duel.GetMatchingGroup(c100000186.filter,tp,LOCATION_HAND,0,nil,e)
 	local sg=Duel.GetMatchingGroup(c100000186.xyzfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
-	if sg:GetCount()>0 and g:IsExists(c100000186.lvfilter,1,nil,g)>0 then
+	if sg:GetCount()>0 and g:IsExists(c100000186.lvfilter,1,nil,g) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local mg1=g:FilterSelect(tp,c100000186.lvfilter,1,1,nil,g)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
