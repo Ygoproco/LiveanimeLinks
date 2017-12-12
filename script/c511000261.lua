@@ -79,25 +79,24 @@ function c511000261.tokencon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000261.tokentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local ct=eg:FilterCount(c511000261.tokenfilter,nil,1-tp)
+	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,ct,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,ct,0,0)
 end
 function c511000261.tokenop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=eg:FilterCount(c511000261.tokenfilter,nil,1-tp)
+	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,69890968,0,0x4011,1000,1000,1,RACE_FIEND,ATTRIBUTE_DARK) then return end
-	local i=0
-	while i<ct do
+	for i=1,ct do
 		local token=Duel.CreateToken(tp,69890968)
-		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		token:RegisterEffect(e1,true)
-		i=i+1
 	end
+	Duel.SpecialSummonComplete()
 end
 function c511000261.increaseatkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,2,e:GetHandler()) end
