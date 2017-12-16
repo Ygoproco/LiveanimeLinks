@@ -25,23 +25,7 @@ function c111011002.initial_effect(c)
 	e3:SetTarget(c111011002.xyztg)
 	e3:SetOperation(c111011002.xyzop)
 	c:RegisterEffect(e3)
-	if not c111011002.global_check then
-		c111011002.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c111011002.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c111011002.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
+	aux.CallToken(420)
 end
 function c111011002.ofilter(c,tp)
 	return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:IsSetCard(0x1048) and c:IsFaceup()
@@ -90,9 +74,6 @@ function c111011002.spop(e,tp,eg,ep,ev,re,r,rp)
 			xyz:RegisterFlagEffect(111011002,RESET_EVENT+0x1fe0000,0,1)
 			Duel.SpecialSummonComplete()
 		end
-	else
-		local cg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
-		Duel.ConfirmCards(tp,cg)
 	end	
 end
 function c111011002.desop(e,tp,eg,ep,ev,re,r,rp)
