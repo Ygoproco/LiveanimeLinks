@@ -1,5 +1,5 @@
 --Ｖ・ＨＥＲＯ マルティプリ・ガイ
-function c100000510.initial_effect(c)	
+function c100000510.initial_effect(c)   
 	--send 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100000510,0))
@@ -42,10 +42,7 @@ function c100000510.recop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 	c:RegisterFlagEffect(100000501,RESET_EVENT+0x1fe0000,0,1)
 end
-function c100000510.costfilter(c,ft,tp)
-	return (c:IsSetCard(0x5008) or c:IsCode(27780618)) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
-end
-function c100000510.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c100000510.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
