@@ -423,7 +423,8 @@ end
 
 function c419.relayop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLP(0)<=0 and not Duel.IsPlayerAffectedByEffect(0,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(0,511002521)==0 then
+	if Duel.GetLP(0)<=0 and not Duel.IsPlayerAffectedByEffect(0,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(0,511002521)==0 
+		and Duel.IsPlayerAffectedByEffect(0,511000793) then
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD)
 		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
@@ -441,7 +442,8 @@ function c419.relayop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RaiseEvent(Duel.GetMatchingGroup(aux.TRUE,0,0xff,0,nil),511002521,nil,0,0,0,0)
 		Duel.RegisterFlagEffect(0,511002521,0,0,1)
 	end
-	if Duel.GetLP(1)<=0 and not Duel.IsPlayerAffectedByEffect(1,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(1,511002521)==0 then
+	if Duel.GetLP(1)<=0 and not Duel.IsPlayerAffectedByEffect(1,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(1,511002521)==0 
+		and Duel.IsPlayerAffectedByEffect(1,511000793) then
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD)
 		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
