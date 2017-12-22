@@ -42,8 +42,7 @@ function c511009614.valcon(e,re,r,rp,rc)
 	if bit.band(r,REASON_BATTLE)~=0 then
 		local tp=e:GetHandlerPlayer()
 		local bc=rc:GetBattleTarget()
-		if bc and bc==
-			and c:GetFlagEffect(511009614)==0 then
+		if bc and bc:GetFlagEffect(511009614)==0 then
 			c:RegisterFlagEffect(511009614,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 			return true
 		end
