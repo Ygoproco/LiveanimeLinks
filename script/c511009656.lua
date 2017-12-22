@@ -1,7 +1,7 @@
 --Dark Mummy Infuser
 --fixed by MLD
 function c511009656.initial_effect(c)
-	--search
+	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511009656,1))
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
@@ -24,7 +24,7 @@ function c511009656.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511009656.filter(c,ec)
-	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(ec)
+	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsRace(RACE_ZOMBIE) and c:GetLinkedGroup():IsContains(ec)
 end
 function c511009656.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009656.filter(chkc,e:GetHandler()) end
