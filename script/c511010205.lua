@@ -168,17 +168,21 @@ function c511010205.matcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
-function c511010205.matfilter(c,tc)
-	return c:GetPreviousLocation()&LOCATION_OVERLAY~=0 and c:GetReasonEffect() and c:GetReasonEffect():GetHandler()==tc
+function c511010205.matfilter(c,tc,tid)
+	return c:GetPreviousLocation()&LOCATION_OVERLAY~=0 and c:GetReasonEffect() and c:GetReasonEffect():GetHandler()==tc and c:GetTurnID()==tid-1
 end
 function c511010205.mattg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511010205.matfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e:GetHandler()) end
-	local g=Duel.GetMatchingGroup(c511010205.matfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e:GetHandler())
+	local tid=Duel.GetTurnCount()
+	if Duel.GetTurnPlayer()==tp then tid=tid-1 end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511010205.matfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e:GetHandler(),tid) end
+	local g=Duel.GetMatchingGroup(c511010205.matfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e:GetHandler(),tid)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,g:GetCount(),tp,0)
 end
 function c511010205.matop(e,tp,eg,ep,ev,re,r,rp)
+	local tid=Duel.GetTurnCount()
+	if Duel.GetTurnPlayer()==tp then tid=tid-1 end
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(c511010205.matfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,c)
+	local g=Duel.GetMatchingGroup(c511010205.matfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,c,tid)
 	if c:IsRelateToEffect(e) then
 		Duel.Overlay(c,g)
 	end

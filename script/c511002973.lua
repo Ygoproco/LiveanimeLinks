@@ -70,8 +70,11 @@ function c511002973.ovfilter(c)
 end
 function c511002973.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511002973.desfilter,tp,LOCATION_ONFIELD,0,nil)
-	Duel.Destroy(g,REASON_EFFECT)
+	if g then
+		Duel.Destroy(g,REASON_EFFECT)
+	end
 	local sg=Duel.GetMatchingGroup(c511002973.filter,tp,LOCATION_SZONE,0,e:GetHandler(),e:GetHandler():GetFieldID())
+	if not sg or sg:GetCount()<=0 then return end
 	local tc=sg:GetFirst()
 	while tc do
 		local cid=tc:ReplaceEffect(511002974,RESET_EVENT+RESETS_STANDARD)
