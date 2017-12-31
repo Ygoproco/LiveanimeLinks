@@ -43,7 +43,7 @@ function c100000490.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mg=Duel.GetMatchingGroup(c100000490.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
 	if chk==0 then return aux.SelectUnselectGroup(mg,e,tp,nil,nil,c100000490.rescon(false),0) end
 	local reset={}
-	local tc=g:GetFirst()
+	local tc=mg:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -51,10 +51,10 @@ function c100000490.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e1:SetCode(EFFECT_XYZ_MATERIAL)
 		tc:RegisterEffect(e1)
 		table.insert(reset,e1)
-		tc=g:GetNext()
+		tc=mg:GetNext()
 	end
 	local tg=aux.SelectUnselectGroup(mg,e,tp,nil,nil,c100000490.rescon(true),1,tp,HINTMSG_XMATERIAL,c100000490.rescon(true))
-	Duel.SetTargetCard(g)
+	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	for _,te in ipairs(reset) do
 		te:Reset()
