@@ -1,4 +1,5 @@
 --覇王門無限
+--fixed by MLD
 function c511009444.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	--selfdes
@@ -31,10 +32,11 @@ function c511009444.initial_effect(c)
 	e3:SetOperation(c511009444.thop)
 	c:RegisterEffect(e3)
 end
+function c511009444.scfilter(c)
+	return c:IsFaceup() and c:IsCode(96227613)
+end
 function c511009444.descon(e)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_PZONE,1-seq)
-	return not tc or not tc:IsCode(96227613)
+	return not Duel.IsExistingMatchingCard(c511009444.scfilter,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,e:GetHandler())
 end
 function c511009444.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -43,6 +45,7 @@ function c511009444.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ev)
 end
 function c511009444.recop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
