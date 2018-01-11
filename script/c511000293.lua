@@ -81,7 +81,7 @@ function c511000293.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local at=Duel.GetAttackTarget()
 	if chk==0 then
 		local pg=aux.GetMustBeMaterialGroup(tp,Group.FromCards(c),tp,nil,nil,REASON_XYZ)
-		return pg:GetCount()<=1 and at and at:GetRank()>0 and Duel.IsExistingMatchingCard(c511000293.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,rank,at,pg)
+		return pg:GetCount()<=1 and at and at:GetRank()>0 and Duel.IsExistingMatchingCard(c511000293.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,at:GetRank(),at,pg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end

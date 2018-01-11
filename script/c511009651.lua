@@ -34,7 +34,7 @@ function c511009651.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 function c511009651.damcon(e)
-	return c:GetLinkedGroupCount()==0
+	return e:GetHandler():GetLinkedGroupCount()==0
 end
 function c511009651.damfilter(c)
 	return c:IsSetCard(0xfb) and c:IsType(TYPE_MONSTER)

@@ -121,14 +121,14 @@ function c419.lvcfilter(c)
 	return c:GetLevel()~=c:GetFlagEffectLabel(585)
 end
 function c419.atkraiseeff(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c419.atkcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(c419.atkcfilter,tp,0x7f,0x7f,nil)
 	local g1=Group.CreateGroup() --change atk
 	local g2=Group.CreateGroup() --gain atk
 	local g3=Group.CreateGroup() --lose atk
 	local g4=Group.CreateGroup() --gain atk from original
 	local g9=Group.CreateGroup() --lose atk from original
 	
-	local dg=Duel.GetMatchingGroup(c419.defcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local dg=Duel.GetMatchingGroup(c419.defcfilter,tp,0x7f,0x7f,nil)
 	local g5=Group.CreateGroup() --change def
 	local g6=Group.CreateGroup() --gain def
 	--local g7=Group.CreateGroup() --lose def
@@ -204,7 +204,7 @@ function c419.atkraiseeff(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RaiseEvent(g9,511010103,re,REASON_EFFECT,rp,ep,0)
 	--Duel.RaiseEvent(g6,,re,REASON_EFFECT,rp,ep,0)
 	
-	local lvg=Duel.GetMatchingGroup(c419.lvcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local lvg=Duel.GetMatchingGroup(c419.lvcfilter,tp,0x7f,0x7f,nil)
 	local lvc=lvg:GetFirst()
 	while lvc do
 		local prevlv=lvc:GetFlagEffectLabel(585)
@@ -221,14 +221,14 @@ function c419.atkraiseeff(e,tp,eg,ep,ev,re,r,rp)
 end
 function c419.atkraiseadj(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,285)~=0 or Duel.GetFlagEffect(1-tp,285)~=0 then return end
-	local g=Duel.GetMatchingGroup(c419.atkcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(c419.atkcfilter,tp,0x7f,0x7f,nil)
 	local g1=Group.CreateGroup() --change atk
 	local g2=Group.CreateGroup() --gain atk
 	local g3=Group.CreateGroup() --lose atk
 	local g4=Group.CreateGroup() --gain atk from original
 	local g9=Group.CreateGroup() --lose atk from original
 	
-	local dg=Duel.GetMatchingGroup(c419.defcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local dg=Duel.GetMatchingGroup(c419.defcfilter,tp,0x7f,0x7f,nil)
 	local g5=Group.CreateGroup() --change def
 	--local g6=Group.CreateGroup() --gain def
 	--local g7=Group.CreateGroup() --lose def
@@ -299,7 +299,7 @@ function c419.atkraiseadj(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RaiseEvent(g5,511009053,e,REASON_EFFECT,rp,ep,0)
 	Duel.RaiseEvent(g9,511010103,e,REASON_EFFECT,rp,ep,0)
 	
-	local lvg=Duel.GetMatchingGroup(c419.lvcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local lvg=Duel.GetMatchingGroup(c419.lvcfilter,tp,0x7f,0x7f,nil)
 	local lvc=lvg:GetFirst()
 	while lvc do
 		local prevlv=lvc:GetFlagEffectLabel(585)
@@ -423,7 +423,8 @@ end
 
 function c419.relayop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLP(0)<=0 and not Duel.IsPlayerAffectedByEffect(0,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(0,511002521)==0 then
+	if Duel.GetLP(0)<=0 and not Duel.IsPlayerAffectedByEffect(0,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(0,511002521)==0 
+		and Duel.IsPlayerAffectedByEffect(0,511000793) then
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD)
 		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
@@ -441,7 +442,8 @@ function c419.relayop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RaiseEvent(Duel.GetMatchingGroup(aux.TRUE,0,0xff,0,nil),511002521,nil,0,0,0,0)
 		Duel.RegisterFlagEffect(0,511002521,0,0,1)
 	end
-	if Duel.GetLP(1)<=0 and not Duel.IsPlayerAffectedByEffect(1,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(1,511002521)==0 then
+	if Duel.GetLP(1)<=0 and not Duel.IsPlayerAffectedByEffect(1,EFFECT_CANNOT_LOSE_LP) and Duel.GetFlagEffect(1,511002521)==0 
+		and Duel.IsPlayerAffectedByEffect(1,511000793) then
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD)
 		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)

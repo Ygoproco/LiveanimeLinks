@@ -48,8 +48,8 @@ function c511015103.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if ect then ftex=math.min(ftex,ect) end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ftt=math.min(ftt,1) ftex=math.min(ftex,1) ft=math.min(ft,1) end
 	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2) and ftt>0 and (ft>0 or ftex>0)
-		and aux.SelectUnselectGroup(rg,e,tp,nil,ftt,c511015103.rescon(ft,ftex,ftt),0) end
-	local sg=aux.SelectUnselectGroup(rg,e,tp,nil,ftt,c511015103.rescon(ft,ftex,ftt),1,tp,HINTMSG_SPSUMMON,c511015103.rescon(ft,ftex,ftt))
+		and aux.SelectUnselectGroup(mg,e,tp,nil,ftt,c511015103.rescon(ft,ftex,ftt),0) end
+	local sg=aux.SelectUnselectGroup(mg,e,tp,nil,ftt,c511015103.rescon(ft,ftex,ftt),1,tp,HINTMSG_SPSUMMON,c511015103.rescon(ft,ftex,ftt))
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,sg:GetCount()+1,tp,LOCATION_EXTRA)
 end
