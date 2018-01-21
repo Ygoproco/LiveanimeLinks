@@ -35,7 +35,7 @@ function c511001115.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetCode(EFFECT_SELF_DESTROY)
-	e5:SetRange(LOCATION_MZONE)
+	e5:SetRange(LOCATION_ONFIELD)
 	e5:SetCondition(c511001115.descon)
 	c:RegisterEffect(e5)
 end

@@ -1,12 +1,12 @@
 --青眼の光龍
 function c511002418.initial_effect(c)
-	c:EnableReviveLimit()
+	c:EnableUnsummonable()
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(aux.FALSE)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
@@ -73,8 +73,7 @@ function c511002418.val(e,c)
 end
 function c511002418.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
+	if c:IsStatus(STATUS_BATTLE_DESTROYED) or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local loc,tg=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TARGET_CARDS)
 	if not tg or not tg:IsContains(c) then return false end
 	return Duel.IsChainDisablable(ev) and loc~=LOCATION_DECK
