@@ -4,18 +4,14 @@ function c421.initial_effect(c)
 	if not c421.global_check then
 		c421.global_check=true
 	--rank
-		local rank1=Effect.CreateEffect(c)
-		rank1:SetType(EFFECT_TYPE_FIELD)
-		rank1:SetCode(513000065)
-		rank1:SetTarget(c421.rank1)
-		rank1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_IGNORE_RANGE)
-		Duel.RegisterEffect(rank1,0) 
-		local rank2=Effect.CreateEffect(c)
-		rank2:SetType(EFFECT_TYPE_FIELD)
-		rank2:SetCode(513000065)
-		rank2:SetTarget(c421.rank2)
-		rank2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_IGNORE_RANGE)
-		Duel.RegisterEffect(rank2,0)
+		local rank=Effect.CreateEffect(c)
+		rank:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		rank:SetCode(EVENT_ADJUST)
+		rank:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_IGNORE_RANGE)
+		rank:SetCondition(c421.hrcon)
+		rank:SetOperation(c421.rank)
+		Duel.RegisterEffect(rank,0) 
+	--immunes
 		local immunity=Effect.CreateEffect(c)
 		immunity:SetType(EFFECT_TYPE_FIELD)
 		immunity:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
@@ -24,7 +20,6 @@ function c421.initial_effect(c)
 		immunity:SetTarget(c421.hrtg)
 		immunity:SetValue(c421.hrfilter)
 		Duel.RegisterEffect(immunity,0)
-	--control
 		local control=Effect.CreateEffect(c)
 		control:SetType(EFFECT_TYPE_FIELD)
 		control:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
@@ -32,136 +27,130 @@ function c421.initial_effect(c)
 		control:SetCode(EFFECT_CANNOT_CHANGE_CONTROL)
 		control:SetTarget(c421.control)
 		Duel.RegisterEffect(control,0)
-	--last 1 turn
 		local last=Effect.CreateEffect(c)
 		last:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		last:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		last:SetCode(EVENT_ADJUST)
-		last:SetTarget(c421.lasttg)
+		last:SetTarget(c421.lastcon)
 		last:SetOperation(c421.lastop)
 		Duel.RegisterEffect(last,0)
-		local check=Effect.CreateEffect(c)
-		check:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		check:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		check:SetCode(EVENT_CHAINING)
-		check:SetOperation(c421.sdop)
-		Duel.RegisterEffect(check,0)
 	end
 end
-function c421.sdop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=re:GetHandler()
-	if tc:GetFlagEffect(1211920)>0 then
-		tc:ResetFlagEffect(1211920)
-	end
-	tc:RegisterFlagEffect(1211920,RESET_EVENT+0x1fe0000,0,1,Duel.GetTurnCount()) 
-	if re:IsHasProperty(EFFECT_FLAG_IGNORE_IMMUNE) then tc:RegisterFlagEffect(128,0,0,0) end
-end
-function c421.rank1(e,c)
+function c421.rank1(c)
 	local code1,code2=c:GetOriginalCodeRule() 
-	return c:IsFaceup()
+	return c:GetFlagEffect(513000065)==0
 		and (code1==10000000 or code1==10000010 or code1==10000020
 		or code1==62180201 or code1==57793869 or code1==21208154
 		or code2==10000000 or code2==10000010 or code2==10000020
 		or code2==62180201 or code2==57793869 or code2==21208154)
 end
-function c421.rank2(e,c)
+function c421.rank2(c)
 	local code1,code2=c:GetOriginalCodeRule() 
-	return c:IsFaceup() and (code1==10000010 or code1==21208154 or code2==10000010 or code2==21208154)
+	return code1==10000010 or code1==21208154 or code2==10000010 or code2==21208154
+end
+function c421.hrcon(e,tp,eg,ev,ep,re,r,rp)
+	return Duel.IsExistingMatchingCard(c421.rank1,tp,0xff,0xff,1,nil)
+end
+function c421.rank(e,tp,eg,ev,ep,re,r,rp)
+	local g=Duel.GetMatchingGroup(c421.rank1,tp,0xff,0xff,nil)
+	for c in aux.Next(g) do
+		c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,1,aux.Stringid(4011,1))
+	end
+	for c in aux.Next(g:Filter(c421.rank2,nil)) do
+		c:ResetFlagEffect(513000065)
+		c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,2,aux.Stringid(4011,2))
+	end
 end
 function c421.hrtg(e,c)
-	return c:IsHasEffect(513000065) and c:IsFaceup()
+	return c:GetFlagEffect(513000065)>0 and c:IsFaceup()
 end
 function c421.hrfilter(e,te,c)
 	if not te then return false end
-	if not c:IsHasEffect(513000065) or not c:IsFaceup() then return false end
 	local tc=te:GetOwner()
 	return (te:IsActiveType(TYPE_MONSTER) and c~=tc
-		and c:GetEffectCount(513000065)>tc:GetEffectCount(513000065))
+		and (not tc:GetFlagEffectLabel(513000065) or c:GetFlagEffectLabel(513000065)>tc:GetFlagEffectLabel(513000065)))
 		or (te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
 		and te:IsActiveType(TYPE_SPELL+TYPE_TRAP))
-		or (tc:GetFlagEffectLabel(1211920) 
-		and (te:GetType()==EFFECT_TYPE_EQUIP or tc:GetCardTarget():IsContains(c))
-		and Duel.GetTurnCount()-tc:GetFlagEffectLabel(1211920)>=1
-		and Duel.GetTurnCount()-c:GetTurnID()>=1)
 end
 function c421.control(e,c)
-	return c:IsHasEffect(513000065) and c:IsFaceup() and not c:IsHasEffect(513000134)
+	return c:GetFlagEffect(513000065)>0 and c:IsFaceup() and not c:IsHasEffect(513000134)
+end
+function c421.lfilter(c)
+	return c:GetFlagEffect(513000065)>0 and c:IsFaceup()
 end
 function c421.lastfilter(c)
-	return c:GetFlagEffect(51300065)>0
+	local effs={c:GetCardEffect(EFFECT_UNRELEASABLE_SUM)}
+	for _,eff in ipairs(effs) do
+		if eff:GetLabel()==513000065 then
+		return false end
+	end
+	return true
 end
-function c421.lasttg(e,tp,eg,ev,ep,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_MZONE,LOCATION_MZONE,nil,513000065)
-	return g:IsExists(aux.NOT(c421.lastfilter),1,nil)
+function c421.lastcon(e,tp,eg,ev,ep,re,r,rp)
+	local g=Duel.GetMatchingGroup(c421.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	return g:IsExists(c421.lastfilter,1,nil)
 end
 function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_MZONE,LOCATION_MZONE,nil,513000065)
-	local tg=g:Filter(aux.NOT(c421.lastfilter),nil)
+	local g=Duel.GetMatchingGroup(c421.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local tg=g:Filter(c421.lastfilter,nil)
 	tg:ForEach(function(c)
-		c:RegisterFlagEffect(51300065,RESET_EVENT+0x1fe0000,0,1)
-		--If Special Summoned: Send to previous location/Effects only last for 1 turn
-		local e1=Effect.CreateEffect(c)
-		e1:SetDescription(aux.Stringid(421,0))
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetCode(EVENT_PHASE+PHASE_END)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetCountLimit(1)
-		e1:SetCondition(c421.stgcon)
-		e1:SetOperation(c421.stgop)
-		c:RegisterEffect(e1)
-		--Negate attack due to Hierarchy
-		local e2=Effect.CreateEffect(c)
-		e2:SetDescription(aux.Stringid(421,1))
-		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-		e2:SetCode(EVENT_BE_BATTLE_TARGET)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
-		e2:SetCondition(c421.negatkcon)
-		e2:SetOperation(c421.negatkop)
-		c:RegisterEffect(e2)
-		--release limit
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_UNRELEASABLE_SUM)
-		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e3:SetRange(LOCATION_MZONE)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
-		e3:SetValue(c421.recon)
-		c:RegisterEffect(e3)
-		local e4=e3:Clone()
-		e4:SetCondition(c421.recon2)
-		e4:SetCode(EFFECT_UNRELEASABLE_NONSUM)
-		c:RegisterEffect(e4)
+	--last 1 turn
+		local ep=Effect.CreateEffect(c)
+		ep:SetDescription(aux.Stringid(4011,0))
+		ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ep:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		ep:SetCountLimit(1)
+		ep:SetRange(LOCATION_MZONE)
+		ep:SetCode(EVENT_PHASE+PHASE_END)
+		ep:SetReset(RESET_EVENT+0x1fe0000)
+		ep:SetCondition(c421.stgcon)
+		ep:SetOperation(c421.stgop)
+		c:RegisterEffect(ep)
+	 --release limit
+		local r1=Effect.CreateEffect(c)
+		r1:SetType(EFFECT_TYPE_SINGLE)
+		r1:SetCode(EFFECT_UNRELEASABLE_SUM)
+		r1:SetLabel(513000065)
+		r1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		r1:SetRange(LOCATION_MZONE)
+		r1:SetReset(RESET_EVENT+0x1fe0000)
+		r1:SetValue(c421.recon)
+		c:RegisterEffect(r1)
+		local r2=r1:Clone()
+		r2:SetCondition(c421.recon2)
+		r2:SetCode(EFFECT_UNRELEASABLE_NONSUM)
+		c:RegisterEffect(r2)
+	--battle
+		local dg=r1:Clone()
+		dg:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
+		dg:SetValue(c421.tglimit)
+		c:RegisterEffect(dg)
+		local bt=dg:Clone()
+		bt:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		c:RegisterEffect(bt)
 	end)
 end
-function c421.negatkcon(e,tp,eg,ep,ev,re,r,rp)
-	local ac=Duel.GetAttacker()
-	return ac:IsHasEffect(513000065) 
-		and e:GetHandler():GetEffectCount(513000065)>ac:GetEffectCount(513000065)
-end
-function c421.negatkop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateAttack()
+function c421.tglimit(e,c)
+	return not c:GetFlagEffectLabel(513000065)
+		or e:GetHandler():GetFlagEffectLabel(513000065)>c:GetFlagEffectLabel(513000065)
 end
 function c421.recon(e,c)
-	return e:GetHandler():IsHasEffect(513000065) and c:GetControler()~=e:GetHandler():GetControler()
+	return e:GetHandler():GetFlagEffect(513000065)>0 and c:GetControler()~=e:GetHandler():GetControler()
 end
 function c421.recon2(e)
-	return e:GetHandler():IsHasEffect(513000065) and Duel.GetTurnPlayer()~=e:GetOwnerPlayer()
+	return e:GetHandler():GetFlagEffect(513000065)>0 and Duel.GetTurnPlayer()~=e:GetOwnerPlayer()
 end
 function c421.stgcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsHasEffect(513000065)
+	return e:GetHandler():GetFlagEffect(513000065)>0
 end
 function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(nil,tp,0xff,0xff,c)
-	for tc in aux.Next(g) do
-		if tc:GetOriginalCode()~=c:GetOriginalCode() and tc:GetFlagEffect(128)==0 then
-			c:ResetEffect(tc:GetOriginalCode(),RESET_CARD)
-			tc:ResetFlagEffect(128)
+	local effs={c:GetCardEffect()}
+	for _,eff in ipairs(effs) do
+		if eff:GetOwner()~=c and not eff:GetOwner():IsCode(421)
+			and not eff:IsHasProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			and not eff:IsHasType(EFFECT_TYPE_GRANT+EFFECT_TYPE_FIELD) then
+			eff:Reset()
 		end
 	end
 	if c:IsSummonType(SUMMON_TYPE_SPECIAL) then
