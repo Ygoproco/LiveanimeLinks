@@ -69,7 +69,7 @@ function c421.hrfilter(e,te,c)
 	local tc=te:GetOwner()
 	return (te:IsActiveType(TYPE_MONSTER) and c~=tc
 		and (not tc:GetFlagEffectLabel(513000065) or c:GetFlagEffectLabel(513000065)>tc:GetFlagEffectLabel(513000065)))
-		or (te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
+		or (te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE+CATEGORY_FUSION_SUMMON)
 		and te:IsActiveType(TYPE_SPELL+TYPE_TRAP))
 end
 function c421.control(e,c)
