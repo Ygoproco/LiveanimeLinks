@@ -43,25 +43,52 @@ function c513000135.initial_effect(c)
 	if not c513000135.global_check then
 		c513000135.global_check=true
 		--avatar
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetOperation(c513000135.avatarop)
-		Duel.RegisterEffect(ge2,0)
+		local av=Effect.CreateEffect(c)
+		av:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		av:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		av:SetCode(EVENT_ADJUST)
+		av:SetCondition(c513000135.avatarcon)
+		av:SetOperation(c513000135.avatarop)
+		Duel.RegisterEffect(av,0)
 	end
 end
-function c513000135.avatarfilter(c)
-	return c:GetOriginalCode()==21208154 and aux.NOT(c:GetFlagEffect(9999999)>0)
+function c513000135.avfilter(c)
+	local atktes={c:GetCardEffect(EFFECT_SET_ATTACK_FINAL)}
+	local ae=nil
+	local de=nil
+	for _,atkte in ipairs(atktes) do
+		if atkte:GetOwner()==c and atkte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+			ae=atkte:GetLabel()
+		end
+	end
+	local deftes={c:GetCardEffect(EFFECT_SET_DEFENSE_FINAL)}
+	for _,defte in ipairs(deftes) do
+		if defte:GetOwner()==c and defte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+			de=defte:GetLabel()
+		end
+	end
+	return c:GetOriginalCode()==21208154 and (ae~=9999999 or de~=9999999)
+end
+function c513000135.avatarcon(e,tp,eg,ev,ep,re,r,rp)
+	return Duel.GetMatchingGroupCount(c513000135.avfilter,tp,0xff,0xff,nil)>0
 end
 function c513000135.avatarop(e,tp,eg,ev,ep,re,r,rp)
-	local g=Duel.GetMatchingGroup(c513000135.avatarfilter,tp,0xff,0xff,nil)
+	local g=Duel.GetMatchingGroup(c513000135.avfilter,tp,0xff,0xff,nil)
 	g:ForEach(function(c)
-		c:RegisterFlagEffect(9999999,RESET_EVENT+0x1fe0000,0,1)
-		local atkte=c:GetCardEffect(EFFECT_SET_ATTACK_FINAL)
-		local defte=c:GetCardEffect(EFFECT_SET_DEFENSE_FINAL)
-		atkte:SetValue(c513000135.avaval)
-		defte:SetValue(c513000135.avaval)
+		local atktes={c:GetCardEffect(EFFECT_SET_ATTACK_FINAL)}
+		for _,atkte in ipairs(atktes) do
+			if atkte:GetOwner()==c and atkte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+				atkte:SetValue(c513000135.avaval)
+				atkte:SetLabel(9999999)
+			end
+		end
+		local deftes={c:GetCardEffect(EFFECT_SET_DEFENSE_FINAL)}
+		for _,defte in ipairs(deftes) do
+			if defte:GetOwner()==c and defte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+				defte:SetValue(c513000135.avaval)
+				defte:SetLabel(9999999)
+			end
+		end
 	end)
 end
 function c513000135.avafilter(c)
@@ -119,6 +146,42 @@ function c513000135.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 		and e:GetHandler():IsAttackable()
 end
+function c513000135.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsFaceup() and c:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SINGLE_RANGE)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE+PHASE_BATTLE+PHASE_END)
+		e1:SetValue(c513000135.adval)
+		c:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+		e2:SetCondition(c513000135.damcon)
+		e2:SetOperation(c513000135.damop)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE+PHASE_BATTLE+PHASE_END)
+		c:RegisterEffect(e2)
+		Duel.BreakEffect()
+		local ag,direct=c:GetAttackableTarget()
+		if direct and ag:GetCount()>0 then
+			if Duel.SelectYesNo(tp,aux.Stringid(41077745,0)) then
+				Duel.CalculateDamage(c,nil)
+			else
+				Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(36708764,0))
+				Duel.CalculateDamage(c,ag:Select(tp,1,1,nil):GetFirst())
+			end
+		elseif ag:GetCount()>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(36708764,0))
+			Duel.CalculateDamage(c,ag:Select(tp,1,1,nil):GetFirst())
+		elseif direct then
+			Duel.CalculateDamage(c,nil)
+		end
+	end
+end
 function c513000135.adval(e,c)
 	local g=Duel.GetMatchingGroup(nil,0,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	if g:GetCount()==0 then 
@@ -129,54 +192,6 @@ function c513000135.adval(e,c)
 			return 9999999
 		else
 			return val
-		end
-	end
-end
-function c513000135.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SINGLE_RANGE)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE+PHASE_END)
-		e1:SetValue(c513000135.adval)
-		c:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-		e2:SetCondition(c513000135.damcon)
-		e2:SetOperation(c513000135.damop)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE+PHASE_END)
-		c:RegisterEffect(e2)
-		if Duel.GetTurnPlayer()==tp then
-			local e3=Effect.CreateEffect(c)
-			e3:SetType(EFFECT_TYPE_SINGLE)
-			e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e3:SetCode(EFFECT_EXTRA_ATTACK)
-			e3:SetValue(1)
-			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE+PHASE_END)
-			c:RegisterEffect(e3)
-			local e4=Effect.CreateEffect(c)
-			e4:SetType(EFFECT_TYPE_SINGLE)
-			e4:SetCode(EFFECT_FIRST_ATTACK)
-			e4:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE+PHASE_END)
-			c:RegisterEffect(e4)
-			local e5=Effect.CreateEffect(c)
-			e5:SetType(EFFECT_TYPE_SINGLE)
-			e5:SetCode(EFFECT_MUST_ATTACK)
-			e5:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE+PHASE_END)
-			c:RegisterEffect(e5)
-		else
-			Duel.BreakEffect()
-			local tc=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
-			if tc:GetEffectCount(513000065)>c:GetEffectCount(513000065) and Duel.SelectYesNo(1-tp,aux.Stringid(4010,9)) then
-				c:ResetEffect(c:GetCode(),RESET_CARD)
-			else
-				Duel.CalculateDamage(c,tc)
-			end
 		end
 	end
 end
