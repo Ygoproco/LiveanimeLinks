@@ -149,7 +149,7 @@ function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
 	for _,eff in ipairs(effs) do
 		if eff:GetOwner()~=c and not eff:GetOwner():IsCode(421)
 			and not eff:IsHasProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			and not eff:IsHasType(EFFECT_TYPE_GRANT+EFFECT_TYPE_FIELD) then
+			and (eff:GetTarget()==aux.PersistentTargetFilter or not eff:IsHasType(EFFECT_TYPE_GRANT+EFFECT_TYPE_FIELD)) then
 			eff:Reset()
 		end
 	end
