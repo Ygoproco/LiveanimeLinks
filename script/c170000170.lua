@@ -55,25 +55,52 @@ function c170000170.initial_effect(c)
 	if not c170000170.global_check then
 		c170000170.global_check=true
 		--avatar
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetOperation(c170000170.avatarop)
-		Duel.RegisterEffect(ge1,0)
+		local av=Effect.CreateEffect(c)
+		av:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		av:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		av:SetCode(EVENT_ADJUST)
+		av:SetCondition(c170000170.avatarcon)
+		av:SetOperation(c170000170.avatarop)
+		Duel.RegisterEffect(av,0)
 	end
 end
-function c170000170.avatarfilter(c)
-	return c:GetOriginalCode()==21208154 and aux.NOT(c:GetFlagEffect(9999999)>0)
+function c170000170.avfilter(c)
+	local atktes={c:GetCardEffect(EFFECT_SET_ATTACK_FINAL)}
+	local ae=nil
+	local de=nil
+	for _,atkte in ipairs(atktes) do
+		if atkte:GetOwner()==c and atkte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+			ae=atkte:GetLabel()
+		end
+	end
+	local deftes={c:GetCardEffect(EFFECT_SET_DEFENSE_FINAL)}
+	for _,defte in ipairs(deftes) do
+		if defte:GetOwner()==c and defte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+			de=defte:GetLabel()
+		end
+	end
+	return c:GetOriginalCode()==21208154 and (ae~=9999999 or de~=9999999)
+end
+function c170000170.avatarcon(e,tp,eg,ev,ep,re,r,rp)
+	return Duel.IsExistingMatchingCard(c170000170.avfilter,tp,0xff,0xff,1,nil)
 end
 function c170000170.avatarop(e,tp,eg,ev,ep,re,r,rp)
-	local g=Duel.GetMatchingGroup(c170000170.avatarfilter,tp,0xff,0xff,nil)
+	local g=Duel.GetMatchingGroup(c170000170.avfilter,tp,0xff,0xff,nil)
 	g:ForEach(function(c)
-		c:RegisterFlagEffect(9999999,RESET_EVENT+0x1fe0000,0,1)
-		local atkte=c:GetCardEffect(EFFECT_SET_ATTACK_FINAL)
-		local defte=c:GetCardEffect(EFFECT_SET_DEFENSE_FINAL)
-		atkte:SetValue(c170000170.avaval)
-		defte:SetValue(c170000170.avaval)
+		local atktes={c:GetCardEffect(EFFECT_SET_ATTACK_FINAL)}
+		for _,atkte in ipairs(atktes) do
+			if atkte:GetOwner()==c and atkte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+				atkte:SetValue(c170000170.avaval)
+				atkte:SetLabel(9999999)
+			end
+		end
+		local deftes={c:GetCardEffect(EFFECT_SET_DEFENSE_FINAL)}
+		for _,defte in ipairs(deftes) do
+			if defte:GetOwner()==c and defte:IsHasProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY) then
+				defte:SetValue(c170000170.avaval)
+				defte:SetLabel(9999999)
+			end
+		end
 	end)
 end
 function c170000170.avafilter(c)
@@ -92,6 +119,7 @@ function c170000170.avaval(e,c)
 		end
 	end
 end
+-------------------------------------------------------------------
 function c170000170.sucop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	Duel.SendtoGrave(g,REASON_EFFECT)
