@@ -17,7 +17,7 @@ function c511003088.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511003088.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,Duel.GetAttacker())
 end
 function c511003088.operation(e,tp,eg,ep,ev,re,r,rp)
