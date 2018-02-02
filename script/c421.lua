@@ -54,11 +54,11 @@ end
 function c421.rank(e,tp,eg,ev,ep,re,r,rp)
 	local g=Duel.GetMatchingGroup(c421.rank1,tp,0xff,0xff,nil)
 	for c in aux.Next(g) do
-		c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,1,aux.Stringid(4011,1))
+		c:RegisterFlagEffect(513000065,0,0,0,1)
 	end
 	for c in aux.Next(g:Filter(c421.rank2,nil)) do
 		c:ResetFlagEffect(513000065)
-		c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,2,aux.Stringid(4011,2))
+		c:RegisterFlagEffect(513000065,0,0,0,2)
 	end
 end
 function c421.hrtg(e,c)
@@ -131,8 +131,7 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 	end)
 end
 function c421.tglimit(e,c)
-	return not c:GetFlagEffectLabel(513000065)
-		or e:GetHandler():GetFlagEffectLabel(513000065)>c:GetFlagEffectLabel(513000065)
+	return c:GetFlagEffectLabel(513000065) and e:GetHandler():GetFlagEffectLabel(513000065)>c:GetFlagEffectLabel(513000065) or false
 end
 function c421.recon(e,c)
 	return e:GetHandler():GetFlagEffect(513000065)>0 and c:GetControler()~=e:GetHandler():GetControler()

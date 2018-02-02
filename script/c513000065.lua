@@ -24,7 +24,7 @@ function c513000065.activate(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(g) do
 		local hr=tc:GetFlagEffectLabel(513000065)+1
 		tc:ResetFlagEffect(513000065)
-		tc:RegisterFlagEffect(513000065,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,hr,aux.Stringid(4011,hr))
+		tc:RegisterFlagEffect(513000065,RESET_EVENT+0x1fe0000,0,1,hr)
 		--Atk/Def up
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(4010,7))
