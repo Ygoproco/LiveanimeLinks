@@ -74,17 +74,17 @@ function c513000139.erasop(e,tp,eg,ep,ev,re,r,rp)
 	if phr~=hr then
 		if phr then
 			c:ResetFlagEffect(513000065)
-			c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,phr,aux.Stringid(4011,phr))
+			c:RegisterFlagEffect(513000065,0,0,0,phr)
 			Duel.SendtoGrave(g,REASON_EFFECT)
 			c:ResetFlagEffect(513000065)
 			if hr then
-				c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,hr,aux.Stringid(4011,hr))
+				c:RegisterFlagEffect(513000065,0,0,0,hr)
 			end
 		else
 			c:ResetFlagEffect(513000065)
 			Duel.SendtoGrave(g,REASON_EFFECT)
 			if hr then
-				c:RegisterFlagEffect(513000065,0,EFFECT_FLAG_CLIENT_HINT,0,hr,aux.Stringid(4011,hr))
+				c:RegisterFlagEffect(513000065,0,0,0,hr)
 			end
 		end
 	else
