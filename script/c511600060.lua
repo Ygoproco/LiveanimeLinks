@@ -37,9 +37,8 @@ function c511600060.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511600060.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsRelateToBattle() then
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsRelateToBattle() and tc:IsControler(tp) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
