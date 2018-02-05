@@ -80,7 +80,7 @@ function c511000614.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 end
 function c511000614.eqfilter(c)
-	return c:GetFlagEffect(83965310)~=0 
+	return c:GetFlagEffect(511000614)~=0 
 end
 function c511000614.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
