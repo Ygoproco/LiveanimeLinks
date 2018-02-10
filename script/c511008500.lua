@@ -14,7 +14,7 @@ end
 
 function c511008500.filter(c, cards)
 	local eff = c:GetReasonEffect()
-	return c:IsType(TYPE_SYNCHRO) and (eff and eff:GetCategory() & CATEGORY_DISABLE_SUMMON and c511008500.has(cards, eff))
+	return c:IsSummonType(SUMMON_TYPE_SYNCHRO) and (eff and eff:GetCategory() & CATEGORY_DISABLE_SUMMON and c511008500.has(cards, eff))
 end
 
 
