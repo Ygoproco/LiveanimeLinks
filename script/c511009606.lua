@@ -23,13 +23,13 @@ function c511009606.initial_effect(c)
 	e2:SetOperation(c511009606.operation)
 	c:RegisterEffect(e2)
 	
---disable spsummon
+	--disable spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(1,1)
+	e3:SetTargetRange(1,0)
 	e3:SetTarget(c511009606.splimit)
 	c:RegisterEffect(e3)
 end
@@ -38,8 +38,7 @@ function c511009606.valcon(e,re,r,rp)
 end
 
 function c511009606.condition(e,tp,eg,ep,ev,re,r,rp,chk)
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return re:IsActiveType(TYPE_MONSTER) and  loc==LOCATION_MZONE and re:GetHandler()==e:GetHandler():GetEquipTarget()
+	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler()==e:GetHandler():GetEquipTarget()
 end
 function c511009606.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
