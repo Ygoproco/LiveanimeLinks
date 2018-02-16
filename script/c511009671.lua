@@ -21,9 +21,8 @@ function c511009671.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(c511009671.atkcon)
-	e2:SetTarget(c511009671.atktg)
-	e2:SetOperation(c511009671.atkop)
+	e2:SetTarget(c511009671.lptg)
+	e2:SetOperation(c511009671.lpop)
 	c:RegisterEffect(e2)
 end
 function c511009671.matfilter(c,lc,sumtype,tp)
@@ -41,13 +40,13 @@ end
 function c511009671.filter(c,card)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(card)
 end
-function c511009671.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009671.lptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009671.filter(chkc) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c511009671.filter,tp,LOCATION_MZONE,0,1,1,nil,e:GetHandler())
 end
-function c511009671.atkop(e,tp,eg,ep,ev,re,r,rp)
+function c511009671.lpop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if e:GetHandler():IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		Duel.Recover(tp,tc:GetLink()*300,REASON_EFFECT)
