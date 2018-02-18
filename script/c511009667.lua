@@ -77,7 +77,7 @@ function c511009667.zonefilter(tp)
 	local lg=Duel.GetMatchingGroup(c511009667.lkfilter,tp,LOCATION_MZONE,0,nil)
 	local zone=0
 	for tc in aux.Next(lg) do
-		zone=zone|tc:GetLinkedZone()>>16
+		zone=zone|tc:GetLinkedZone()
 	end
 	return zone
 end
@@ -93,7 +93,7 @@ function c511009667.spop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=c511009667.zonefilter(tp)
 	if Duel.GetLocationCountFromEx(tp)<=0 and zone~=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511009667.spfilter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,zone)
+	local g=Duel.SelectMatchingCard(tp,c511009667.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,zone)
 	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) then
 		Duel.Recover(tp,ev,REASON_EFFECT)
 	end
