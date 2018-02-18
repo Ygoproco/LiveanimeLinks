@@ -34,12 +34,13 @@ function c511009670.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-function c511009670.filter(c)
+function c511009670.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
 end
 function c511009670.descon(e)
-	return not Duel.IsExistingMatchingCard(c511009670.filter,0,LOCATION_MZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c511009670.desfilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
 end
+
 
 function c511009670.filter2(c,card)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(card)
