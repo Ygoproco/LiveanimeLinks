@@ -11,6 +11,7 @@ function c511009666.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	e1:SetCondition(c511009666.matcon)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	
 	--atk
