@@ -45,7 +45,6 @@ function c511009671.lptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c511009671.filter,tp,LOCATION_MZONE,0,1,1,nil,e:GetHandler())
-	Duel.SelectTarget(tp,c511009901.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c511009671.lpop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
