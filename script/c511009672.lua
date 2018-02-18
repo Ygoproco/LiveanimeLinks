@@ -16,15 +16,16 @@ function c511009672.initial_effect(c)
 	e2:SetCode(EFFECT_SELF_DESTROY)
 	e2:SetCondition(c511009672.descon)
 	c:RegisterEffect(e2)
-	--special summon
+	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(1353770,0))
+	e3:SetDescription(aux.Stringid(53274132,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetCountLimit(1)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTarget(c511009672.target)
-	e3:SetOperation(c511009672.operation)
+	e3:SetCountLimit(1)
+	e3:SetTarget(c511009672.sptg)
+	e3:SetOperation(c511009672.spop)
 	c:RegisterEffect(e3)
 	
 	--set
@@ -35,7 +36,6 @@ function c511009672.initial_effect(c)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetHintTiming(TIMING_STANDBY_PHASE)
-	e4:SetCondition(c511009672.setcon)
 	e4:SetCost(c511009672.setcost)
 	e4:SetTarget(c511009672.settg)
 	e4:SetOperation(c511009672.setop)
@@ -62,25 +62,25 @@ function c511009672.descon(e)
 end
 
 
-
-function c511009672.filter(c,e,sp)
-	return c:IsRace(RACE_PLANT) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,sp,false,false)
+function c511009672.spfilter(c,e,tp)
+	return c:IsLevelBelow(4) and c:IsRace(RACE_PLANT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c511009672.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009672.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511009672.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c511009672.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
-end
-function c511009672.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0 then return end
+		and Duel.IsExistingTarget(c511009672.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511009672.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.SelectTarget(tp,c511009672.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function c511009672.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
+
 
 
 
@@ -89,9 +89,7 @@ function c511009672.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c511009672.setfilter(c,e,tp)
-		local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
-		if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then ct=ct-1 end
-		return c:IsSSetable() and c:IsType(TYPE_TRAP) and ct>0
+		c:IsType(TYPE_TRAP) and c:IsSSetable(true) and (c:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0)
 end
 function c511009672.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511009672.setfilter(chkc,e,tp) end
