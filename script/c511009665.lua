@@ -32,7 +32,6 @@ end
 function c511009665.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 or not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=g:GetFirst()
 	local c=e:GetHandler()
 	Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
 	Duel.SpecialSummonComplete()

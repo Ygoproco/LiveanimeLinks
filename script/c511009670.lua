@@ -34,12 +34,13 @@ function c511009670.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-function c511009670.filter(c)
+function c511009670.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
 end
 function c511009670.descon(e)
-	return not Duel.IsExistingMatchingCard(c511009670.filter,0,LOCATION_MZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c511009670.desfilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
 end
+
 
 function c511009670.filter2(c,card)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(card)
@@ -58,7 +59,7 @@ function c511009670.redop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 		e2:SetCondition(c511009670.rdcon)
-		e2::SetLabel(tc:GetLink())
+		e2:SetLabel(tc:GetLink())
 		e2:SetOperation(c511009670.rdop)
 		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
 		c:RegisterEffect(e2)

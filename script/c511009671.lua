@@ -29,11 +29,11 @@ function c511009671.matfilter(c,lc,sumtype,tp)
 	return c:IsType(TYPE_NORMAL,lc,sumtype,tp) and c:IsRace(RACE_PLANT,lc,sumtype,tp)
 end
 
-function c511009671.filter(c)
+function c511009671.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
 end
 function c511009671.descon(e)
-	return not Duel.IsExistingMatchingCard(c511009671.filter,0,LOCATION_MZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c511009671.desfilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
 end
 
 

@@ -25,24 +25,24 @@ function c511009669.initial_effect(c)
 	e2:SetOperation(c511009669.atkop)
 	c:RegisterEffect(e2)
 	--destroy
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(96622984,1))
-	e2:SetCategory(CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetTarget(c511009669.destg)
-	e2:SetOperation(c511009669.atkop)
-	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(96622984,1))
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_BATTLE_START)
+	e3:SetTarget(c511009669.destg)
+	e3:SetOperation(c511009669.desop)
+	c:RegisterEffect(e3)
 end
 function c511009669.matfilter(c,lc,sumtype,tp)
 	return c:IsType(TYPE_NORMAL,lc,sumtype,tp) and c:IsRace(RACE_PLANT,lc,sumtype,tp)
 end
 
-function c511009669.filter(c)
+function c511009669.selffilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
 end
 function c511009669.descon(e)
-	return not Duel.IsExistingMatchingCard(c511009669.filter,0,LOCATION_MZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c511009669.selffilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
 end
 
 --------------------------------------------------------
@@ -74,14 +74,14 @@ end
 
 
 --------------------------------------------------------
-function c511009669.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009669.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return false end
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	if chk==0 then return bc and bc:IsOnField() end
 	
 end
-function c511009669.atkop(e,tp,eg,ep,ev,re,r,rp)
+function c511009669.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=c:GetBattleTarget()
 	

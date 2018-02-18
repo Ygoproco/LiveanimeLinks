@@ -31,11 +31,11 @@ function c511009673.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		if tc:IsFacedown() then Duel.ConfirmCards(tp,tc) end
 		if tc:IsType(TYPE_TRAP) then 
-			Duel.Remove(g,POS_UP,REASON_EFFECT)
+			Duel.Remove(tc,POS_UP,REASON_EFFECT)
 			local code=tc:GetCode()
-			local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_DECK,nil,code)
+			local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_DECK+LOCATION_HAND,nil,code)
 			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-			g=Duel.GetFieldGroup(tp,0,LOCATION_DECK)
+			g=Duel.GetFieldGroup(tp,0,LOCATION_DECK+LOCATION_HAND)
 			Duel.ConfirmCards(tp,g)
 			Duel.ShuffleDeck(1-tp)
 		end

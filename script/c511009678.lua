@@ -11,6 +11,7 @@ function c511009678.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	e1:SetCondition(c511009678.matcon)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	
 	--atk
@@ -24,7 +25,6 @@ function c511009678.initial_effect(c)
 	--damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(11384280,0))
-	e3:SetCategory(CATEGORY_DAMAGE)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
@@ -44,7 +44,7 @@ function c511009678.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(sg,REASON_COST)
 end
 function c511009678.filter(c)
-	return c:IsType(TYPE_LINK) and c:IsRace(RACE_ZOMBIE) and c:IsAbleToExtra()
+	return c:IsType(TYPE_LINK) and c:IsRace(RACE_PLANT) and c:IsAbleToExtra()
 end
 function c511009678.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511009678.filter(chkc) end
