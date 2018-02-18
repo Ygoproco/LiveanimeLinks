@@ -20,17 +20,17 @@ function c511009683.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not c:IsPublic() and c:GetFlagEffect(511009683)==0 end
 	c:RegisterFlagEffect(511009683,RESET_CHAIN,0,1)
 end
-function c511009683.filter(c)
+function c511009683.filter(c,e,tp)
 	return c:IsSetCard(0xfc) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009683.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return  chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c511009683.filter(chkc) end
-	local c=e:GetHandler()
+		if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c41158734.spfilter(chkc,e,tp) end
+		local c=e:GetHandler()
 	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c511009683.filter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,c511009683.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+		and Duel.IsExistingTarget(c511009683.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,c511009683.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c511009683.operation(e,tp,eg,ep,ev,re,r,rp)
