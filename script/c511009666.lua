@@ -25,11 +25,11 @@ function c511009666.initial_effect(c)
 	
 	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(511009666,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DAMAGE)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetCondition(c511009666.spcon)
 	e3:SetTarget(c511009666.sptg)
@@ -47,7 +47,7 @@ end
 
 
 function c511009666.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep==tp
+	return ep==tp and bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
 end
 
 function c511009666.filter(c,e,tp,zone)
@@ -75,8 +75,6 @@ end
 
 function c511009666.spop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=c511009666.zonefilter(tp)
-	Debug.Message("op")
-	Debug.Message(zone)
 	if Duel.GetLocationCountFromEx(tp)<=0 and zone~=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511009666.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,zone)
