@@ -3,8 +3,7 @@ function c511009680.initial_effect(c)
 	
 	--link summon
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_PLANT),2)
-	
+	aux.AddLinkProcedure(c,c511009680.matfilter,2)
 	--Immune
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -33,6 +32,9 @@ function c511009680.initial_effect(c)
 	e3:SetOperation(c511009680.desop)
 	c:RegisterEffect(e3)
 	Duel.AddCustomActivityCounter(511009680,ACTIVITY_ATTACK,c511009680.counterfilter)
+end
+function c511009680.matfilter(c,lc,sumtype,tp)
+	return c:IsType(TYPE_LINK,lc,sumtype,tp) and c:IsRace(RACE_PLANT,lc,sumtype,tp)
 end
 function c511009680.counterfilter(c)
     return c:GetSequence()<5
