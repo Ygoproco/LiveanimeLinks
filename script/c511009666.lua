@@ -65,7 +65,7 @@ function c511009666.zonefilter(tp)
 	return zone
 end
 function c511009666.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local zoneX=c511009666.zonefilter(tp)
+	local zone=c511009666.zonefilter(tp)
 	if chk==0 then
 		local zone=c511009666.zonefilter(tp)
 		return zone~=0 and Duel.IsExistingMatchingCard(c511009666.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,zone)
