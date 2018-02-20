@@ -60,7 +60,7 @@ function c511010521.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511010521.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp
+	return e:GetHandler():IsReason(REASON_DESTROY) and e:GetHandler():GetPreviousControler()==tp
 end
 function c511010521.spfilter(c,e,tp)
 	return c:IsCode(39823987) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
