@@ -23,12 +23,8 @@ function c511009675.initial_effect(c)
 	e2:SetOperation(c511009675.damop)
 	c:RegisterEffect(e2)
 	
-	 -- Once per turn, when your opponent's monster declares a direct attack:
-	 -- You can target that attacking monster; negate the attack, 
-	 -- then that targeted monster can make a second attack in a row,
-	 -- and must attack a "Sunvine" monster you control. 
 	--negate attack
-	local e=Effect.CreateEffect(c)
+	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(94804055,0))
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_QUICK_O)

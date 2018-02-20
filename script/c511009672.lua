@@ -31,11 +31,10 @@ function c511009672.initial_effect(c)
 	--set
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(89856523,0))
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_SZONE)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(TIMING_STANDBY_PHASE)
+	e4:SetCountLimit(1)
 	e4:SetCost(c511009672.setcost)
 	e4:SetTarget(c511009672.settg)
 	e4:SetOperation(c511009672.setop)
@@ -63,7 +62,7 @@ end
 
 
 function c511009672.spfilter(c,e,tp)
-	return c:IsLevelBelow(4) and c:IsRace(RACE_PLANT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(4) and c:IsRace(RACE_PLANT) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009672.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511009672.spfilter(chkc,e,tp) end
