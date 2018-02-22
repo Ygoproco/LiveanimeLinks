@@ -31,4 +31,5 @@ function c511000149.drop(e,tp,eg,ep,ev,re,r,rp,chk)
 	if g:GetCount()>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
+	Duel.ShuffleHand(p)
 end
