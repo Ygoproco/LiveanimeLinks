@@ -38,20 +38,19 @@ end
 function c511010520.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.PayLPCost(tp,1000)
 end
-function c511010520.lvfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO)
+function c511010520.lvfilter(c,lv)
+	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:GetLevel()~=lv
 end
 function c511010520.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511010520.lvfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511010520.lvfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) 
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511010520.lvfilter(chkc) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511010520.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler(),e:GetHandler():GetLevel()) 
 		and e:GetHandler():GetLevel()>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c511010520.lvfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 end
 function c511010520.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local tc=Duel.SelectMatchingCard(tp,c511010520.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c,c:GetLevel()):GetFirst()
+	if c:IsFaceup() and tc and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetType(EFFECT_TYPE_SINGLE)

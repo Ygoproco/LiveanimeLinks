@@ -59,8 +59,10 @@ function c511010517.top(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,53855410,0,0x4011,400,400,1,RACE_WARRIOR,ATTRIBUTE_DARK) then return end
 	for i=1,ft do
+		if Duel.SelectYesNo(tp,aux.Stringid(23571046,0)) then
 		local token=Duel.CreateToken(tp,53855409+i)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 	Duel.SpecialSummonComplete()
 end
