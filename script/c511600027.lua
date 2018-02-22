@@ -13,7 +13,7 @@ function c511600027.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x201))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x102))
 	e2:SetValue(300)
 	c:RegisterEffect(e2)	
 	local e3=e2:Clone()
@@ -49,7 +49,7 @@ function c511600027.mtop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,6)
 	local g=Duel.GetDecktopGroup(tp,6)
 	if g:GetCount()>0 then
-		local tg=g:Filter(Card.IsSetCard,nil,0x201)
+		local tg=g:Filter(Card.IsSetCard,nil,0x102)
 		if tg:GetCount()>0 then
 			Duel.DisableShuffleCheck()
 			Duel.SendtoGrave(tg,REASON_EFFECT+REASON_REVEAL)
@@ -63,7 +63,7 @@ function c511600027.mtop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511600027.spfilter(c,e,tp)
-	return c:IsSetCard(0x201) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x102) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c511600027.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -72,26 +72,25 @@ function c511600027.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511600027.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<=0 then return end
+	local g=Duel.GetMatchingGroup(c511600027.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
+	if ft<1 or g:GetCount()==0 then return end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	local mg=Duel.GetMatchingGroup(c511600027.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
-	local g=Group.CreateGroup()
-	::start::
-		local cancel=g:GetCount()>0
-		local cg=mg
-		if g:GetCount()>0 then
-			cg=mg:Filter(aux.NOT(Card.IsCode),nil,g:GetFirst():GetCode())
+	local sg=Group.CreateGroup()
+	while sg:GetCount()<math.min(ft,2) do
+		local cancel=sg:GetCount()>0
+		local cg=g
+		if sg:GetCount()>0 then
+			cg=g:Filter(aux.NOT(Card.IsCode),nil,sg:GetFirst():GetCode())
 		end
-		local tc=Group.SelectUnselect(cg,g,tp,cancel,cancel,1,2)
-		if not tc then goto jump end
-		if not g:IsContains(tc) then
-			g:AddCard(tc)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=Group.SelectUnselect(cg,sg,tp,cancel,cancel,1,2)
+		if not tc then break end
+		if not sg:IsContains(tc) then
+			sg:AddCard(tc)
 		else
-			g:RemoveCard(tc)
+			sg:RemoveCard(tc)
 		end
-		if ft==1 then goto jump end
-		goto start
-	::jump::
-	if g:GetCount()==0 then return end
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
+	if sg:GetCount()==0 then return end
+	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 end

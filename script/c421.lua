@@ -34,6 +34,13 @@ function c421.initial_effect(c)
 		last:SetTarget(c421.lastcon)
 		last:SetOperation(c421.lastop)
 		Duel.RegisterEffect(last,0)
+		local rel=Effect.CreateEffect(c)
+		rel:SetType(EFFECT_TYPE_FIELD)
+		rel:SetCode(EFFECT_CANNOT_RELEASE)
+		rel:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		rel:SetTargetRange(1,1)
+		rel:SetTarget(c421.rellimit)
+		Duel.RegisterEffect(rel,0)
 	end
 end
 function c421.rank1(c)
@@ -75,9 +82,6 @@ end
 function c421.control(e,c)
 	return c:GetFlagEffect(513000065)>0 and c:IsFaceup() and not c:IsHasEffect(513000134)
 end
-function c421.lfilter(c)
-	return c:GetFlagEffect(513000065)>0 and c:IsFaceup()
-end
 function c421.lastfilter(c)
 	local effs={c:GetCardEffect(EFFECT_UNRELEASABLE_SUM)}
 	for _,eff in ipairs(effs) do
@@ -85,6 +89,9 @@ function c421.lastfilter(c)
 		return false end
 	end
 	return true
+end
+function c421.lfilter(c)
+	return c:GetFlagEffect(513000065)>0 and c:IsFaceup()
 end
 function c421.lastcon(e,tp,eg,ev,ep,re,r,rp)
 	local g=Duel.GetMatchingGroup(c421.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
@@ -99,7 +106,6 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 		ep:SetDescription(aux.Stringid(4011,0))
 		ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ep:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		ep:SetCountLimit(1)
 		ep:SetRange(LOCATION_MZONE)
 		ep:SetCode(EVENT_PHASE+PHASE_END)
 		ep:SetReset(RESET_EVENT+0x1fe0000)
@@ -114,12 +120,8 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 		r1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		r1:SetRange(LOCATION_MZONE)
 		r1:SetReset(RESET_EVENT+0x1fe0000)
-		r1:SetValue(c421.recon)
+		r1:SetValue(c421.sumlimit)
 		c:RegisterEffect(r1)
-		local r2=r1:Clone()
-		r2:SetCondition(c421.recon2)
-		r2:SetCode(EFFECT_UNRELEASABLE_NONSUM)
-		c:RegisterEffect(r2)
 	--battle
 		local dg=r1:Clone()
 		dg:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -128,19 +130,49 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 		local bt=dg:Clone()
 		bt:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 		c:RegisterEffect(bt)
+	-- immune to leaving
+		local im=Effect.CreateEffect(c)
+		im:SetCode(EFFECT_SEND_REPLACE)
+		im:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		im:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		im:SetRange(LOCATION_MZONE)
+		im:SetReset(RESET_EVENT+0x1fe0000)
+		im:SetLabel(513000065)
+		im:SetTarget(c421.reptg)
+		im:SetValue(function(e,c) return false end)
+		c:RegisterEffect(im)
 	end)
+end
+function c421.rellimit(e,c,tp,sumtp)
+	return c:GetFlagEffect(513000065)>0 and c:IsFaceup() and c:IsControler(1-tp)
+end
+function c421.sumlimit(e,c)
+	if not c then return false end
+	return e:GetHandler():GetFlagEffect(513000065)>0 and e:GetHandler():IsFaceup() and not c:IsControler(e:GetHandlerPlayer())
+end
+function c421.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsReason(REASON_EFFECT) and re and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+		and c:GetFlagEffect(513000065)>0 end
+	return true
 end
 function c421.tglimit(e,c)
 	return c:GetFlagEffectLabel(513000065) and e:GetHandler():GetFlagEffectLabel(513000065)>c:GetFlagEffectLabel(513000065) or false
 end
-function c421.recon(e,c)
-	return e:GetHandler():GetFlagEffect(513000065)>0 and c:GetControler()~=e:GetHandler():GetControler()
-end
-function c421.recon2(e)
-	return e:GetHandler():GetFlagEffect(513000065)>0 and Duel.GetTurnPlayer()~=e:GetOwnerPlayer()
-end
 function c421.stgcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(513000065)>0
+	local c=e:GetHandler()
+	local owner=false
+	local effs={c:GetCardEffect()}
+	for _,eff in ipairs(effs) do
+		owner=(eff:GetOwner()~=c and not eff:GetOwner():IsCode(421)
+			and not eff:IsHasProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			and (eff:GetTarget()==aux.PersistentTargetFilter or not eff:IsHasType(EFFECT_TYPE_GRANT+EFFECT_TYPE_FIELD)))
+			and (eff:GetOwner()~=c and not eff:GetOwner():IsCode(421)
+			and not eff:IsHasProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			and (eff:GetTarget()==aux.PersistentTargetFilter or not eff:IsHasType(EFFECT_TYPE_GRANT+EFFECT_TYPE_FIELD)))
+			or owner
+	end
+	return c:GetFlagEffect(513000065)>0 and (owner or c:IsSummonType(SUMMON_TYPE_SPECIAL))
 end
 function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
