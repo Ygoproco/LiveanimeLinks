@@ -69,21 +69,35 @@ function c511600039.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:RegisterFlagEffect(511600039,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(c511600039.cfilter,nil,e,tp)
-	for tc in aux.Next(g) do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-		tc:RegisterEffect(e1)
-	end
+	g:KeepAlive()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_DESTROY_SUBSTITUTE)
+	e1:SetLabelObject(g)
+	e1:SetTarget(c511600039.destg)
+	e1:SetValue(c511600039.value)
+	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	Duel.RegisterEffect(e1,tp)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 	e2:SetOperation(c511600039.damop)
-	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+	e2:SetReset(RESET_PHASE+PHASE_DAMAGE)
 	Duel.RegisterEffect(e2,tp)
 end
 function c511600039.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(Duel.GetBattleDamage(tp)>0 and tp or 1-tp,0)
+end
+function c511600039.desfilter(c,g)
+	return c:IsLocation(LOCATION_ONFIELD) and c:IsType(TYPE_MONSTER)
+		and c:IsReason(REASON_BATTLE) and c:IsRelateToBattle() and g:IsContains(c)
+end
+function c511600039.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		return eg:IsExists(c511600039.desfilter,1,nil,e:GetLabelObject())
+	end
+	return true
+end
+function c511600039.value(e,c)
+	return c511600039.desfilter(c,e:GetLabelObject())
 end
