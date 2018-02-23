@@ -8,7 +8,6 @@ function c511009667.initial_effect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetCode(EFFECT_MATERIAL_CHECK)
     e0:SetValue(c511009667.valcheck)
-    e0:SetLabelObject(e3)
     c:RegisterEffect(e0)
     --cannot link material
     local e1=Effect.CreateEffect(c)
@@ -32,6 +31,7 @@ function c511009667.initial_effect(c)
     e3:SetCode(EVENT_DAMAGE)
     e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
     e3:SetRange(LOCATION_MZONE)
+    e3:SetLabelObject(e0)
     e3:SetCountLimit(2)
     e3:SetCondition(c511009667.spcon)
     e3:SetTarget(c511009667.sptg)
@@ -47,13 +47,13 @@ function c511009667.matfilter(c)
 end
 function c511009667.valcheck(e,c)
     if c:GetMaterial():IsExists(c511009667.matfilter,1,nil,tp) then
-        e:GetLabelObject():SetLabel(1)
+        e:SetLabel(1)
     else
-        e:GetLabelObject():SetLabel(0)
+        e:SetLabel(0)
     end
 end
 function c511009667.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return ep==tp and bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 and e:GetLabel()>0
+    return ep==tp and bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 and e:GetLabelObject():GetLabel()==1
 end
 function c511009667.filter(c,e,tp,zone)
     return c:IsSetCard(0x575) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
