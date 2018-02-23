@@ -23,8 +23,6 @@ function c511009682.initial_effect(c)
 	e3:SetCondition(c511009682.descon2)
 	e3:SetOperation(c511009682.desop2)
 	c:RegisterEffect(e3)
-	
-	-- If you take battle or effect damage: You can send this card to the GY; inflict damage to your opponent equal to the damage you took.
 	--damage
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_DAMAGE)
@@ -32,7 +30,7 @@ function c511009682.initial_effect(c)
 	e4:SetCode(EVENT_DAMAGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e4:SetCost(c511009682.drcost)
+	e4:SetCost(c511009682.damcost)
 	e4:SetCondition(c511009682.damcon)
 	e4:SetTarget(c511009682.damtg)
 	e4:SetOperation(c511009682.damop)
