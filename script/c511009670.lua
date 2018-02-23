@@ -1,10 +1,8 @@
 --Sunvine Gardna
 function c511009670.initial_effect(c)
-	
 	--link summon
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_PLANT),1,1)
-	
 	--self destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -33,20 +31,17 @@ function c511009670.initial_effect(c)
 	e3:SetOperation(c511009670.operation)
 	c:RegisterEffect(e3)
 end
-
 function c511009670.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
+	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(e:GetHandler())
 end
 function c511009670.descon(e)
-	return not Duel.IsExistingMatchingCard(c511009670.desfilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c511009670.desfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil,e)
 end
-
-
 function c511009670.filter2(c,card)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(card)
 end
 function c511009670.redtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009670.filter2(chkc) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009670.filter2(chkc,e:GetHandler()) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c511009670.filter2,tp,LOCATION_MZONE,0,1,1,nil,e:GetHandler())
@@ -72,7 +67,6 @@ function c511009670.rdop(e,tp,eg,ep,ev,re,r,rp)
 	local red=e:GetLabel()*800
 	Duel.ChangeBattleDamage(ep,ev-red)
 end
-
 function c511009670.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_BATTLE)
 end
