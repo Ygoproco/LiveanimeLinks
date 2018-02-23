@@ -2,7 +2,7 @@
 function c511009671.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,c511009671.matfilter,1,1)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_PLANT),1,1)
 	--self destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -21,9 +21,6 @@ function c511009671.initial_effect(c)
 	e2:SetTarget(c511009671.lptg)
 	e2:SetOperation(c511009671.lpop)
 	c:RegisterEffect(e2)
-end
-function c511009671.matfilter(c,lc,sumtype,tp)
-	return c:IsType(TYPE_NORMAL,lc,sumtype,tp) and c:IsRace(RACE_PLANT,lc,sumtype,tp)
 end
 function c511009671.desfilter(c,e)
 	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK)  and c:GetLinkedGroup():IsContains(e:GetHandler())
