@@ -1,6 +1,5 @@
 --Sunavalon Dryatrentiay
 function c511009680.initial_effect(c)
-	
 	--link summon
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,c511009680.matfilter,2)
@@ -19,7 +18,6 @@ function c511009680.initial_effect(c)
 	e2:SetCode(EFFECT_IGNORE_BATTLE_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e2)
-	
 	-- destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(76614340,0))
@@ -28,7 +26,7 @@ function c511009680.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetCost(c511009680.descost)
-	e3:SetTarget(c511009666.destg)
+	e3:SetTarget(c511009680.destg)
 	e3:SetOperation(c511009680.desop)
 	c:RegisterEffect(e3)
 	Duel.AddCustomActivityCounter(511009680,ACTIVITY_ATTACK,c511009680.counterfilter)
@@ -39,11 +37,9 @@ end
 function c511009680.counterfilter(c)
     return c:GetSequence()<5
 end
-
 function c511009680.tgvalue(e,re,rp)
 	return rp~=e:GetHandlerPlayer()
 end
-
 function c511009680.costfilter(c,lg)
 	return c:IsFaceup() and c:IsRace(RACE_PLANT) and c:IsType(TYPE_LINK) and lg:IsContains(c)
 end
