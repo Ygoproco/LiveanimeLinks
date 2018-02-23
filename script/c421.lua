@@ -103,7 +103,7 @@ function c421.lastop(e,tp,eg,ev,ep,re,r,rp)
 	tg:ForEach(function(c)
 	--last 1 turn
 		local ep=Effect.CreateEffect(c)
-		ep:SetDescription(aux.Stringid(4011,0))
+		ep:SetDescription(aux.Stringid(4011,15))
 		ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ep:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		ep:SetRange(LOCATION_MZONE)
