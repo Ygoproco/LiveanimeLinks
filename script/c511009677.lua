@@ -35,7 +35,7 @@ function c511009677.initial_effect(c)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
 end
-function c511009677.thcon(e,tp,eg,ep,ev,re,r,rp)
+function c511009677.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if not d then return false end
