@@ -7,7 +7,7 @@ function c513000180.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c513000180.cost)
 	e1:SetTarget(c513000180.target)
-	e1:SetOperation(c513000180.operation)
+	e1:SetOperation(c513000180.activate)
 	c:RegisterEffect(e1)
 end
 function c513000180.cfilter(c)
