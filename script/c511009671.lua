@@ -39,7 +39,7 @@ function c511009671.lptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511009671.lpop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if e:GetHandler():IsRelateToEffect(e) and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		Duel.Recover(tp,tc:GetLink()*300,REASON_EFFECT)
 	end
 end
