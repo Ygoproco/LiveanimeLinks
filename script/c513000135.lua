@@ -123,18 +123,15 @@ function c513000135.setcon(e,c)
 end
 -----------------------------------------------------------------
 function c513000135.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(e:GetHandler():GetAttack())
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,e:GetHandler():GetAttack())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),1-tp,LOCATION_MZONE)
 end
 function c513000135.desop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Damage(p,d,REASON_EFFECT)
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
-	Duel.Destroy(g,REASON_EFFECT)
+	Duel.Damage(Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER),e:GetHandler():GetAttack(),REASON_EFFECT)
+	Duel.Destroy(Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil),REASON_EFFECT)
 end
 -----------------------------------------------------------------
 function c513000135.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
