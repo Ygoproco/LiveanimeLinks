@@ -62,6 +62,15 @@ function c511009441.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c511009441.imfilter)
 	c:RegisterEffect(e6)
+	local e61=Effect.CreateEffect(c)
+	e61:SetCode(EFFECT_SEND_REPLACE)
+	e61:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e61:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e61:SetRange(LOCATION_MZONE)
+	e61:SetCondition(c511009441.indcon)
+	e61:SetTarget(c511009441.reptg)
+	e61:SetValue(function(e,c) return false end)
+	c:RegisterEffect(e61)
 	--immune to Fusion/Synchro/Xyz
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_FIELD)
@@ -159,6 +168,10 @@ end
 function c511009441.imfilter(e,te)
 	if not te then return false end
 	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
+end
+function c511009441.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return re and e:GetHandler():IsReason(REASON_EFFECT) and r&REASON_EFFECT~=0 end
+	return true
 end
 function c511009441.efilter(e,te)
 	return te:IsActiveType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()

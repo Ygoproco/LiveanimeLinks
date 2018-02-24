@@ -152,7 +152,7 @@ function c421.sumlimit(e,c)
 end
 function c421.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsReason(REASON_EFFECT) and re and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+	if chk==0 then return c:IsReason(REASON_EFFECT) and r&REASON_EFFECT~=0 and re and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
 		and c:GetFlagEffect(513000065)>0 end
 	return true
 end
