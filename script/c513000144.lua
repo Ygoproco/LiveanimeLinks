@@ -34,6 +34,10 @@ function c513000144.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_SUMMON)
 	e4:SetTargetRange(1,0)
 	c:RegisterEffect(e4)
+	--Cannot Normal Summon Monsters
+	local e4a=e4:Clone()
+	e4a:SetCode(EFFECT_CANNOT_MSET)
+	c:RegisterEffect(e4a)
 	--Opponents monsters must attack
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)
