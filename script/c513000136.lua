@@ -14,10 +14,8 @@ function c513000136.initial_effect(c)
 	e1:SetOperation(c513000136.sumonop)
 	e1:SetValue(SUMMON_TYPE_ADVANCE)
 	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
+	local e2=e1:Clone()
 	e2:SetCode(EFFECT_LIMIT_SET_PROC)
-	e2:SetCondition(c513000136.setcon)
 	c:RegisterEffect(e2)
 	--Race "Dragon"
 	local e3=Effect.CreateEffect(c)
@@ -68,10 +66,6 @@ function c513000136.sumonop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectTribute(tp,c,3,3)
 	c:SetMaterial(g)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
-end
-function c513000136.setcon(e,c)
-	if not c then return true end
-	return false
 end
 -------------------------------------------------------------------
 function c513000136.atkfilter(c,e,tp)
