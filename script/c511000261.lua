@@ -32,16 +32,19 @@ function c511000261.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
-	--Tribute to Increase ATK
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(511000261,1))
-	e5:SetCategory(CATEGORY_ATKCHANGE)
-	e5:SetType(EFFECT_TYPE_IGNITION)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCountLimit(1)
-	e5:SetCost(c511000261.increaseatkcost)
-	e5:SetOperation(c511000261.increaseatkop)
+	local e5=e3:Clone()
+	e5:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e5)
+	--Tribute to Increase ATK
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(511000261,1))
+	e6:SetCategory(CATEGORY_ATKCHANGE)
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCountLimit(1)
+	e6:SetCost(c511000261.atkcost)
+	e6:SetOperation(c511000261.atkop)
+	c:RegisterEffect(e6)
 end
 function c511000261.mzfilter(c,tp)
 	return c:IsControler(tp) and c:GetSequence()<5
@@ -81,7 +84,7 @@ function c511000261.tokentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,ct,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,ct,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,ct,tp,0)
 end
 function c511000261.tokenop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
@@ -98,7 +101,7 @@ function c511000261.tokenop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 end
-function c511000261.increaseatkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511000261.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,2,e:GetHandler()) end
 	local g=Duel.SelectReleaseGroup(tp,nil,2,2,e:GetHandler())
 	local atk=0
@@ -110,7 +113,7 @@ function c511000261.increaseatkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(atk)
 	Duel.Release(g,REASON_COST)
 end
-function c511000261.increaseatkop(e,tp,eg,ep,ev,re,r,rp)
+function c511000261.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFaceup() and c:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)

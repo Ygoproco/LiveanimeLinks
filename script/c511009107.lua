@@ -16,7 +16,7 @@ function c511009107.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetCondition(c511009107.condition2)
-	e2:SetOperation(c511009107.operation2)
+	e2:SetOperation(c511009107.operation)
 	c:RegisterEffect(e2)
 	--atkup
 	local e3=Effect.CreateEffect(c)
@@ -32,15 +32,16 @@ function c511009107.initial_effect(c)
 	e3:SetOperation(c511009107.atkop)
 	c:RegisterEffect(e3)
 end
+function c511009107.scfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0xc6)
+end
 function c511009107.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local phase=Duel.GetCurrentPhase()
 	if (phase~=PHASE_DAMAGE and phase~=PHASE_DAMAGE_CAL) or Duel.IsDamageCalculated() then return false end
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	local seq=e:GetHandler():GetSequence()
-	local pc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
 	return ((a:IsControler(tp) and a:IsRelateToBattle()) or (d and d:IsControler(tp) and d:IsRelateToBattle())) 
-		and pc and pc:IsSetCard(0xc6)
+		and Duel.IsExistingMatchingCard(c511009107.scfilter,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,e:GetHandler())
 end
 function c511009107.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -117,23 +118,12 @@ function c511009107.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511009107.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(c511009107.cfilter,nil,e,tp)
-	for tc in aux.Next(g) do
+	g:ForEach(function(tc)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 		e1:SetValue(1)
 		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 		tc:RegisterEffect(e1)
-	end
-end
-function c511009107.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(c511009107.cfilter,nil,e,tp)
-	for tc in aux.Next(g) do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-		e1:SetValue(1)
-		e1:SetReset(RESET_CHAIN)
-		tc:RegisterEffect(e1)
-	end
+	end)
 end

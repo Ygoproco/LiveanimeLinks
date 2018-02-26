@@ -1,4 +1,5 @@
 --Sunvine Thrasher
+--cleaned up by MLD
 function c511009669.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
@@ -16,7 +17,7 @@ function c511009669.initial_effect(c)
 	e2:SetDescription(aux.Stringid(3954901,0))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetTarget(c511009669.atktg)
 	e2:SetOperation(c511009669.atkop)
@@ -34,22 +35,18 @@ end
 function c511009669.matfilter(c,lc,sumtype,tp)
 	return c:IsType(TYPE_NORMAL,lc,sumtype,tp) and c:IsRace(RACE_PLANT,lc,sumtype,tp)
 end
---------------------------------------------------------
-function c511009669.selffilter(c,e)
-	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(e:GetHandler())
+function c511009669.filter(c,sc,atk)
+	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(sc) and (not atk or c:GetLink()>0)
 end
 function c511009669.descon(e)
-	return not Duel.IsExistingMatchingCard(c511009669.selffilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil,e)
-end
---------------------------------------------------------
-function c511009669.filter(c,card)
-	return c:IsFaceup() and c:IsSetCard(0x574) and c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(card)
+	return not Duel.IsExistingMatchingCard(c511009669.filter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil,e:GetHandler())
 end
 function c511009669.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009669.filter(chkc,e:GetHandler()) end
+	local c=e:GetHandler()
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009669.filter(chkc,c,true) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c511009669.filter,tp,LOCATION_MZONE,0,1,1,nil,e:GetHandler())
+	Duel.SelectTarget(tp,c511009669.filter,tp,LOCATION_MZONE,0,1,1,nil,c,true)
 end
 function c511009669.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -63,10 +60,9 @@ function c511009669.atkop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 	end
 end
---------------------------------------------------------
 function c511009669.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local bc=e:GetHandler():GetBattleTarget()
-	if chk==0 then return bc and bc:IsOnField() end
+	if chk==0 then return bc and bc:IsControler(1-tp) and bc:IsRelateToBattle() end
 end
 function c511009669.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -79,19 +75,10 @@ function c511009669.desop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetOperation(c511009669.sumop)
 	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 	Duel.RegisterEffect(e1,tp)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_DESTROY)
-	e2:SetLabelObject(e1)
-	e2:SetOperation(c511009669.checkop)
-	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
-	tc:RegisterEffect(e2)
-end
-function c511009669.checkop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetLabelObject():SetLabel(1)
 end
 function c511009669.sumcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetLabel()==1
+	local tc=e:GetLabelObject()
+	return tc and eg:IsContains(tc)
 end
 function c511009669.lkfilter(c)
 	return c:IsSetCard(0x574) and c:IsFaceup() and c:IsType(TYPE_LINK)
@@ -99,17 +86,16 @@ end
 function c511009669.zonefilter(tp)
 	local lg=Duel.GetMatchingGroup(c511009669.lkfilter,tp,LOCATION_MZONE,0,nil)
 	local zone=0
-	for tc in aux.Next(lg) do
+	lg:ForEach(function(tc)
 		zone=zone|tc:GetLinkedZone()
-	end
+	end)
 	return zone
 end
 function c511009669.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	local zone=c511009669.zonefilter(tp)
-	if zone>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone) then 
+	if zone>0 and tc:IsLocation(LOCATION_GRAVE) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone) then 
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
-	e:SetLabel(0)
 	e:Reset()
 end

@@ -1,0 +1,57 @@
+--Tears of a Mermaid
+function c511001524.initial_effect(c)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DISABLE)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_CHAINING)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCondition(c511001524.condition)
+	e1:SetTarget(c511001524.target)
+	e1:SetOperation(c511001524.activate)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_CHANGE_POS)
+	e2:SetCondition(c511001524.condition2)
+	c:RegisterEffect(e2)
+end
+function c511001524.condition(e,tp,eg,ep,ev,re,r,rp)
+	local pos,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_POSITION,CHAININFO_TRIGGERING_LOCATION)
+	return rp~=tp and pos&POS_FACEDOWN>0 and loc&LOCATION_ONFIELD>0
+end
+function c511001524.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and aux.disfilter1(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
+end
+function c511001524.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsFaceup() and not tc:IsDisabled() and tc:IsRelateToEffect(e) then
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e2)
+		local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_SINGLE)
+		e4:SetCode(EFFECT_CANNOT_ATTACK)
+		e4:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e4)
+	end
+end
+function c511001524.cfilter(c,tp)
+	return c:IsControler(1-tp) and c:IsPreviousPosition(POS_FACEDOWN) and c:IsFaceup()
+end
+function c511001524.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c511001524.cfilter,1,nil,tp)
+end
