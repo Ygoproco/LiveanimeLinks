@@ -24,8 +24,8 @@ end
 function c511009683.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
-function c511009683.filter(c,e,tp)
-	return c:IsSetCard(0xfc) and c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c511009683.filter(c,e,tp,tid)
+	return c:GetTurnID()==tid and bit.band(c:GetReason(),REASON_DESTROY)~=0 and c:IsSetCard(0xfc) and c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009683.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c41158734.spfilter(chkc,e,tp) end
