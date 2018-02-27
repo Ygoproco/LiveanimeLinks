@@ -22,16 +22,7 @@ function c511003034.initial_effect(c)
 	e2:SetTarget(c511003034.ztg)
 	e2:SetOperation(c511003034.zop)
 	c:RegisterEffect(e2,false,1)
-	if not c511003034.global_check then
-		c511003034.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511003034.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	aux.CallToken(53244294)
 end
 c511003034.xyz_number=57
 function c511003034.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -43,7 +34,7 @@ end
 function c511003034.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -77,8 +68,4 @@ function c511003034.zop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511003034.disop(e,tp)
 	return e:GetLabel()
-end
-function c511003034.numchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,53244294)
-	Duel.CreateToken(1-tp,53244294)
 end

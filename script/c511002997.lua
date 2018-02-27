@@ -70,7 +70,7 @@ function c511002997.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511002997.procfilter(c,code,e,tp)
-	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial()
+	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 end
 function c511002997.proccon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
@@ -82,6 +82,7 @@ function c511002997.procop(e,tp,eg,ep,ev,re,r,rp)
 	c:SetTurnCounter(ct)
 	if ct==2 then
 		local code=e:GetLabel()
+		if aux.GetMustBeMaterialGroup(tp,nil,tp,c,nil,REASON_FUSION):GetCount()>0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=Duel.SelectMatchingCard(tp,c511002997.procfilter,tp,LOCATION_EXTRA,0,1,1,nil,code,e,tp):GetFirst()
 		if not tc then return end

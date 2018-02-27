@@ -15,13 +15,17 @@ function c100000270.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_DRAW)
 	e2:SetRange(LOCATION_DECK)
 	e2:SetTargetRange(1,0)
-	e2:SetCondition(c100000270.sdcon)
+	e2:SetCondition(c100000270.drcon1)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetCode(EFFECT_DRAW_COUNT)
+	e3:SetRange(LOCATION_DECK)
+	e3:SetTargetRange(1,0)
+	e3:SetCondition(c100000270.drcon2)
 	e3:SetValue(0)
 	c:RegisterEffect(e3)
-	
 end
 function c100000270.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -36,8 +40,11 @@ function c100000270.activate(e,tp,eg,ep,ev,re,r,rp)
 		c:ReverseInDeck()
 	end
 end
-function c100000270.sdcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetDecktopGroup(c:GetControler(),1)
-	return g:GetFirst()==c and c:IsFaceup() and Duel.GetCurrentPhase()==PHASE_DRAW and Duel.GetTurnPlayer()==tp
+function c100000270.drcon1(e)
+	return c100000270.drcon2(e) and Duel.GetCurrentPhase()==PHASE_DRAW
+end
+function c100000270.drcon2(e)
+	local c=e:GetHandler()
+	local g=Duel.GetDecktopGroup(e:GetHandlerPlayer(),1)
+	return g:GetFirst()==c and c:IsFaceup() and Duel.GetTurnPlayer()==e:GetHandlerPlayer()
 end

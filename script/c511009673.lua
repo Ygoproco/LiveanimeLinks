@@ -1,8 +1,9 @@
 --Sunvine Burial
+--fixed by MLD
 function c511009673.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -18,26 +19,23 @@ function c511009673.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511009673.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c511009673.filter(c)
-	return c:IsFacedown() 
+	return c:IsFacedown() and c:GetSequence()<5
 end
 function c511009673.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and c511009673.filter(chkc) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(c511009673.filter,tp,0,LOCATION_SZONE,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c511009673.filter,tp,0,LOCATION_SZONE,1,1,e:GetHandler())
+	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(1-tp) and c511009673.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c511009673.filter,tp,0,LOCATION_SZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	Duel.SelectTarget(tp,c511009673.filter,tp,0,LOCATION_SZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,0)
 end
 function c511009673.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		if tc:IsFacedown() then Duel.ConfirmCards(tp,tc) end
-		if tc:IsType(TYPE_TRAP) then 
-			Duel.Remove(tc,POS_UP,REASON_EFFECT)
-			local code=tc:GetCode()
-			local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_DECK+LOCATION_HAND,nil,code)
+	if tc and tc:IsRelateToEffect(e) and tc:IsFacedown() then
+		Duel.ConfirmCards(tp,tc)
+		if tc:IsType(TYPE_TRAP) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
+			Duel.BreakEffect()
+			local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_DECK+LOCATION_HAND,nil,tc:GetCode())
 			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-			g=Duel.GetFieldGroup(tp,0,LOCATION_DECK+LOCATION_HAND)
-			Duel.ConfirmCards(tp,g)
-			Duel.ShuffleDeck(1-tp)
 		end
 	end
 end

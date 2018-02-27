@@ -49,7 +49,7 @@ function c511000350.activate(e,tp,eg,ep,ev,re,r,rp)
 	if sg:GetCount()>1 and Duel.SendtoGrave(sg,REASON_EFFECT)>0 then
 		local tc=Duel.CreateToken(tp,38109772)
 		if tc then
-			Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end

@@ -14,7 +14,6 @@ function c100000510.initial_effect(c)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(c100000510.spcost)
@@ -42,27 +41,26 @@ function c100000510.recop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 	c:RegisterFlagEffect(100000501,RESET_EVENT+0x1fe0000,0,1)
 end
-function c100000510.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
+function c100000510.costfilter(c,ft,tp)
+	return (c:IsSetCard(0x5008) or c:IsCode(27780618)) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
 end
-function c100000510.filter(c,e,sp)
-	return c:IsFaceup() and (c:IsSetCard(0x5008) or c:IsCode(27780618)) and c:IsCanBeSpecialSummoned(e,0,sp,true,false)
+function c100000510.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return ft>-1 and Duel.CheckReleaseGroup(tp,c100000510.costfilter,1,nil,ft,tp) end
+	local g=Duel.SelectReleaseGroup(tp,c100000510.costfilter,1,1,nil,ft,tp)
+	Duel.Release(g,REASON_COST)
 end
 function c100000510.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c100000510.filter(chkc,e,tp) end
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if e:GetHandler():GetSequence()<5 then ft=ft+1 end
-	if chk==0 then return ft>0 and Duel.IsExistingTarget(c100000510.filter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c100000510.filter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
-function c100000510.spop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)>0 then
-		local e1=Effect.CreateEffect(e:GetHandler())
+function c100000510.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(tc:GetAttack()*2)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
