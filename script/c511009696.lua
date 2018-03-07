@@ -21,7 +21,7 @@ function c511009696.filter(c,e,tp)
 	return c:IsAstral() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009696.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(c511009696.cfilter,tp,LOCATION_DECK,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(c511009696.cfilter,tp,LOCATION_MZONE,0,nil,e,tp)
 	local ct=g:GetCount()*2
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct
