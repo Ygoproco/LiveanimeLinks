@@ -1,3 +1,4 @@
+-- Fallen Angel of Roses (anime)
 function c511002214.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
