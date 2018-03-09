@@ -1,4 +1,5 @@
 --魔天使ローズ・ソーサラー
+-- Fallen Angel of Roses (anime)
 function c511002214.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -22,23 +23,23 @@ function c511002214.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+	aux.CallToken(420)
 end
-function c511002214.spfilter(c,ft)
-	return c:IsFaceup() and c:IsCode(96470883) and c:IsAbleToHandAsCost() and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
+function c511002214.spfilter(c)
+	return c:IsFaceup() and c:IsCode(96470883) and c:IsAbleToHandAsCost() 
 end
 function c511002214.spcon(e,c)
 	if c==nil then return true end
-	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	return ft>-1 and Duel.IsExistingMatchingCard(c511002214.spfilter,tp,LOCATION_ONFIELD,0,1,nil,ft)
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
+		and Duel.IsExistingMatchingCard(c511002214.spfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c511002214.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp,c511002214.spfilter,tp,LOCATION_MZONE,0,1,1,nil,Duel.GetLocationCount(tp,LOCATION_MZONE))
+	local g=Duel.SelectMatchingCard(tp,c511002214.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SendtoHand(g,nil,REASON_COST)
 end
 function c511002214.filter(c,tp)
-	return c:IsFaceup() and c:IsCode(96470883) and c:IsLocation(LOCATION_MZONE) and c:GetSummonPlayer()==tp
+	return c:IsFaceup() and c:IsAngel() and c:IsLocation(LOCATION_MZONE) and c:GetSummonPlayer()==tp
 end
 function c511002214.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(c511002214.filter,1,nil,tp) end
