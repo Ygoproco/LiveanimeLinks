@@ -94,7 +94,8 @@ function c511009675.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     Duel.SetTargetCard(tg)
 end
 function c511009675.atkop(e,tp,eg,ep,ev,re,r,rp)
-    if not e:GetHandler():IsRelateToEffect(e) then return end
+    local c=e:GetHandler()
+    if not c:IsRelateToEffect(e) then return end
     local tc=Duel.GetAttacker()
     if Duel.NegateAttack() and tc then
         local e1=Effect.CreateEffect(c)
