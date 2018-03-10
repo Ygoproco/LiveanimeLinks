@@ -60,7 +60,7 @@ function c511009340.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ and e:GetLabel()==1
 end
 function c511009340.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+local c=e:GetHandler()
 	--extra att
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -80,14 +80,6 @@ function c511009340.regop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetOperation(c511009340.desop)
 	e2:SetReset(RESET_EVENT+0x1ff0000)
 	c:RegisterEffect(e2,false,1)
-	--Double Snare
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(3682106)
-	e3:SetReset(RESET_EVENT+0x1ff0000)
-	c:RegisterEffect(e3)
 end
 function c511009340.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -139,19 +131,17 @@ function c511009340.desop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e4)
 	end
 end
-function c511009340.matfilter(c)
-	return c:IsType(TYPE_XYZ) and c:IsXyzLevel(c,7)
+function c511009340.matfilter(c,sc)
+	return c:IsType(TYPE_XYZ,sc,SUMMON_TYPE_XYZ) and c:IsXyzLevel(c,7)
 end
 function c511009340.valcheck(e,c)
 	local g=c:GetMaterial()
-	if g:IsExists(c511009340.matfilter,1,nil) then
+	if g:IsExists(c511009340.matfilter,1,nil,c) then
 		e:GetLabelObject():SetLabel(1)
 	else
 		e:GetLabelObject():SetLabel(0)
 	end
 end
-
-
 function c511009340.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 end
