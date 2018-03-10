@@ -837,13 +837,16 @@ function Card.IsMagnet(c,fbool)
 	end
 end
 
--- Mantis カマキリ
--- Empress Mantis
+-- Mantis マンティス
+-- Flying Kamakiri #2, Inzektor Giga-Mantis, Naturia Mantis
+c420.OCGMantis={
+	3134241, 94573223, 51254980
+}
 function Card.IsMantis(c,fbool)
 	if fbool then
-		return c:IsFusionSetCard(0x535) or c:IsFusionCode(58818411)
+		return c:IsFusionSetCard(0x535) or c:IsFusionCode(table.unpack(c420.OCGMantis))
 	else
-		return c:IsSetCard(0x535) or c:IsCode(58818411)
+		return c:IsSetCard(0x535) or c:IsCode(table.unpack(c420.OCGMantis))
 	end
 end
 

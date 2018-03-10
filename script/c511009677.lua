@@ -1,4 +1,5 @@
 --Sunavalon Force
+--fixed by MLD
 function c511009677.initial_effect(c)
 	--Activate
 	local e0=Effect.CreateEffect(c)
@@ -8,8 +9,7 @@ function c511009677.initial_effect(c)
 	--no damage & spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DAMAGE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_BATTLED)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCondition(c511009677.damcon)
@@ -31,7 +31,7 @@ function c511009677.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x474))
+	e4:SetTarget(c511009677.tgtg)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
 end
@@ -47,21 +47,16 @@ function c511009677.filter(c)
 end
 function c511009677.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c511009677.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if chk==0 then return ct>0 end
+	if chk==0 then return g:GetCount()>0 end
 	Duel.SetTargetPlayer(1-tp)
 	local sg=g:GetMaxGroup(Card.GetLevel)
-	if sg:GetCount()>1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-		sg=sg:Select(tp,1,1,nil)
-	end
 	local tc=sg:GetFirst()
 	local dam=tc:GetLink()*100
-	Duel.SetTargetParam(dam)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function c511009677.damop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511009677.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if g:GetCount()==0 then return end
+	if g:GetCount()==0 or not e:GetHandler():IsRelateToEffect(e) then return end
 	local sg=g:GetMaxGroup(Card.GetLevel)
 	if sg:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
@@ -72,9 +67,12 @@ function c511009677.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam=tc:GetLink()*100
 	Duel.Damage(p,dam,REASON_EFFECT)
 end
-function c511009677.descon(c)
-	return c:IsFaceup() and c:IsSetCard(0x474) and c:IsType(TYPE_LINK)
+function c511009677.desfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x474)
 end
 function c511009677.descon(e)
 	return not Duel.IsExistingMatchingCard(c511009677.desfilter,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+end
+function c511009677.tgtg(e,c)
+	return c:IsSetCard(0x474) and c:IsType(TYPE_LINK)
 end

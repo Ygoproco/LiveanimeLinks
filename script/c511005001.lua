@@ -21,10 +21,11 @@ function c511005001.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,c511005001.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c511005001.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		if not tc:IsType(TYPE_EFFECT) then
-			local e1=Effect.CreateEffect(e:GetHandler())
+			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_ADD_TYPE)
 			e1:SetValue(TYPE_EFFECT)
