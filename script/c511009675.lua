@@ -78,13 +78,10 @@ function c511009675.damcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511009675.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
-    Duel.SetTargetPlayer(1-tp)
-    Duel.SetTargetParam(ev)
     Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ev)
 end
 function c511009675.damop(e,tp,eg,ep,ev,re,r,rp)
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Damage(p,d,REASON_EFFECT)
+    Duel.Damage(1-tp,ev,REASON_EFFECT)
 end
 --------------------------------------
 function c511009675.atkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -100,32 +97,32 @@ function c511009675.atkop(e,tp,eg,ep,ev,re,r,rp)
     if not e:GetHandler():IsRelateToEffect(e) then return end
     local tc=Duel.GetAttacker()
     if Duel.NegateAttack() and tc then
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_MUST_ATTACK)
+        e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+        tc:RegisterEffect(e1)
         local e2=Effect.CreateEffect(c)
         e2:SetType(EFFECT_TYPE_SINGLE)
-        e2:SetCode(EFFECT_MUST_ATTACK)
+        e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+        e2:SetValue(c511009675.atlimit)
         e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
         tc:RegisterEffect(e2)
-    
-        local e5=Effect.CreateEffect(c)
-        e5:SetType(EFFECT_TYPE_SINGLE)
-        e5:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-        e5:SetValue(c511009675.atlimit)
-        e5:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
-        tc:RegisterEffect(e5)
-        local e6=Effect.CreateEffect(c)
-        e6:SetType(EFFECT_TYPE_SINGLE)
-        e6:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-        e6:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
-        tc:RegisterEffect(e6)
+        local e3=Effect.CreateEffect(c)
+        e3:SetType(EFFECT_TYPE_SINGLE)
+        e3:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
+        e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+        tc:RegisterEffect(e3)
         Duel.ChainAttack()
     end
 end
 function c511009675.atlimit(e,c)
-    return not c:IsSetCard(0x574) and c:IsFacedown()
+    return not c:IsSetCard(0x574) or c:IsFacedown()
 end
 --------------------------------------
 function c511009675.sfilter(c)
-    return c:IsReason(REASON_DESTROY) and c:IsPreviousPosition(POS_FACEUP) and  c:IsSetCard(0x574) and c:IsPreviousLocation(LOCATION_ONFIELD)
+    return c:IsReason(REASON_DESTROY) and c:IsPreviousPosition(POS_FACEUP)
+        and c:IsSetCard(0x574) and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c511009675.sdescon(e,tp,eg,ep,ev,re,r,rp)
     return eg:IsExists(c511009675.sfilter,1,nil)
