@@ -49,11 +49,17 @@ end
 function c511009680.atkfilter(e,c)
 	return c:GetSequence()<5
 end
+function c511009680.filter(c,e,lg)
+	return c:IsFaceup() and (not e or c:IsCanBeEffectTarget(e)) and lg:IsContains(c)
+end
+
 function c511009680.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCustomActivityCount(511009680,tp,ACTIVITY_ATTACK)==0 and Duel.CheckReleaseGroup(tp,c511009680.costfilter,1,e:GetHandler(),e:GetHandler():GetLinkedGroup()) end
-	local rg=Duel.SelectReleaseGroup(tp,c511009680.costfilter,1,1,e:GetHandler(),e:GetHandler():GetLinkedGroup())
-	e:SetLabel(rg:GetFirst():GetLink())
-	Duel.Release(rg,REASON_COST)
+	local lg=e:GetHandler():GetLinkedGroup()
+	local dg=Duel.GetMatchingGroup(c511009680.filter,tp,0,LOCATION_ONFIELD,nil,e,lg)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511009680.costfilter,1,false,aux.ReleaseCheckTarget,nil,dg,lg) and Duel.GetCustomActivityCount(511009680,tp,ACTIVITY_ATTACK)==0 
+	end
+	local sg=Duel.SelectReleaseGroupCost(tp,c511009680.costfilter,1,1,false,aux.ReleaseCheckTarget,nil,dg,lg)
+	Duel.Release(sg,REASON_COST)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
