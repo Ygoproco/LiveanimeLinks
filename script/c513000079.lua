@@ -20,8 +20,8 @@ function c513000079.costfilter(c)
 	return c:GetLevel()>0
 end
 function c513000079.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c513000079.costfilter,1,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,c513000079.costfilter,1,1,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c513000079.costfilter,1,false,nil,e:GetHandler()) end
+	local g=Duel.SelectReleaseGroupCost(tp,c513000079.costfilter,1,1,false,nil,e:GetHandler())
 	e:SetLabel(g:GetFirst():GetLevel()*200)
 	Duel.Release(g,REASON_COST)
 end
