@@ -11,15 +11,13 @@ function c511009657.initial_effect(c)
 	e1:SetTarget(c511009657.target)
 	e1:SetOperation(c511009657.activate)
 	c:RegisterEffect(e1)
-	
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetOperation(c511009657.regop)
-	c:RegisterEffect(e2)
-	
+	c:RegisterEffect(e2)	
 	--Activate
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(511009657,0))
@@ -32,9 +30,12 @@ function c511009657.initial_effect(c)
 	e3:SetOperation(c511009657.activate)
 	c:RegisterEffect(e3)
 end
+function c511009657.costfilter(c)
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:GetAttack()==0
+end
 function c511009657.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,nil,ATTRIBUTE_DARK) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsAttribute,1,1,nil,ATTRIBUTE_DARK)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511009657.costfilter,1,false,nil,nil) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511009657.costfilter,1,1,false,nil,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c511009657.condition(e,tp,eg,ep,ev,re,r,rp)
@@ -59,10 +60,6 @@ function c511009657.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc=g:GetNext()
 	end
 end
-
-
-
-
 function c511009657.regop(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local c=e:GetHandler()
@@ -79,8 +76,6 @@ function c511009657.regop(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,2)
 	c:RegisterEffect(e1)
 end
-
-
 function c511009657.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
@@ -89,7 +84,6 @@ function c511009657.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 	end
 end
-
 function c511009657.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:GetFirst():IsSummonType(SUMMON_TYPE_LINK)
 end
