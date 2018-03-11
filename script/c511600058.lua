@@ -29,9 +29,9 @@ function c511600058.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return Duel.CheckReleaseGroup(tp,c511600058.cfilter,1,nil,tp)
+		return Duel.CheckReleaseGroupCost(tp,c511600058.cfilter,1,false,nil,nil,tp)
 	end
-	local rg=Duel.SelectReleaseGroup(tp,c511600058.cfilter,1,1,nil,tp)
+	local rg=Duel.SelectReleaseGroupCost(tp,c511600058.cfilter,1,1,false,nil,nil,tp)
 	local atk=rg:GetFirst():GetAttack()
 	e:SetLabel(atk)
 	Duel.Release(rg,REASON_COST)

@@ -26,27 +26,27 @@ end
 function c511600056.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local lg=c:GetLinkedGroup()
-	local zone=c:GetLinkedZone(tp)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511600056.spcfilter,1,nil,lg,zone) end
-	local g=Duel.SelectReleaseGroup(tp,c511600056.spcfilter,1,1,nil,lg,zone)
-	Duel.Release(g,REASON_COST)
+	local zone=c:GetFreeLinkedZone()&0x1f
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511600056.spcfilter,1,false,nil,nil,lg,zone) end
+	local tc=Duel.SelectReleaseGroupCost(tp,c511600056.spcfilter,1,1,false,nil,nil,lg,zone)
+	Duel.Release(tc,REASON_COST)
 end
 function c511600056.spfilter(c,e,tp,zone)
 	if not zone then zone=0xff end
 	return c:IsSetCard(0x101) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c511600056.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local zone=e:GetHandler():GetLinkedZone(tp)
+	local zone=e:GetHandler():GetFreeLinkedZone()&0x1f
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp)
-		and zone~=0 and c511600056.spfilter(chkc,e,tp,zone) or c511600056.spfilter(chkc,e,tp) end
-	if chk==0 then return zone~=0 and Duel.IsExistingTarget(c511600056.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone)
+		and c511600056.spfilter(chkc,e,tp,zone) or c511600056.spfilter(chkc,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c511600056.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone)
 			or Duel.IsExistingTarget(c511600056.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c511600056.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,zone)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c511600056.spop(e,tp,eg,ep,ev,re,r,rp)
-	local zone=e:GetHandler():GetLinkedZone(tp)
+	local zone=e:GetHandler():GetFreeLinkedZone()&0x1f
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and zone~=0 then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)

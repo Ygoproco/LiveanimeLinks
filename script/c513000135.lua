@@ -119,18 +119,17 @@ end
 function c513000135.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
-	Duel.SetTargetPlayer(1-tp)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,e:GetHandler():GetAttack())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),1-tp,LOCATION_MZONE)
 end
 function c513000135.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Damage(Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER),e:GetHandler():GetAttack(),REASON_EFFECT)
+	Duel.Damage(1-tp,e:GetHandler():GetAttack(),REASON_EFFECT)
 	Duel.Destroy(Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil),REASON_EFFECT)
 end
 -----------------------------------------------------------------
 function c513000135.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,2,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,nil,2,2,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,2,false,nil,e:GetHandler()) end
+	local g=Duel.SelectReleaseGroup(tp,nil,2,2,false,nil,e:GetHandler())
 	Duel.Release(g,REASON_COST)
 end
 function c513000135.atkcon(e,tp,eg,ep,ev,re,r,rp)
