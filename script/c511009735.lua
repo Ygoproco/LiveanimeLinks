@@ -57,10 +57,7 @@ end
 function c511009735.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_HAND,LOCATION_HAND,nil)
 	Duel.Destroy(g,REASON_EFFECT)
-	
 end
-
-
 --------------
 function c511009735.descon2(e)
 	return e:GetHandler():IsExtraLinked()
@@ -78,6 +75,6 @@ function c511009735.desop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 ---------------
-function c511009735.indcon2(e)
+function c511009735.indcon(e)
 	return e:GetHandler():IsExtraLinked()
 end
