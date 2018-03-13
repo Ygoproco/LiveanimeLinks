@@ -26,16 +26,21 @@ function c511009340.initial_effect(c)
 	e3:SetValue(c511009340.valcheck)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
-	--pendulum
-	local e7=Effect.CreateEffect(c)
-	e7:SetDescription(aux.Stringid(7548,0))
-	e7:SetCategory(CATEGORY_DESTROY)
-	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e7:SetCode(EVENT_DESTROYED)
-	e7:SetProperty(EFFECT_FLAG_DELAY)
-	e7:SetCondition(c511009340.pencon)
-	e7:SetTarget(c511009340.pentg)
-	e7:SetOperation(c511009340.penop)
+	--To Pendulum
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(35952884,1))
+	e5:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e5:SetCode(EVENT_TO_GRAVE)
+	e5:SetCondition(c511009340.pencon)
+	e5:SetTarget(c511009340.pentg)
+	e5:SetOperation(c511009340.penop)
+	c:RegisterEffect(e5)
+	local e6=e5:Clone()
+	e6:SetCode(EVENT_REMOVE)
+	c:RegisterEffect(e6)
+	local e7=e5:Clone()
+	e7:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e7)
 end
 function c511009340.pcfilter(c)
@@ -60,7 +65,7 @@ function c511009340.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ and e:GetLabel()==1
 end
 function c511009340.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+local c=e:GetHandler()
 	--extra att
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -80,14 +85,6 @@ function c511009340.regop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetOperation(c511009340.desop)
 	e2:SetReset(RESET_EVENT+0x1ff0000)
 	c:RegisterEffect(e2,false,1)
-	--Double Snare
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(3682106)
-	e3:SetReset(RESET_EVENT+0x1ff0000)
-	c:RegisterEffect(e3)
 end
 function c511009340.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -139,29 +136,32 @@ function c511009340.desop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e4)
 	end
 end
-function c511009340.matfilter(c)
-	return c:IsType(TYPE_XYZ) and c:IsXyzLevel(c,7)
+function c511009340.matfilter(c,sc)
+	return c:IsType(TYPE_XYZ,sc,SUMMON_TYPE_XYZ) and c:IsXyzLevel(c,7)
 end
 function c511009340.valcheck(e,c)
 	local g=c:GetMaterial()
-	if g:IsExists(c511009340.matfilter,1,nil) then
+	if g:IsExists(c511009340.matfilter,1,nil,c) then
 		e:GetLabelObject():SetLabel(1)
 	else
 		e:GetLabelObject():SetLabel(0)
 	end
 end
-
-
 function c511009340.pencon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
+	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c511009340.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7) end
+	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local rsc=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
+	local g=Group.FromCards(lsc,rsc)
+	if chk==0 then return g:GetCount()>0 end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511009340.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return false end
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local rsc=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
+	local g=Group.FromCards(lsc,rsc)
+	if Duel.Destroy(g,REASON_EFFECT)~=0 and e:GetHandler():IsRelateToEffect(e) then
+		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end

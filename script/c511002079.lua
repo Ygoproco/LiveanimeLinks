@@ -94,12 +94,12 @@ function c511002079.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e1)
 end
-function c511002079.matfilter(c)
-	return c:IsSetCard(0xba) and c:IsType(TYPE_XYZ)
+function c511002079.matfilter(c,sc)
+	return c:IsSetCard(0xba) and c:IsType(TYPE_XYZ,sc,SUMMON_TYPE_XYZ)
 end
 function c511002079.valcheck(e,c)
 	local g=c:GetMaterial()
-	if g:IsExists(c511002079.matfilter,1,nil) then
+	if g:IsExists(c511002079.matfilter,1,nil,c) then
 		e:GetLabelObject():SetLabel(1)
 	else
 		e:GetLabelObject():SetLabel(0)

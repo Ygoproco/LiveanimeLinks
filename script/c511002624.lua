@@ -1,4 +1,4 @@
---Amazing Pendulum
+--Amazing Pendulum (Anime)
 function c511002624.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +11,7 @@ function c511002624.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002624.condition(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_PZONE,0,2,nil)
+	return not Duel.GetFieldCard(tp,LOCATION_PZONE,0) and not Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 end
 function c511002624.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()

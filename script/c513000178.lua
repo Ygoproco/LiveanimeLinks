@@ -1,47 +1,39 @@
 --Last Machine Acid Virus (Anime)
 --scripted by GameMaster(GM)
 function c513000178.initial_effect(c)
---Activate
-local e1=Effect.CreateEffect(c)
-e1:SetCategory(CATEGORY_DESTROY)
-e1:SetType(EFFECT_TYPE_ACTIVATE)
-e1:SetCode(EVENT_FREE_CHAIN)
-e1:SetHintTiming(0,TIMING_TOHAND)
-e1:SetCost(c513000178.cost)
-e1:SetTarget(c513000178.target)
-e1:SetOperation(c513000178.activate)
-c:RegisterEffect(e1)
-end
-
-function c513000178.costfilter(c)
-return c:IsAttribute(ATTRIBUTE_WATER)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_TOHAND)
+	e1:SetCost(c513000178.cost)
+	e1:SetTarget(c513000178.target)
+	e1:SetOperation(c513000178.activate)
+	c:RegisterEffect(e1)
 end
 
 function c513000178.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return Duel.CheckReleaseGroup(tp,c513000178.costfilter,1,nil) end
-local g=Duel.SelectReleaseGroup(tp,c513000178.costfilter,1,1,nil)
-Duel.Release(g,REASON_COST)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,false,nil,nil,ATTRIBUTE_WATER) end
+	local g=Duel.SelectReleaseGroup(tp,Card.IsAttribute,1,1,false,nil,nil,ATTRIBUTE_WATER)
+	Duel.Release(g,REASON_COST)
 end
 
 function c513000178.tgfilter(c)
-return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsDestructable()
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsDestructable()
 end
 
 function c513000178.target(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return true end
-local g=Duel.GetMatchingGroup(c513000178.tgfilter,tp,0,LOCATION_MZONE,nil)
-Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-end
-
-function c513000178.filter(c)
-return c:IsRace(RACE_MACHINE)
+	if chk==0 then return true end
+	local g=Duel.GetMatchingGroup(c513000178.tgfilter,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 
 function c513000178.activate(e,tp,eg,ep,ev,re,r,rp)
 	local conf=Duel.GetFieldGroup(tp,0,LOCATION_MZONE+LOCATION_HAND)
 	if conf:GetCount()>0 then
 		Duel.ConfirmCards(tp,conf)
-		local dg=conf:Filter(c513000178.filter,nil)
+		local dg=conf:Filter(Card.IsRace,nil,RACE_MACHINE)
 		Duel.Destroy(dg,REASON_EFFECT)
 		local ct=dg:GetCount()*500
 		Duel.Damage(1-tp,ct,REASON_EFFECT)
@@ -72,7 +64,7 @@ function c513000178.desop(e,tp,eg,ep,ev,re,r,rp)
 	local hg=eg:Filter(Card.IsLocation,nil,LOCATION_HAND)
 	if hg:GetCount()==0 then return end
 	Duel.ConfirmCards(1-ep,hg)
-	local dg=hg:Filter(c513000178.filter,nil)
+	local dg=hg:Filter(Card.IsRace,nil,RACE_MACHINE)
 	Duel.Destroy(dg,REASON_EFFECT)
 	local ct=dg:GetCount()*500
 	Duel.Damage(1-tp,ct,REASON_EFFECT)
@@ -80,7 +72,7 @@ function c513000178.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c513000178.turncon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
+    	return Duel.GetTurnPlayer()~=tp
 end
 
 function c513000178.turnop(e,tp,eg,ep,ev,re,r,rp)
