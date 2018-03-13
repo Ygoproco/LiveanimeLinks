@@ -1,5 +1,5 @@
 --覇王龍ズァーク
---fixed by MLD
+--Supreme King Z-ARC (Anime)
 function c511009441.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.EnablePendulumAttribute(c,false)
@@ -62,15 +62,6 @@ function c511009441.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c511009441.imfilter)
 	c:RegisterEffect(e6)
-	local e61=Effect.CreateEffect(c)
-	e61:SetCode(EFFECT_SEND_REPLACE)
-	e61:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e61:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e61:SetRange(LOCATION_MZONE)
-	e61:SetCondition(c511009441.indcon)
-	e61:SetTarget(c511009441.reptg)
-	e61:SetValue(function(e,c) return false end)
-	c:RegisterEffect(e61)
 	--immune to Fusion/Synchro/Xyz
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_FIELD)
@@ -104,26 +95,19 @@ function c511009441.initial_effect(c)
 	c:RegisterEffect(e9)
 end
 function c511009441.fscon(e,g,gc,chkfnf)
-	if g==nil then
-		local mustg=Auxiliary.GetMustBeMaterialGroup(tp,g,tp,c,nil,REASON_FUSION)
-		return mustg:GetCount()==0
-	end
+	if g==nil then return true end
 	return false
 end
 function c511009441.splimit(e,se,sp,st)
-	return se and se:GetHandler():IsCode(76794549)
-end
-function c511009441.cfilter(c,ft,tp)
-	return c:IsSetCard(0xf8) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
+	return se:GetHandler():IsCode(76794549)
 end
 function c511009441.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then return ft>-1 and Duel.CheckReleaseGroup(tp,c511009441.cfilter,1,nil,ft,tp) end
-	local g=Duel.SelectReleaseGroup(tp,c511009441.cfilter,1,1,nil,ft,tp)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsSetCard,1,false,nil,nil,0xf8) end
+	local g=Duel.SelectReleaseGroupCost(tp,Card.IsSetCard,1,1,false,nil,nil,0xf8)
 	Duel.Release(g,REASON_COST)
 end
 function c511009441.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c511009441.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -168,10 +152,6 @@ end
 function c511009441.imfilter(e,te)
 	if not te then return false end
 	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
-end
-function c511009441.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return re and e:GetHandler():IsReason(REASON_EFFECT) and r&REASON_EFFECT~=0 end
-	return true
 end
 function c511009441.efilter(e,te)
 	return te:IsActiveType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()

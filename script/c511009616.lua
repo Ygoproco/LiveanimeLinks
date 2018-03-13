@@ -56,7 +56,7 @@ end
 function c511009616.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReason(REASON_BATTLE) end
 		local c=e:GetHandler()
-		e:GetHandler():RegisterFlagEffect(93368494,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+		e:GetHandler():RegisterFlagEffect(511009616,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 		return true
 end
 
@@ -66,15 +66,14 @@ function c511009616.cfilter(c,g)
 end
 function c511009616.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lg=e:GetHandler():GetLinkedGroup()
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511009616.cfilter,1,nil,lg) end
-	local g=Duel.SelectReleaseGroup(tp,c511009616.cfilter,1,1,nil,lg)
-	e:SetLabel(g:GetFirst():GetAttack())
+	local zone=e:GetHandler():GetLinkedZone(tp)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511009616.cfilter,1,false,nil,nil,lg,tp,zone) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511009616.cfilter,1,1,false,nil,nil,lg,tp,zone)
 	Duel.Release(g,REASON_COST)
 end
 function c511009616.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	-- local bc=c:GetBattleTarget()
-	return e:GetHandler():GetFlagEffect(93368494)~=0
+	return e:GetHandler():GetFlagEffect(511009616)~=0
 end
 function c511009616.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

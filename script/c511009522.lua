@@ -65,26 +65,39 @@ end
 function c511009522.cfilter(c)
 	return c:IsFaceup() and c:IsCode(13331639)
 end
-function c511009522.rescon(sg,e,tp,mg)
-	local c=e:GetHandler()
-	if c:IsLocation(LOCATION_EXTRA) then
-		return Duel.GetLocationCountFromEx(tp,tp,sg,c)>0
+function c511009522.costfilter(c,tp,sg,tc)
+	if not c:IsSetCard(0x20f8) then return false end
+	sg:AddCard(c)
+	local res
+	if sg:GetCount()<2 then
+		res=Duel.CheckReleaseGroup(tp,c511009522.costfilter,1,sg,tp,sg,tc)
 	else
-		return aux.ChkfMMZ(1)(sg,e,tp,mg)
+		if tc:IsLocation(LOCATION_EXTRA) then
+			res=Duel.GetLocationCountFromEx(tp,tp,sg,tc)>0
+		else
+			res=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or sg:IsExists(c511009522.fcheck,1,nil,tp)
+		end
 	end
+	sg:RemoveCard(c)
+	return res
+end
+function c511009522.fcheck(c,tp)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
 end
 function c511009522.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local rg=Duel.GetReleaseGroup(tp):Filter(Card.IsSetCard,nil,0x20f8)
 	return eg:IsExists(c511009522.spfilter,1,nil,tp) and Duel.IsExistingMatchingCard(c511009522.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		and aux.SelectUnselectGroup(rg,e,tp,2,2,c511009522.rescon,0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and Duel.CheckReleaseGroup(tp,c511009522.costfilter,1,nil,tp,Group.CreateGroup(),c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009522.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local rg=Duel.GetReleaseGroup(tp):Filter(Card.IsSetCard,nil,0x20f8)
-	if aux.SelectUnselectGroup(rg,e,tp,2,2,c511009522.rescon,0) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
+	local sg=Group.CreateGroup()
+	if Duel.CheckReleaseGroup(tp,c511009522.costfilter,1,nil,tp,sg,c) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
 		and Duel.SelectYesNo(tp,aux.Stringid(4003,8)) then
-		local sg=aux.SelectUnselectGroup(rg,e,tp,2,2,c511009522.rescon,1,tp,HINTMSG_RELEASE)
+		while sg:GetCount()<2 do
+			local g=Duel.SelectReleaseGroup(tp,c511009522.costfilter,1,1,sg,tp,sg,c)
+			sg:Merge(g)
+		end
 		Duel.Release(sg,REASON_COST)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
@@ -147,8 +160,8 @@ function c511009522.spop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511009522.pencost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,nil,0x20f8) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsSetCard,1,1,nil,0x20f8)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsSetCard,1,false,nil,nil,0x20f8) end
+	local g=Duel.SelectReleaseGroupCost(tp,Card.IsSetCard,1,1,false,nil,nil,0x20f8)
 	Duel.Release(g,REASON_COST)
 end
 function c511009522.pentg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -1,5 +1,4 @@
 --Sunavalon Daphne
---cleaned up by MLD
 function c511009678.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
@@ -19,7 +18,7 @@ function c511009678.initial_effect(c)
 	e2:SetCode(EFFECT_IGNORE_BATTLE_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e2)
-	--damage
+	--recover
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(11384280,0))
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -36,8 +35,8 @@ function c511009678.matcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsSummonType(SUMMON_TYPE_LINK) and c:GetTurnID()==Duel.GetTurnCount()
 end
 function c511009678.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
-	local sg=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,nil,1,false,nil,nil) end
+	local sg=Duel.SelectReleaseGroupCost(tp,nil,1,1,false,nil,nil)
 	Duel.Release(sg,REASON_COST)
 end
 function c511009678.filter(c)
