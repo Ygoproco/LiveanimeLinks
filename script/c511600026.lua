@@ -23,7 +23,7 @@ end
 function c511600026.discon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and re:IsActiveType(TYPE_MONSTER)
 end
-function c511600026.filter(c)
+function c511600026.filter(e,c)
 	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK)
 end
 function c511600026.efilter(e,te,c)
