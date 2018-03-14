@@ -1,4 +1,5 @@
 --Blackwing - Pinaka the Waxing Moon
+--rescripted by cybercatman
 function c511003115.initial_effect(c)
 	--add to hand
 	local e1=Effect.CreateEffect(c)
