@@ -43,13 +43,12 @@ end
 function c100001006.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,0)
 end
 function c100001006.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return false end
-	if ft<2 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,100001007,0,0x4011,500,500,2,RACE_BEAST,ATTRIBUTE_EARTH) then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) or ft<2 
+		or not Duel.IsPlayerCanSpecialSummonMonster(tp,100001007,0,0x4011,500,500,2,RACE_YOKAI,ATTRIBUTE_FIRE) then return end
 	for i=1,2 do
 		local token=Duel.CreateToken(tp,100001007)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)

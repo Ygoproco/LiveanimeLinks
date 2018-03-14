@@ -29,7 +29,7 @@ function c511009658.initial_effect(c)
 	e3:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(0,LOCATION_MZONE)
-	e3:SetValue(c511009658.atktg)
+	e3:SetValue(aux.TargetBoolFunction(Card.IsCode,511009659))
 	c:RegisterEffect(e3)
 end
 function c511009658.filter(c)
@@ -47,7 +47,7 @@ function c511009658.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return zone~=0 and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) 
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 function c511009658.spop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=e:GetHandler():GetLinkedZone(tp)
@@ -55,7 +55,4 @@ function c511009658.spop(e,tp,eg,ep,ev,re,r,rp)
 		local token=Duel.CreateToken(tp,511009659)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
-end
-function c511009658.atktg(e,c)
-	return c:IsFaceup() and c:IsCode(511009659)
 end
