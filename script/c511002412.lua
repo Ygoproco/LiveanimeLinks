@@ -14,11 +14,12 @@ end
 function c511002412.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 function c511002412.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,511002413,0,0x4011,0,0,1,RACE_MACHINE,ATTRIBUTE_DARK) then return end
-	local token=Duel.CreateToken(tp,511002413)
-	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511002413,0,0x4011,0,0,1,RACE_MACHINE,ATTRIBUTE_DARK) then
+		local token=Duel.CreateToken(tp,511002413)
+		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

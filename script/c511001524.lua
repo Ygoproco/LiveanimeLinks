@@ -17,13 +17,14 @@ function c511001524.initial_effect(c)
 end
 function c511001524.condition(e,tp,eg,ep,ev,re,r,rp)
 	local pos,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_POSITION,CHAININFO_TRIGGERING_LOCATION)
-	return rp~=tp and pos&POS_FACEDOWN>0 and loc&LOCATION_ONFIELD>0
+	return rp~=tp --and pos&POS_FACEDOWN>0 
+		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and not re:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) and loc&LOCATION_ONFIELD>0
 end
 function c511001524.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and aux.disfilter1(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and aux.disfilter1(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.disfilter1,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function c511001524.activate(e,tp,eg,ep,ev,re,r,rp)

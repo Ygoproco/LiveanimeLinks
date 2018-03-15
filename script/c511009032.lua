@@ -28,11 +28,12 @@ function c511009032.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009033,0x535,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_EARTH) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 function c511009032.spop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009033,0x535,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_EARTH) then return end
-	local token=Duel.CreateToken(tp,511009033)
-	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+	if e:GetHandler():IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009033,0x535,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_EARTH) then
+		local token=Duel.CreateToken(tp,511009033)
+		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
