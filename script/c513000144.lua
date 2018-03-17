@@ -118,3 +118,6 @@ function c513000144.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Damage(1-tp,tc:GetAttack()/2,REASON_EFFECT)
 	end
 end
+function c513000144.indval(e,re)
+	return re:GetOwner():IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)
+end
