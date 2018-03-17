@@ -73,7 +73,11 @@ function c513000144.millop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeckAsCost(1-tp,#g//2) or #g//2==0 then
 		Duel.Destroy(e:GetHandler(),REASON_RULE)
 	end
-	local gc=g:RandomSelect(1-tp,#g//2)
+	local gc=Group.CreateGroup()
+	for i=1,#g//2 do
+		gc=gc+g:TakeatPos(Duel.GetRandomNumber(0,#g//2))
+		g=g-gc
+	end
 	Duel.SendtoGrave(gc,REASON_COST)
 end
 function c513000144.filter(c,e,tp)
