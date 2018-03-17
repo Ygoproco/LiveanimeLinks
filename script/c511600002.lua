@@ -173,7 +173,7 @@ function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
 	local baseDef=0
 	for tc in aux.Next(g) do
 		textAtk=tc:GetTextAttack()
-		textDef=tc:GettextDefense()
+		textDef=tc:GetTextDefense()
 		ctl=tc:GetControler()
 		if textAtk~=-2 and textAtk~=0 then
 			Duel.Hint(HINT_SELECTMSG,ctl,aux.Stringid(4010,4))

@@ -144,7 +144,7 @@ function c511001791.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511001791.pencon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 end
 function c511001791.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
