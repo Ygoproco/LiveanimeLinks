@@ -5,7 +5,6 @@ function c316000124.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,TIMING_BATTLE_START)
 	e1:SetCondition(c316000124.con)
 	e1:SetCost(c316000124.cost)
 	e1:SetTarget(c316000124.target)
@@ -17,9 +16,8 @@ function c316000124.con(e,tp,eg,ep,ev,re,r,rp)
 end
 function c316000124.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	local rg=Duel.GetReleaseGroup(tp)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and rg:GetCount()>1 and aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),0) end
-	local sg=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_RELEASE)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,nil,2,false,aux.ReleaseCheckMMZ,nil) end
+	local sg=Duel.SelectReleaseGroupCost(tp,nil,2,2,false,aux.ReleaseCheckMMZ,nil)
 	Duel.Release(sg,REASON_COST)
 end
 function c316000124.filter(c,e,tp)
