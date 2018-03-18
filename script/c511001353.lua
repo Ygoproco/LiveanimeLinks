@@ -2,7 +2,7 @@
 function c511001353.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -19,7 +19,8 @@ function c511001353.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001353.filter(c,tp)
 	return c:IsFaceup() and c:GetLevel()>0
-		and Duel.IsPlayerCanSpecialSummonMonster(1-tp,511001354,0,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute())
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001354,0,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute(),
+			POS_FACEUP,1-tp)
 end
 function c511001353.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c511001353.filter(chkc,tp) end
@@ -28,7 +29,7 @@ function c511001353.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c511001353.filter,tp,0,LOCATION_MZONE,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 function c511001353.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -45,9 +46,10 @@ function c511001353.activate(e,tp,eg,ep,ev,re,r,rp)
 	ed:SetReset(RESET_EVENT+0x1fe000)
 	ed:SetValue(tc:GetBaseDefense()/2)
 	tc:RegisterEffect(ed)
-	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0
-		or not Duel.IsPlayerCanSpecialSummonMonster(1-tp,511001354,0,0x4011,tc:GetAttack(),tc:GetDefense(),
-			tc:GetLevel(),tc:GetRace(),tc:GetAttribute()) then return end
+	if tc:IsImmuneToEffect(ea) or tc:IsImmuneToEffect(ed) or Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0
+		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511001354,0,0x4011,tc:GetAttack(),tc:GetDefense(),
+			tc:GetLevel(),tc:GetRace(),tc:GetAttribute(),POS_FACEUP,1-tp) then return end
+	Duel.BreakEffect()
 	local token=Duel.CreateToken(tp,511001354)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)

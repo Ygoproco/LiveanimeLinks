@@ -2,6 +2,7 @@
 function c511001263.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_LEAVE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -22,14 +23,14 @@ function c511001263.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001263.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=eg:FilterCount(c511001263.filter,nil,tp)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>ct-1
+	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133))
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001264,0,0x4011,1000,1000,3,RACE_SPELLCASTER,ATTRIBUTE_DARK) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,ct,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,ct,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,ct,tp,0)
 end
 function c511001263.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(c511001263.filter,nil,tp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>ct-1 
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133))
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001264,0,0x4011,1000,1000,3,RACE_SPELLCASTER,ATTRIBUTE_DARK) then
 		for i=1,ct do
 			local token=Duel.CreateToken(tp,511001264)
