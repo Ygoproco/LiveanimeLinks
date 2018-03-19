@@ -1,4 +1,5 @@
 --Dual-Colored Eyes
+--fixed by Larry126
 function c511009731.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,16 +12,11 @@ function c511009731.initial_effect(c)
 	e1:SetOperation(c511009731.activate)
 	c:RegisterEffect(e1)
 end
-function c511009731.tefilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsAbleToExtraAsCost()
-end
 function c511009731.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511009731.tefilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_HAND,0,1,nil,TYPE_PENDULUM) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(24094258,3))
-	local g=Duel.SelectMatchingCard(tp,c511009731.tefilter,tp,LOCATION_HAND,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoExtraP(g,tp,REASON_EFFECT)
-	end
+	local g=Duel.SelectMatchingCard(tp,Card.IsType,tp,LOCATION_HAND,0,1,1,nil,TYPE_PENDULUM)
+	Duel.SendtoExtraP(g,tp,REASON_COST)
 end
 function c511009731.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
