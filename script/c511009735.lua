@@ -1,5 +1,5 @@
 --Topologic Gamble Dragon
---cleaned up by MLD
+--fixed by MLD
 function c511009735.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_EFFECT),2)
@@ -33,7 +33,7 @@ function c511009735.initial_effect(c)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetCondition(c511009735.indcon)
+	e3:SetCondition(c511009735.descon2)
 	e3:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_LINK))
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
@@ -67,11 +67,8 @@ function c511009735.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,3000)
 end
 function c511009735.desop2(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_HAND,nil)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 then
 		Duel.Damage(1-tp,3000,REASON_EFFECT)
 	end
-end
-function c511009735.indcon(e)
-	return e:GetHandler():IsExtraLinked()
 end

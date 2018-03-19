@@ -29,7 +29,7 @@ function c511000878.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			and Duel.IsPlayerCanSpecialSummonMonster(tp,511000879,0,0x4011,0,0,1,RACE_WINDBEAST,ATTRIBUTE_WIND)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,0)
 end
 function c511000878.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 

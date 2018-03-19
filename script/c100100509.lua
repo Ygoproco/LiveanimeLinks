@@ -29,11 +29,12 @@ function c100100509.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return tc and tc:IsCanRemoveCounter(tp,0x91,2,REASON_COST) and ft>-1 and Duel.CheckReleaseGroup(tp,c100100509.cfilter,1,nil,e,tp,ft)
+		return tc and tc:IsCanRemoveCounter(tp,0x91,2,REASON_COST) and ft>-1 
+			and Duel.CheckReleaseGroupCost(tp,c100100509.cfilter,1,false,nil,nil,e,tp,ft)
 	end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	tc:RemoveCounter(tp,0x91,2,REASON_COST)	
-	local rg=Duel.SelectReleaseGroup(tp,c100100509.cfilter,1,1,nil,e,tp,ft)
+	local rg=Duel.SelectReleaseGroupCost(tp,c100100509.cfilter,1,1,false,nil,nil,e,tp,ft)
 	local lv=rg:GetFirst():GetLevel()
 	Duel.Release(rg,REASON_COST)
 	Duel.SetTargetParam(lv)

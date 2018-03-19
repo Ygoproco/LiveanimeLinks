@@ -18,17 +18,25 @@ function c511002661.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c511002661.cfilter,1,nil,1-tp)
 end
 function c511002661.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0,nil)
-	local g=Duel.GetMatchingGroup(Card.IsReleasable,tp,LOCATION_MZONE,0,nil)
-	if chk==0 then return ct>0 and g:GetCount()==ct end
+	e:SetLabel(1)
+	local g=Duel.GetReleaseGroup(tp)
+	if chk==0 then return g:GetCount()>0 and g:FilterCount(aux.MZFilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	local exg=Duel.GetMatchingGroup(aux.ReleaseCostFilter,tp,0,LOCATION_MZONE,nil)
+	exg:Sub(g)
+	if exg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(59160188,2)) then
+		g:Merge(exg)
+	end
 	Duel.Release(g,REASON_COST)
 end
 function c511002661.spfilter(c,e,sp)
 	return c:IsRace(RACE_INSECT) and c:IsCanBeSpecialSummoned(e,0,sp,false,false)
 end
 function c511002661.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 
-		and Duel.IsExistingMatchingCard(c511002661.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	if chk==0 then
+		if e:GetLabel()==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511002661.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c511002661.activate(e,tp,eg,ep,ev,re,r,rp)

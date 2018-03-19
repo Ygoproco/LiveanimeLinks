@@ -30,8 +30,8 @@ function c511000110.contactop(g,tp)
 	Duel.SendtoDeck(g,nil,2,REASON_COST+REASON_MATERIAL)
 end
 function c511000110.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
-	local sg=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,nil,1,false,nil,nil) end
+	local sg=Duel.SelectReleaseGroupCost(tp,nil,1,1,false,nil,nil)
 	Duel.Release(sg,REASON_COST)
 end
 function c511000110.target(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -12,7 +12,7 @@ function c100000251.initial_effect(c)
 end
 function c100000251.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	if chk==0 then return true end
+	return true
 end
 function c100000251.cfilter(c,e,tp,ft)
 	local ct=c:IsControler(tp) and c:GetSequence()<5 and 1 or 0
@@ -37,8 +37,9 @@ function c100000251.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return ft>-2 and Duel.CheckReleaseGroup(tp,c100000251.cfilter,1,nil,e,tp,ft) end
-	local tc=Duel.SelectReleaseGroup(tp,c100000251.cfilter,1,1,nil,e,tp,ft):GetFirst()
+		return ft>-2 and Duel.CheckReleaseGroupCost(tp,c100000251.cfilter,1,false,nil,nil,e,tp,ft)
+	end
+	local tc=Duel.SelectReleaseGroupCost(tp,c100000251.cfilter,1,1,false,nil,nil,e,tp,ft):GetFirst()
 	local ct=tc:IsControler(tp) and tc:GetSequence()<5 and 1 or 0
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g2=Duel.SelectMatchingCard(tp,c100000251.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,tc,e,tp,ct+ft)

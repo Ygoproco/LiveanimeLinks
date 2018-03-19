@@ -1,8 +1,9 @@
 --Worm Revival
+--fixed by MLD
 function c511009663.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -23,7 +24,7 @@ function c511009663.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511009663.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
@@ -33,14 +34,11 @@ function c511009663.activate(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 		tc:RegisterEffect(e2)
-	end
-	local zone=tc:GetLinkedZone()
-	if Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) 
-	and Duel.SelectYesNo(tp,aux.Stringid(23571046,0))
-	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and zone~=0
-	then
-		local zone=tc:GetLinkedZone()
-		local token=Duel.CreateToken(tp,511009659)
-		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,zone)
+		local zone=tc:GetLinkedZone(tp)&0x1f
+		if Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) 
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and zone~=0 and Duel.SelectYesNo(tp,aux.Stringid(23571046,0)) then
+			local token=Duel.CreateToken(tp,511009659)
+			Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,zone)
+		end
 	end
 end

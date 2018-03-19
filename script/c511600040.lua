@@ -17,8 +17,8 @@ function c511600040.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_RELEASE)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetCountLimit(1,511600040)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,51160040)
 	e2:SetCondition(c511600040.spcon)
 	e2:SetTarget(c511600040.sptg)
 	e2:SetOperation(c511600040.spop)
@@ -49,17 +49,16 @@ function c511600040.link(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.RegisterEffect(e1,tp)
 end
 function c511600040.splimit(e,c,tp,sumtp,sumpos)
-	return c:GetLink()>=3 and bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
+	return c:GetLink()>=3 and sumtp&SUMMON_TYPE_LINK==SUMMON_TYPE_LINK
 end
 function c511600040.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabel()>0
 end
 function c511600040.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511600041,0,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,0)
 end
 function c511600040.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2 

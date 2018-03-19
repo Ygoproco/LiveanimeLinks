@@ -2,7 +2,7 @@
 function c511009661.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCondition(c511009661.condition)
@@ -14,7 +14,7 @@ function c511009661.initial_effect(c)
 	Duel.AddCustomActivityCounter(43140791,ACTIVITY_SPSUMMON,c511009661.counterfilter)
 end
 function c511009661.counterfilter(c)
-	return c:GetLevel()~=3 and c:GetLevel()~=4
+	return not c:IsLevel(3) and not c:IsLevel(4)
 end
 function c511009661.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_INSECT)
@@ -38,19 +38,16 @@ function c511009661.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e2,tp)
 end
 function c511009661.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	local lv=c:GetLevel()
-	return lv==3 or lv==4
+	return c:IsLevel(3) or c:IsLevel(4)
 end
 function c511009661.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,0)
 end
 function c511009661.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) then
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,511009659)

@@ -12,13 +12,18 @@ function c511009654.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009654.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
 	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsSetCard,1,false,nil,nil,0x56f) end
 	local g=Duel.SelectReleaseGroupCost(tp,Card.IsSetCard,1,1,false,nil,nil,0x56f)
 	Duel.Release(g,REASON_COST)
 end
 function c511009654.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>2
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009655,0x56f,0x4011,0,0,1,RACE_ZOMBIE,ATTRIBUTE_DARK) end
+	if chk==0 then
+		if e:GetLabel()==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 then return false end
+		e:SetLabel(0)
+		return not Duel.IsPlayerAffectedByEffect(tp,59822133) 
+			and Duel.IsPlayerCanSpecialSummonMonster(tp,511009655,0x56f,0x4011,0,0,1,RACE_ZOMBIE,ATTRIBUTE_DARK)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,3,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,0)
 end

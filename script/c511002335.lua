@@ -21,7 +21,7 @@ function c511002335.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return ft>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511002336,0,0x4011,0,0,1,RACE_MACHINE,ATTRIBUTE_FIRE) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,0)
 end
 function c511002335.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
