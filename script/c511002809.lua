@@ -50,7 +50,7 @@ function c511002809.valcheck(e,c)
 	local mg=c:GetMaterial():Filter(c511002809.matfilter,nil,c)
 	local flag=0
 	if mg:GetCount()>0 then
-		local mc=mg:GetFirst():GetOriginalLevel()
+		local lv=mg:GetFirst():GetOriginalLevel()
 		if lv>=7 then
 			flag=0x4
 		elseif lv>=5 then
