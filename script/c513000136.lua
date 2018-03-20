@@ -5,6 +5,12 @@
 --updated by Larry126
 function c513000136.initial_effect(c)
 	aux.CallToken(421)
+	--X000
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e0:SetCode(513000136)
+	c:RegisterEffect(e0)
 	--Summon with 3 Tribute
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -28,9 +34,10 @@ function c513000136.initial_effect(c)
 	--atk/def
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EFFECT_SET_BASE_ATTACK)
+	e4:SetCondition(function(e) return e:GetHandler():IsHasEffect(513000136) end)
 	e4:SetValue(c513000136.adval)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()

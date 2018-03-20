@@ -91,7 +91,7 @@ function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	Duel.DisableShuffleCheck()
 	Duel.SendtoDeck(c,nil,-2,REASON_RULE)
-	if c:GetPreviousLocation()==LOCATION_HAND then
+	if c:IsPreviousLocation(LOCATION_HAND) then
 		Duel.Draw(tp,1,REASON_RULE)
 	end
 end
@@ -141,16 +141,14 @@ end
 function c511600002.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SET_BASE_ATTACK)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetValue(0)
-	e1:SetReset(RESET_EVENT+0xec0000)
+	e1:SetReset(RESET_EVENT+0x1dc0000)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e2:SetCategory(CATEGORY_DEFCHANGE)
 	e2:SetCode(EFFECT_SET_BASE_DEFENSE)
 	c:RegisterEffect(e2)
 end
@@ -169,49 +167,49 @@ function c511600002.spttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c511600002.sptfilter,nil)
-	local baseAtk=0
-	local baseDef=0
 	for tc in aux.Next(g) do
-		textAtk=tc:GetTextAttack()
-		textDef=tc:GetTextDefense()
-		ctl=tc:GetControler()
+		local baseAtk=0
+		local baseDef=0
+		local textAtk=tc:GetTextAttack()
+		local textDef=tc:GettextDefense()
+		local ctl=tc:GetControler()
 		if textAtk~=-2 and textAtk~=0 then
 			Duel.Hint(HINT_SELECTMSG,ctl,aux.Stringid(4010,4))
 			local atkop=Duel.SelectOption(ctl,aux.Stringid(4010,1),aux.Stringid(4010,2),aux.Stringid(4010,3))
 			if atkop==0 then
 				baseAtk=textAtk
-			elseif atkop==1 then
-				baseAtk=0
-			else
+			elseif atkop==2 then
 				baseAtk=aux.ComposeNumberDigitByDigit(ctl,0,textAtk)
 			end
-			local e1=Effect.CreateEffect(tc)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_SET_BASE_ATTACK)
-			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetValue(baseAtk)
-			e1:SetReset(RESET_EVENT+0x1dc0000)
-			tc:RegisterEffect(e1)
+			if baseAtk>0 then
+				local e1=Effect.CreateEffect(tc)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_SET_BASE_ATTACK)
+				e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
+				e1:SetRange(LOCATION_MZONE)
+				e1:SetValue(baseAtk)
+				e1:SetReset(RESET_EVENT+0x1dc0000)
+				tc:RegisterEffect(e1)
+			end
 		end
 		if textDef~=-2 and textDef~=0 then
 			Duel.Hint(HINT_SELECTMSG,ctl,aux.Stringid(4010,5))
 			local defop=Duel.SelectOption(ctl,aux.Stringid(4010,1),aux.Stringid(4010,2),aux.Stringid(4010,3))
 			if defop==0 then
 				baseDef=textDef
-			elseif defop==1 then
-				baseDef=0
-			else
+			elseif defop==2 then
 				baseDef=aux.ComposeNumberDigitByDigit(ctl,0,textDef)
 			end
-			local e2=Effect.CreateEffect(tc)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_SET_BASE_DEFENSE)
-			e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
-			e2:SetRange(LOCATION_MZONE)
-			e2:SetValue(baseDef)
-			e2:SetReset(RESET_EVENT+0x1dc0000)
-			tc:RegisterEffect(e2)
+			if baseDef>0 then
+				local e2=Effect.CreateEffect(tc)
+				e2:SetType(EFFECT_TYPE_SINGLE)
+				e2:SetCode(EFFECT_SET_BASE_DEFENSE)
+				e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
+				e2:SetRange(LOCATION_MZONE)
+				e2:SetValue(baseDef)
+				e2:SetReset(RESET_EVENT+0x1dc0000)
+				tc:RegisterEffect(e2)
+			end
 		end
 	end
 end
