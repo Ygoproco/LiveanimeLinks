@@ -1,20 +1,20 @@
---Golgoil (DOR)
---scripted by GameMaster (GM)+ Shad3
-function c511005703.initial_effect(c)
---Resurect different Mzone
+--petit angel  (DOR)
+--scripted by GameMaster (GM)
+function c511005734.initial_effect(c)
+--special summon from grave when destroyed by battle
 local e1=Effect.CreateEffect(c)
 e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 e1:SetCode(EVENT_BATTLE_DESTROYED)
 e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-e1:SetCondition(c511005703.condition5)
-e1:SetTarget(c511005703.sptg)
-e1:SetOperation(c511005703.spop)
+e1:SetCondition(c511005734.condition5)
+e1:SetTarget(c511005734.sptg)
+e1:SetOperation(c511005734.spop)
 c:RegisterEffect(e1)
 end
 
-function c511005703.condition5(e,tp)
+function c511005734.condition5(e,tp)
 local tc=e:GetHandler()
-if tc and tc:IsReason(REASON_DESTROY) and tc:IsLocation(LOCATION_GRAVE) and tc:GetPreviousControler()==tp then
+if tc and tc:IsReason(REASON_BATTLE) and tc:IsLocation(LOCATION_GRAVE) and tc:GetPreviousControler()==tp then
 e:SetLabel(tc:GetPreviousSequence())
 return true
 end
@@ -22,31 +22,31 @@ return false
 end
 
 --block previous zone and special summon
-function c511005703.regop(e,tp,eg,ep,ev,re,r,rp)
+function c511005734.regop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-if c:IsReason(REASON_DESTROY) and bit.band(c:GetPreviousLocation(),LOCATION_SZONE)~=0 then
+if bit.band(r,REASON_BATTLE)~=0 and bit.band(c:GetPreviousLocation(),LOCATION_SZONE)~=0 then
 --spsummon
 local e1=Effect.CreateEffect(c)
-e1:SetDescription(aux.Stringid(511005703,0))
+e1:SetDescription(aux.Stringid(511005734,0))
 e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 e1:SetRange(LOCATION_GRAVE)
 e1:SetCode(EVENT_PHASE+PHASE_BATTLE)
-e1:SetCost(c511005703.spcost)
-e1:SetTarget(c511005703.sptg)
-e1:SetOperation(c511005703.spop)
+e1:SetCost(c511005734.spcost)
+e1:SetTarget(c511005734.sptg)
+e1:SetOperation(c511005734.spop)
 e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
 c:RegisterEffect(e1)
 end
 end
 
-function c511005703.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511005734.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 local c=e:GetHandler()
-if chk==0 then return c:GetFlagEffect(511005703)==0 end
-c:RegisterFlagEffect(511005703,nil,0,1)
+if chk==0 then return c:GetFlagEffect(511005734)==0 end
+c:RegisterFlagEffect(511005734,nil,0,1)
 end
 
-function c511005703.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511005734.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return true end
 Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 local seq=bit.lshift(0x1,e:GetLabel())
@@ -60,7 +60,7 @@ e1:SetOperation(function() if Duel.GetCurrentChain()==ch then return seq else re
 Duel.RegisterEffect(e1,tp)
 end
 
-function c511005703.spop(e,tp,eg,ep,ev,re,r,rp)
+function c511005734.spop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
 local seq=bit.lshift(0x1,e:GetLabel())
 if c:IsRelateToEffect(e) then 
