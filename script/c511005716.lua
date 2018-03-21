@@ -1,4 +1,4 @@
---Injection Fair Lily (DOR)
+--Injection Fairy Lily (DOR)
 --scripted by GameMaster(GM)
 function c511005716.initial_effect(c)
 --gain 50 lp start of each turn
