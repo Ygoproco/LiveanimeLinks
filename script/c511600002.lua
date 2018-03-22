@@ -1,3 +1,4 @@
+--次元领域决斗
 --Dimension Duel
 --scripted by Larry126
 --note: Please contact with me if wanting to edit this script
@@ -143,10 +144,10 @@ function c511600002.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SET_BASE_ATTACK)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetValue(0)
-	e1:SetReset(RESET_EVENT+0x1dc0000)
+	e1:SetReset(RESET_EVENT+0xec0000)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_SET_BASE_DEFENSE)
@@ -171,7 +172,7 @@ function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
 		local baseAtk=0
 		local baseDef=0
 		local textAtk=tc:GetTextAttack()
-		local textDef=tc:GettextDefense()
+		local textDef=tc:GetTextDefense()
 		local ctl=tc:GetControler()
 		if textAtk~=-2 and textAtk~=0 then
 			Duel.Hint(HINT_SELECTMSG,ctl,aux.Stringid(4010,4))
@@ -185,10 +186,10 @@ function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
 				local e1=Effect.CreateEffect(tc)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_SET_BASE_ATTACK)
-				e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
 				e1:SetRange(LOCATION_MZONE)
 				e1:SetValue(baseAtk)
-				e1:SetReset(RESET_EVENT+0x1dc0000)
+				e1:SetReset(RESET_EVENT+0xec0000)
 				tc:RegisterEffect(e1)
 			end
 		end
@@ -204,10 +205,10 @@ function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
 				local e2=Effect.CreateEffect(tc)
 				e2:SetType(EFFECT_TYPE_SINGLE)
 				e2:SetCode(EFFECT_SET_BASE_DEFENSE)
-				e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
+				e2:SetProperty(\EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
 				e2:SetRange(LOCATION_MZONE)
 				e2:SetValue(baseDef)
-				e2:SetReset(RESET_EVENT+0x1dc0000)
+				e2:SetReset(RESET_EVENT+0xec0000)
 				tc:RegisterEffect(e2)
 			end
 		end
@@ -241,7 +242,7 @@ function c511600002.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RDComplete()
 end
 ------------------------------------------------------------------------
---no battle damage
+--no battle damaged
 function c511600002.bcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttackTarget()~=nil
 end

@@ -43,7 +43,7 @@ function c513000137.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
 function c513000137.atktg(e,c)
-	return c~=e:GetHandler()
+	return c~=e:GetHandler() and not c:IsAttribute(ATTRIBUTE_DEVINE)
 end
 function c513000137.atkval(e,c)
 	return c:GetAttack()/2
