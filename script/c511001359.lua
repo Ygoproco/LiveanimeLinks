@@ -27,9 +27,10 @@ function c511001359.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return ft>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.CheckReleaseGroup(tp,c511001359.cfilter,1,nil,e,tp,ft)
+		return ft>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
+			and Duel.CheckReleaseGroupCost(tp,c511001359.cfilter,1,false,nil,nil,e,tp,ft)
 	end
-	local g=Duel.SelectReleaseGroup(tp,c511001359.cfilter,1,1,nil,e,tp,ft)
+	local g=Duel.SelectReleaseGroupCost(tp,c511001359.cfilter,1,1,false,nil,nil,e,tp,ft)
 	local lv=g:GetFirst():GetLevel()/3
 	Duel.Release(g,REASON_COST)
 	Duel.SetTargetParam(lv)

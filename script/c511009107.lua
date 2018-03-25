@@ -9,14 +9,13 @@ function c511009107.initial_effect(c)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
-	e1:SetCondition(c511009107.condition)
-	e1:SetTarget(c511009107.target)
-	e1:SetOperation(c511009107.operation)
+	e1:SetCondition(c511009107.indescon)
+	e1:SetTarget(c511009107.indestg)
+	e1:SetOperation(c511009107.indesop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_CHAINING)
-	e2:SetCondition(c511009107.condition2)
-	e2:SetOperation(c511009107.operation)
+	e2:SetCondition(c511009107.indescon2)
 	c:RegisterEffect(e2)
 	--atkup
 	local e3=Effect.CreateEffect(c)
@@ -53,10 +52,10 @@ function c511009107.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c511009107.rdop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(tp,ev/2)
-	Duel.ChangeBattleDamage(1-tp,ev/2)
+	Duel.ChangeBattleDamage(tp,Duel.GetBattleDamage(tp)/2)
+	Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(1-tp)/2)
 end
-function c511009107.condition(e,tp,eg,ep,ev,re,r,rp)
+function c511009107.indescon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	local bc=tc:GetBattleTarget()
 	if tc:IsControler(1-tp) then
@@ -66,8 +65,7 @@ function c511009107.condition(e,tp,eg,ep,ev,re,r,rp)
 	if not tc or not bc or tc:IsControler(1-tp) or not tc:IsSetCard(0xc6) then return false end
 	if tc:IsHasEffect(EFFECT_INDESTRUCTABLE_BATTLE) then
 		local tcind={tc:GetCardEffect(EFFECT_INDESTRUCTABLE_BATTLE)}
-		for i=1,#tcind do
-			local te=tcind[i]
+		for _,te in ipairs(tcind) do
 			local f=te:GetValue()
 			if type(f)=='function' then
 				if f(te,bc) then return false end
@@ -103,7 +101,7 @@ function c511009107.cfilter(c,e,tp)
 	return c:IsOnField() and c:IsType(TYPE_MONSTER) and c:IsControler(tp) and (not e or c:IsRelateToEffect(e)) 
 		and c:IsSetCard(0xc6)
 end
-function c511009107.condition2(e,tp,eg,ep,ev,re,r,rp)
+function c511009107.indescon2(e,tp,eg,ep,ev,re,r,rp)
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
 	if tg==nil then return false end
 	local g=tg:Filter(c511009107.cfilter,nil,nil,tp)
@@ -111,19 +109,25 @@ function c511009107.condition2(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabelObject(g)
 	return ex and tc+g:GetCount()-tg:GetCount()>0
 end
-function c511009107.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009107.indestg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetLabelObject()
 	if chk==0 then return g end
 	Duel.SetTargetCard(g)
 end
-function c511009107.operation(e,tp,eg,ep,ev,re,r,rp)
+function c511009107.indesop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(c511009107.cfilter,nil,e,tp)
 	g:ForEach(function(tc)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+		if e:GetCode()==EVENT_PRE_DAMAGE_CALCULATE then
+			e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+			e1:SetValue(1)
+			e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+		else
+			e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+			e1:SetValue(function(e,te) re==te end)
+			e1:SetReset(RESET_CHAIN)
+		end
 		tc:RegisterEffect(e1)
 	end)
 end

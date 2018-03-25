@@ -29,9 +29,9 @@ function c511000356.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
-		return ft>-1 and Duel.CheckReleaseGroup(tp,c511000356.cfilter,1,nil,e,tp,ft)
+		return ft>-1 and Duel.CheckReleaseGroupCost(tp,c511000356.cfilter,1,false,nil,nil,e,tp,ft)
 	end
-	local g=Duel.SelectReleaseGroup(tp,c511000356.cfilter,1,1,nil,e,tp)
+	local g=Duel.SelectReleaseGroupCost(tp,c511000356.cfilter,1,1,false,nil,nil,e,tp,ft)
 	local att=0
 	if g:GetFirst():IsAttribute(ATTRIBUTE_LIGHT) then att=att|ATTRIBUTE_DARK end
 	if g:GetFirst():IsAttribute(ATTRIBUTE_DARK) then att=att|ATTRIBUTE_LIGHT end

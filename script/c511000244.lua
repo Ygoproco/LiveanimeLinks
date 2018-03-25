@@ -33,10 +33,17 @@ function c511000244.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,c511000244.costfilter,2,2,REASON_COST+REASON_DISCARD)
 end
 function c511000244.filter(c,e,tp)
-	return c:IsCode(13893596) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	if not c:IsCode(13893596) then return false end
+	local nocheck=false
+	for _,te in ipairs({c:GetCardEffect(EFFECT_SPSUMMON_CONDITION)}) do
+		local val=te:GetValue()
+		if te:GetOwner()==c and (not val or type(val)=='number' or not val(te,e,POS_FACEUP,0)) then nocheck=true break end
+	end
+	return c:IsCanBeSpecialSummoned(e,0,tp,nocheck,false)
 end
 function c511000244.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
+		local c=e:GetHandler()
 		local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
 		for _,te in ipairs(eff) do
 			local op=te:GetOperation()
