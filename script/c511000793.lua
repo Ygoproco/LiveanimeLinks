@@ -29,7 +29,7 @@ function c511000793.econ(e)
 	return e:GetLabelObject():IsActivatable(e:GetLabel())
 end
 function c511000793.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)<=0 and ep==tp
+	return Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)<=0
 end
 function c511000793.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
