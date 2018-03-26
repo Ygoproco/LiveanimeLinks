@@ -68,11 +68,11 @@ function c511009677.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,dam,REASON_EFFECT)
 end
 function c511009677.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x474)
+	return c:IsFaceup() and c:IsSetCard(0x574)
 end
 function c511009677.descon(e)
 	return not Duel.IsExistingMatchingCard(c511009677.desfilter,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function c511009677.tgtg(e,c)
-	return c:IsSetCard(0x474) and c:IsType(TYPE_LINK)
+	return c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
 end
