@@ -69,11 +69,14 @@ function c511000242.havefieldcon(e)
 	return Duel.IsExistingMatchingCard(c511000242.havefieldfilter,0,LOCATION_SZONE,LOCATION_SZONE,1,e:GetHandler())
 end
 function c511000242.unaffectedval(e,te)
-	return (te:IsActiveType(TYPE_SPELL) or te:IsActiveType(TYPE_TRAP)) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
+	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
+end
+function c511000242.ctfilter(c,tp)
+	return Duel.IsExistingTarget(c511000242.controlfilter,tp,0,LOCATION_MZONE,1,c)
 end
 function c511000242.controlcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511000242.ctfilter,1,false,nil,nil,tp) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511000242.ctfilter,1,1,false,nil,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c511000242.controlfilter(c)
@@ -81,7 +84,7 @@ function c511000242.controlfilter(c)
 end
 function c511000242.controltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c511000242.controlfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511000242.controlfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectTarget(tp,c511000242.controlfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)

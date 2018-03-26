@@ -4,7 +4,6 @@ function c511000341.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetCost(c511000341.cost)
@@ -29,8 +28,9 @@ function c511000341.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return ft>-1 and Duel.CheckReleaseGroup(tp,c511000341.rfilter,1,nil,e,tp,ft) end
-	local tc=Duel.SelectReleaseGroup(tp,c511000341.rfilter,1,1,nil,e,tp,ft):GetFirst()
+		return ft>-1 and Duel.CheckReleaseGroupCost(tp,c511000341.rfilter,1,false,nil,nil,e,tp,ft)
+	end
+	local tc=Duel.SelectReleaseGroupCost(tp,c511000341.rfilter,1,1,false,nil,nil,e,tp,ft):GetFirst()
 	local lv=tc:GetLevel()
 	Duel.Release(tc,REASON_COST)
 	Duel.SetTargetParam(lv)

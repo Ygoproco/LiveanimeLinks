@@ -12,10 +12,8 @@ function c511000343.initial_effect(c)
 end
 function c511000343.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	local rg=Duel.GetReleaseGroup(tp):Filter(Card.IsRace,nil,RACE_DRAGON)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and rg:GetCount()>1 
-		and aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),0) end
-	local sg=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_RELEASE)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsRace,2,nil,aux.ReleaseCheckMMZ,nil,RACE_DRAGON) end
+	local sg=Duel.SelectReleaseGroupCost(tp,Card.IsRace,2,2,nil,aux.ReleaseCheckMMZ,nil,RACE_DRAGON)
 	Duel.Release(sg,REASON_COST)
 end
 function c511000343.spfilter(c,e,tp)

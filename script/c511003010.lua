@@ -18,6 +18,9 @@ end
 function c511003010.mfilter(c)
 	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER
 end
+function c511003010.filter0(c,e,opp)
+	return c:IsOnField() and (not e or not c:IsImmuneToEffect(e)) and (not opp or c:IsFaceup())
+end
 function c511003010.filter2(c,e,tp,m,f)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
@@ -41,7 +44,7 @@ function c511003010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			table.insert(reset,e1)
 		end)
 		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
-		local mg2=Duel.GetFusionMaterial(1-tp):Filter(Card.IsOnField,nil)
+		local mg2=Duel.GetFusionMaterial(1-tp):Filter(c511003010.filter0,nil,nil,true)
 		mg1:Merge(mg2)
 		Auxiliary.FCheckAdditional=c511003010.fcheck
 		Auxiliary.FCheckExact=2
@@ -50,7 +53,7 @@ function c511003010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			local ce=Duel.GetChainMaterial(tp)
 			if ce~=nil then
 				local fgroup=ce:GetTarget()
-				local mg3=fgroup(ce,e,tp)
+				local mg3=fgroup(ce,e,tp):Filter(Card.IsOnField,nil)
 				local mf=ce:GetValue()
 				res=Duel.IsExistingMatchingCard(c511003010.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg3,mf)
 			end
@@ -67,9 +70,6 @@ function c511003010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetChainLimit(aux.FALSE)
 	end
 end
-function c511003010.filter0(c,e)
-	return c:IsOnField() and not c:IsImmuneToEffect(e)
-end
 function c511003010.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511003010.mfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	g:ForEach(function(tc)
@@ -82,7 +82,7 @@ function c511003010.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end)
 	local mg1=Duel.GetFusionMaterial(tp):Filter(c511003010.filter0,nil,e)
-	local mg2=Duel.GetFusionMaterial(1-tp):Filter(c511003010.filter0,nil,e)
+	local mg2=Duel.GetFusionMaterial(1-tp):Filter(c511003010.filter0,nil,e,true)
 	mg1:Merge(mg2)
 	Auxiliary.FCheckAdditional=c511003010.fcheck
 	Auxiliary.FCheckExact=2
@@ -92,7 +92,7 @@ function c511003010.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ce=Duel.GetChainMaterial(tp)
 	if ce~=nil then
 		local fgroup=ce:GetTarget()
-		mg3=fgroup(ce,e,tp):Filter(c511003010.filter0,nil)
+		mg3=fgroup(ce,e,tp):Filter(c511003010.filter0,nil,e,true)
 		local mf=ce:GetValue()
 		sg2=Duel.GetMatchingGroup(c511003010.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg3,mf)
 	end
