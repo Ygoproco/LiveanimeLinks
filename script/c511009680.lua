@@ -1,5 +1,4 @@
 --Sunavalon Dryatrentiay
---fixed by MLD
 function c511009680.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
@@ -75,6 +74,7 @@ function c511009680.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511009680.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	Duel.Destroy(g,REASON_EFFECT)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	Duel.Destroy(sg,REASON_EFFECT)
 end
