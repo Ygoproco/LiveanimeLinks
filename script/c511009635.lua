@@ -40,11 +40,11 @@ function c511009635.initial_effect(c)
 end
 function c511009635.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511009635.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
 	if g:GetCount()>0 then
 		Duel.Destroy(g,REASON_EFFECT)
 	end
