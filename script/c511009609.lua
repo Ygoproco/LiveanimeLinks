@@ -1,4 +1,4 @@
---蒼焔の煉獄
+--Trickstar Vision
 function c511009609.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +11,7 @@ function c511009609.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009609.filter(c,e,tp)
-	return c:IsSetCard(0xfb) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0xfb) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c511009609.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -44,7 +44,4 @@ function c511009609.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e3,true)
 		Duel.SpecialSummonComplete()
 	end
-	Duel.BreakEffect()
-	Duel.Draw(tp,1,REASON_EFFECT)
-	Duel.Draw(1-tp,1,REASON_EFFECT)
 end
