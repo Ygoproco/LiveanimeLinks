@@ -1,5 +1,7 @@
 --Sunvine Shrine
+--fixed by MLD
 function c511009672.initial_effect(c)
+	c:SetUniqueOnField(1,1,511009672)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -32,6 +34,7 @@ function c511009672.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCountLimit(1)
 	e4:SetCost(c511009672.setcost)
 	e4:SetTarget(c511009672.settg)
@@ -77,11 +80,8 @@ function c511009672.setfilter(c)
 end
 function c511009672.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511009672.setfilter(chkc) end
-	if chk==0 then
-		local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
-		if e:GetHandler():GetSequence()<5 then ft=ft+1 end
-		return ft>0 and Duel.IsExistingTarget(c511009672.setfilter,tp,LOCATION_GRAVE,0,1,nil)
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>-1 
+		and Duel.IsExistingTarget(c511009672.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,c511009672.setfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
