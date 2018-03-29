@@ -27,10 +27,13 @@ function c511009611.initial_effect(c)
 	end
 end
 function c511009611.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local at=Duel.GetAttackTarget()
-	if Duel.GetAttacker():IsSetCard(0xfb) and at then
-		c511009611[0]=true
-		c511009611[1]=true
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if a:IsSetCard(0xfb) then
+		c511009611[a:GetControler()]=true
+	end
+	if d and d:IsSetCard(0xfb) then
+		c511009611[d:GetControler()]=true
 	end
 end
 function c511009611.clear(e,tp,eg,ep,ev,re,r,rp)

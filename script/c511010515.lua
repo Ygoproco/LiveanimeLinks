@@ -1,4 +1,5 @@
 --DDD超死偉王ダークネス・ヘル・アーマゲドン
+--fixed by MLD
 function c511010515.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.EnablePendulumAttribute(c,false)
@@ -48,15 +49,15 @@ function c511010515.initial_effect(c)
 	c:RegisterEffect(e6)
 	--destroy
 	local e7=Effect.CreateEffect(c)
-	e7:SetCategory(CATEGORY_CONTROL)
+	e7:SetCategory(CATEGORY_DESTROY)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e7:SetDescription(aux.Stringid(511010515,1))
 	e7:SetType(EFFECT_TYPE_IGNITION)
-	e7:SetProperty(0,EFFECT_FLAG2_XMDETACH)
 	e7:SetRange(LOCATION_MZONE)
-	e7:SetCost(c511010515.cost)
-	e7:SetTarget(c511010515.target)
-	e7:SetOperation(c511010515.operation)
-	c:RegisterEffect(e7)
+	e7:SetCost(c511010515.descost)
+	e7:SetTarget(c511010515.destg)
+	e7:SetOperation(c511010515.desop)
+	c:RegisterEffect(e7,false,1)
 end
 function c511010515.valcheck(e,c)
 	local g=c:GetMaterial()
@@ -67,10 +68,10 @@ function c511010515.valcheck(e,c)
 	end
 end
 function c511010515.xyzcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ and e:GetLabel()==1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetLabel()==1
 end
 function c511010515.xyzfilter(c)
-	return c:IsFaceup() and c:GetLocation()==LOCATION_EXTRA and c:IsCode(47198668)
+	return c:IsFaceup() and c:IsCode(47198668)
 end
 function c511010515.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511010515.xyzfilter,tp,LOCATION_EXTRA,0,1,nil) end
@@ -79,33 +80,30 @@ function c511010515.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.GetMatchingGroup(c511010515.xyzfilter,tp,LOCATION_EXTRA,0,nil)
-	if g:GetCount()>=1 then
-		local og=g:Select(tp,1,1,nil)
-		Duel.Overlay(c,og)
+	local g=Duel.SelectMatchingCard(tp,c511010515.xyzfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.Overlay(c,g)
 	end
 end
-function c511010515.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511010515.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)	
 end
-function c511010515.filter(c)
+function c511010515.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
 end
-function c511010515.dfilter(c)
-	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_PENDULUM)
+function c511010515.desfilter(c)
+	return c:IsFaceup() and not c:IsType(TYPE_PENDULUM)
 end
-function c511010515.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMatchingGroupCount(c511010515.filter,tp,LOCATION_MZONE,0,nil)<=Duel.GetMatchingGroupCount(c511010515.dfilter,tp,0,LOCATION_MZONE,nil,TYPE_MONSTER) end
-	local ct=Duel.GetMatchingGroupCount(c511010515.filter,tp,LOCATION_MZONE,0,nil)
+function c511010515.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local ct=Duel.GetMatchingGroupCount(c511010515.cfilter,tp,LOCATION_MZONE,0,nil)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c511010515.desfilter(chkc) end
+	if chk==0 then return ct>0 and Duel.IsExistingTarget(c511010515.desfilter,tp,0,LOCATION_MZONE,ct,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local dg=Duel.SelectTarget(tp,c511010515.dfilter,tp,0,LOCATION_MZONE,ct,ct,nil)
+	local dg=Duel.SelectTarget(tp,c511010515.desfilter,tp,0,LOCATION_MZONE,ct,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,dg:GetCount(),0,0)
 end
-function c511010515.operation(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetMatchingGroupCount(c511010515.filter,tp,LOCATION_MZONE,0,nil)
-	local g=Duel.GetMatchingGroup(c511010515.dfilter,tp,0,LOCATION_MZONE,nil)
-	if ct>g:GetCount() then return end
+function c511010515.desop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Destroy(dg,REASON_EFFECT)
 end

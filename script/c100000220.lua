@@ -28,8 +28,8 @@ function c100000220.chk(c,sg,g,code,...)
 end
 function c100000220.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsCode,4,nil,c100000220.spcheck,nil,80208158.16796157.43791861,79185500) end
-	local sg=Duel.SelectReleaseGroupCost(tp,Card.IsCode,4,4,nil,c100000220.spcheck,nil,80208158.16796157.43791861,79185500)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsCode,4,nil,c100000220.spcheck,nil,80208158,16796157,43791861,79185500) end
+	local sg=Duel.SelectReleaseGroupCost(tp,Card.IsCode,4,4,nil,c100000220.spcheck,nil,80208158,16796157,43791861,79185500)
 	Duel.Release(sg,REASON_COST)
 end
 function c100000220.filter(c,e,tp)

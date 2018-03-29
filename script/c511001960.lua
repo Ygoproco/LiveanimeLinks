@@ -10,8 +10,8 @@ function c511001960.initial_effect(c)
 	e1:SetOperation(c511001960.activate)
 	c:RegisterEffect(e1)
 end
-function c511001960.rescon(sg,e,tp,mg)
-	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c511001960.chk,1,nil,sg,Group.CreateGroup(),511000813,511000827,511001958)
+function c511001960.spcheck(sg,tp)
+	return aux.ReleaseCheckMMZ(sg,tp) and sg:IsExists(c511001960.chk,1,nil,sg,Group.CreateGroup(),511000813,511000827,511001958)
 end
 function c511001960.chk(c,sg,g,code,...)
 	if not c:IsCode(code) then return false end
@@ -27,16 +27,8 @@ function c511001960.chk(c,sg,g,code,...)
 end
 function c511001960.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	local rg=Duel.GetReleaseGroup(tp)
-	local g1=rg:Filter(Card.IsCode,nil,511000813)
-	local g2=rg:Filter(Card.IsCode,nil,511000827)
-	local g3=rg:Filter(Card.IsCode,nil,511001958)
-	local g=g1:Clone()
-	g:Merge(g2)
-	g:Merge(g3)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 
-		and aux.SelectUnselectGroup(g,e,tp,3,3,c511001960.rescon,0) end
-	local sg=aux.SelectUnselectGroup(g,e,tp,3,3,c511001960.rescon,1,tp,HINTMSG_RELEASE)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsCode,3,nil,c511001960.spcheck,nil,511000813,511000827,511001958) end
+	local sg=Duel.SelectReleaseGroupCost(tp,Card.IsCode,3,3,nil,c511001960.spcheck,nil,511000813,511000827,511001958)
 	Duel.Release(sg,REASON_COST)
 end
 function c511001960.spfilter(c,e,tp)

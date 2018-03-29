@@ -10,11 +10,14 @@ function c511002569.initial_effect(c)
 	e1:SetOperation(c511002569.activate)
 	c:RegisterEffect(e1)
 end
+function c511002569.cfilter(c,ft,tp)
+	return c:IsType(TYPE_XYZ) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
+end
 function c511002569.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then return ft>-1 and Duel.CheckReleaseGroup(tp,Card.IsType,1,nil,TYPE_XYZ) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsType,1,1,nil,TYPE_XYZ)
+	if chk==0 then return ft>-1 and Duel.CheckReleaseGroupCost(tp,c511002569.cfilter,1,false,nil,nil,ft,tp) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511002569.cfilter,1,1,false,nil,nil,ft,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c511002569.filter(c,e,tp)
@@ -31,8 +34,7 @@ end
 function c511002569.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511002569.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c511002569.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
 	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
