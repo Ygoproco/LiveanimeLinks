@@ -125,7 +125,7 @@ function c511009107.indesop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 		else
 			e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-			e1:SetValue(function(e,te) re==te end)
+			e1:SetValue(function(e,te) return re==te end)
 			e1:SetReset(RESET_CHAIN)
 		end
 		tc:RegisterEffect(e1)
