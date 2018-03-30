@@ -34,7 +34,7 @@ function c511002804.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511002804.filter,tp,LOCATION_HAND,0,nil,tp,tc)
 	if g:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local matg=g:Select(tp,1,1,nil):GetFirst()
+		local matg=g:Select(tp,1,1,nil)
 		matg:AddCard(tc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sc=Duel.SelectMatchingCard(tp,c511002804.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,matg):GetFirst()

@@ -33,15 +33,14 @@ function c511009727.spfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsReason(REASON_BATTLE) or c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()==tp)
 end
 function c511009727.checkop(e,tp,eg,ep,ev,re,r,rp)
-		if eg:IsExists(c22804410.spfilter,1,nil,tp) and  then
-			c511009727[tc:GetControler()]=c511009727[tc:GetControler()]+1
-		end
+	if eg:IsExists(c22804410.spfilter,1,nil,tp) then
+		c511009727[tc:GetControler()]=c511009727[tc:GetControler()]+1
+	end
 end
 function c511009727.clear(e,tp,eg,ep,ev,re,r,rp)
 	c511009727[0]=0
 	c511009727[1]=0
 end
-
 
 function c511009727.descon(e,c)
 	if c==nil then return true end
