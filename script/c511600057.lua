@@ -19,7 +19,7 @@ function c511600057.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511600057.tgfilter(c)
-	return c:IsType(TYPE_LINK) and c:IsFaceup()
+	return c:IsFaceup() and c:IsType(TYPE_LINK)
 end
 function c511600057.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511600057.tgfilter(chkc) end
@@ -43,7 +43,7 @@ end
 function c511600057.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		c:SetCardTarget(tc)
 		--cannot attack
 		local e1=Effect.CreateEffect(c)
@@ -69,8 +69,7 @@ function c511600057.descon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600057.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetTurnCounter()
-	ct=ct+1
+	local ct=c:GetTurnCounter()+1
 	c:SetTurnCounter(ct)
 	if ct==2 then
 		Duel.Destroy(c,REASON_RULE)

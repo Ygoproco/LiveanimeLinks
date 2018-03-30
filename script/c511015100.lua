@@ -59,32 +59,29 @@ end
 function c511015100.cfilter(c,tp)
 	return c:IsPreviousSetCard(0x99) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
 end
-function c511015100.costfilter(c)
-	return not c:IsSetCard(0x99)
-end
-function c511015100.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511015100.cfilter,1,nil,tp)
-end
-function c511015100.rescon(sg,e,tp,mg)
-	if not aux.ChkfMMZ(1)(sg,e,tp,mg) then return false end
+function c511015100.spcheck(sg,tp)
+	if not aux.ReleaseCheckMMZ(sg,tp) then return false end
 	if sg:GetCount()==1 then
 		return sg:IsExists(Card.IsSetCard,1,nil,0x99)
 	else return true end
 end
+function c511015100.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c511015100.cfilter,1,nil,tp)
+end
 function c511015100.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rg=Duel.GetReleaseGroup(tp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then return ft>-2 and rg:GetCount()>0 and aux.SelectUnselectGroup(rg,e,tp,1,2,c511015100.rescon,0) end
-	local sg=aux.SelectUnselectGroup(rg,e,tp,1,2,c511015100.rescon,1,tp,HINTMSG_RELEASE)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsSetCard,1,nil,aux.ReleaseCheckMMZ,nil,0x99) 
+		or Duel.CheckReleaseGroupCost(tp,nil,2,nil,aux.ReleaseCheckMMZ,nil) end
+	local sg=Duel.SelectReleaseGroupCost(tp,nil,1,2,nil,c511015100.spcheck,nil)
+	Duel.Release(sg,REASON_COST)
 end
 function c511015100.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c511015100.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
-		c:CompleteProcedure()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c511015100.discfilter(c)
@@ -146,7 +143,7 @@ function c511015100.dmtarget(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511015100.dmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
@@ -182,7 +179,7 @@ function c511015100.dm2cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511015100.dm2op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
@@ -190,7 +187,6 @@ function c511015100.dm2op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
 		tc:RegisterEffect(e1)
 	end
-	
 	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
@@ -199,8 +195,8 @@ function c511015100.dm2op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e2,tp)
 end
 function c511015100.dam2op(e,tp,eg,ep,ev,re,r,rp)
-	if ep~=tp or ev==0 then return end
-	Duel.ChangeBattleDamage(tp,ev/2)
+	if Duel.GetBattleDamage(tp)==0 then return end
+	Duel.ChangeBattleDamage(tp,Duel.GetBattleDamage(tp)/2)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_BATTLE_DAMAGE)
@@ -209,5 +205,7 @@ function c511015100.dam2op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c511015100.dmgop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Damage(1-tp,ev,REASON_EFFECT)
+	if ep==tp then
+		Duel.Damage(1-tp,ev,REASON_EFFECT)
+	end
 end

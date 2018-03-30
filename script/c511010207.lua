@@ -185,8 +185,8 @@ function c511010207.rfilter(c)
 	return c:GetAttackAnnouncedCount()<=0
 end
 function c511010207.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511010207.rfilter,2,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,c511010207.rfilter,2,2,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511010207.rfilter,2,false,nil,e:GetHandler()) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511010207.rfilter,2,2,false,nil,e:GetHandler())
 	Duel.Release(g,REASON_COST)
 end
 function c511010207.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
