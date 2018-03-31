@@ -10,7 +10,7 @@ end
 function c511001535.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	if not a or not d or d==e:GetHandler() then return end
+	if not a or not d or a==e:GetHandler() then return end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
