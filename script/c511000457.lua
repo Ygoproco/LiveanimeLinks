@@ -9,7 +9,7 @@ function c511000457.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000457.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return ft>-1 and Duel.CheckReleaseGroupCost(tp,nil,1,false,nil,nil) end
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,nil,1,false,nil,nil) end
 	local g=Duel.SelectReleaseGroupCost(tp,nil,1,1,false,nil,nil)
 	Duel.Release(g,REASON_COST)
 end
