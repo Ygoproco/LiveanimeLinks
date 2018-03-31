@@ -276,7 +276,8 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif res==4 then
 		Duel.SendtoDeck(c,1-tp,2,REASON_EFFECT)
 	else
-		Duel.SSet(tp,c,1-tp)
+		Duel.MoveToField(c,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,false)
+		Duel.RaiseEvent(c,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)
 	end
 end
 function c512000125.damop(e,tp,eg,ep,ev,re,r,rp)
