@@ -15,11 +15,10 @@ function card.initial_effect(c)
 end
 function card.filter(c,tp)
 	return c:IsFaceup()
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),c:GetSetCard(),0x4011,0,0,0,0,0)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),c:GetSetCard(),0x4011,0,0,0,RACE_AQUA,ATTRIBUTE_WATER)
 end
 function card.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-		and Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_MZONE,0,1,nil,tp) and CheckPillars(tp,1) end
+	if chk==0 then return Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_MZONE,0,1,nil,tp) and CheckPillars(tp,1) end
 end
 function card.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not CheckPillars(tp,1) then return end
