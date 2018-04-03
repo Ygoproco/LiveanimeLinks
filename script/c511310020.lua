@@ -18,11 +18,4 @@ end
 function card.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE,PLAYER_NONE,0) < 2 then return end
 	IcePillarZone[tp+1] = IcePillarZone[tp+1] + Duel.SelectDisableField(tp,2,LOCATION_MZONE,0,IcePillarZone[tp+1])
-	--The following is a workaround - cannot use the pillar's innate effect if this card is activated during EVENT_ATTACK_ANNOUNCE, which contradicts manga usage.
-	Duel.BreakEffect()
-	local tc=Duel.GetAttacker()
-    if Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE) and CheckPillars(tp,1) and tc and tc:GetControler()~=tp and Duel.SelectYesNo(tp,aux.Stringid(4014,0)) then
-        IcePillarZone[tp+1]=IcePillarZone[tp+1] & ~Duel.SelectFieldZone(tp,1,LOCATION_MZONE,LOCATION_MZONE,~IcePillarZone[tp+1])
-        Duel.NegateAttack()
-    end
 end
