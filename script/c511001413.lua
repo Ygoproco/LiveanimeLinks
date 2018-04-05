@@ -11,7 +11,7 @@ function c511001413.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001413.cfilter(c,tid,ft,tp)
-	return c:IsFaceup() and c:IsCode(511001412) and c:GetTurnID()>tid and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) 
+	return c:IsFaceup() and c:IsCode(511001412) and c:GetTurnID()<tid and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) 
 		and (c:IsControler(tp) or c:IsFaceup())
 end
 function c511001413.cost(e,tp,eg,ep,ev,re,r,rp,chk)
