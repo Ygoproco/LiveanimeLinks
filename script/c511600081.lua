@@ -31,7 +31,7 @@ function c511600081.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetRange(LOCATION_MZONE)
 			e1:SetTargetRange(0,LOCATION_MZONE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsCode,18027139)))
+			e1:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsCode,11050416)))
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			token:RegisterEffect(e1)
 		end
