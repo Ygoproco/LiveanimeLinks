@@ -69,10 +69,9 @@ function c511005710.lvfilter(c)
 end
 function c511005710.lvcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetTurnPlayer()~=tp then return false end
 	local sg=e:GetLabelObject()
 	if sg:FilterCount(c511005710.lvfilter,nil)>0 then
-		return true
+		return Duel.GetTurnPlayer()==tp
 	else
 		sg:DeleteGroup()
 		e:Reset()
