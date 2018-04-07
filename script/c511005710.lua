@@ -1,126 +1,105 @@
 --Starlight Force
---scripted by GameMaster(GM)
 function c511005710.initial_effect(c)
---Activate/level change
-local e1=Effect.CreateEffect(c)
-e1:SetType(EFFECT_TYPE_ACTIVATE)
-e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-e1:SetTarget(c511005710.tg)
-e1:SetOperation(c511005710.op)
-e1:SetCondition(c511005710.con)
-c:RegisterEffect(e1)
---disable
-local e2=Effect.CreateEffect(c)
-e2:SetType(EFFECT_TYPE_FIELD)
-e2:SetCode(EFFECT_DISABLE)
-e2:SetRange(LOCATION_SZONE)
-e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-e2:SetTarget(c511005710.tg2)
-c:RegisterEffect(e2)
---level increase
-local e3=Effect.CreateEffect(c)
-e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-e3:SetRange(LOCATION_SZONE)
-e3:SetCountLimit(1)
-e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
-e3:SetTarget(c511005710.tg3)
-e3:SetOperation(c511005710.op3)
-e3:SetCondition(c511005710.con3)
-c:RegisterEffect(e3)
---destroy on endphase if your monsters lv sum is <= lv sum opp
-local e4=Effect.CreateEffect(c)
-e4:SetCategory(CATEGORY_DESTROY)
-e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-e4:SetCode(EVENT_PHASE+PHASE_END)
-e4:SetRange(LOCATION_SZONE)
-e4:SetCountLimit(1)
-e4:SetCondition(c511005710.con4)
-e4:SetOperation(c511005710.desop)
-c:RegisterEffect(e4)
+	--activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DISABLE)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c511005710.condition)
+	e1:SetTarget(c511005710.target)
+	e1:SetOperation(c511005710.operation)
+	c:RegisterEffect(e1)
+	--destroy
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCountLimit(1)
+	e2:SetCondition(c511005710.dcondition)
+	e2:SetTarget(c511005710.dtarget)
+	e2:SetOperation(c511005710.doperation)
+	c:RegisterEffect(e2)
 end
-
-function c511005710.con4(e,c)
-local c=e:GetHandler()
---self destruct
-local g1=Duel.GetMatchingGroup(Card.IsFaceup,c:GetControler(),LOCATION_MZONE,0,nil)
-local g2=Duel.GetMatchingGroup(Card.IsFaceup,c:GetControler(),0,LOCATION_MZONE,nil)
-if g1:GetSum(Card.GetLevel) <= g2:GetSum(Card.GetLevel) then 
-return true
-else 
-return false 
+function c511005710.afilter(c)
+	return c:GetSummonLocation()==LOCATION_EXTRA
 end
+function c511005710.condition(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c511005710.afilter,1,nil)
 end
-
-function c511005710.desop(e,tp,eg,ep,ev,re,r,rp)
-Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+function c511005710.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local g=Duel.GetMatchingGroup(c511005710.afilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,g:GetCount(),0,0)
+	Duel.SetTargetCard(g)
 end
-
-function c511005710.tg2(e,c)
-return (c:IsPreviousLocation(LOCATION_EXTRA) or c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_XYZ) or c:IsType(TYPE_FUSION) or c:GetFlagEffect(511005710)>0 )
+function c511005710.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	local g=Duel.GetMatchingGroup(c511005710.afilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	for tc in aux.Next(sg) do
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		tc:RegisterEffect(e2)
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_CHANGE_LEVEL)
+		e3:SetValue(4)
+		tc:RegisterEffect(e3)
+		tc:RegisterFlagEffect(511005710,RESET_EVENT+RESETS_STANDARD,0,1)
+	end
+	sg:KeepAlive()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCountLimit(1)
+	e1:SetLabelObject(sg)
+	e1:SetCondition(c511005710.lvcon)
+	e1:SetOperation(c511005710.lvop)
+	Duel.RegisterEffect(e1,tp)
 end
-
-function c511005710.cfilter(c)
-return c:IsPreviousLocation(LOCATION_EXTRA)
+function c511005710.lvfilter(c)
+	return c:GetFlagEffect(511005710)~=0
 end
-
-function c511005710.con(e,tp,eg,ep,ev,re,r,rp)
-return eg:IsExists(c511005710.cfilter,1,nil,nil)
+function c511005710.lvcon(e,tp,eg,ep,ev,re,r,rp)
+	local sg=e:GetLabelObject()
+	if sg:FilterCount(c511005710.lvfilter,nil)>0 then
+		return Duel.GetTurnPlayer()==tp
+	else
+		sg:DeleteGroup()
+		e:Reset()
+		return false
+	end
 end
-
---synchros and fusion and monsters on the field  become level 4  v negated ^^
---------------------------------
-
-function c511005710.filter(c)
-return c:IsFaceup() and c:IsType(TYPE_MONSTER) 
+function c511005710.lvop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local g=e:GetLabelObject()
+	local sg=g:Filter(c511005710.lvfilter,nil)
+	for tc in aux.Next(sg) do
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_LEVEL)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+	end
 end
-
-function c511005710.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return Duel.IsExistingMatchingCard(c511005710.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+function c511005710.dcondition(e,tp,eg,ep,ev,re,r,rp)
+	local lv1=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil):GetSum(Card.GetLevel)
+	local lv2=Duel.GetMatchingGroup(Card.IsFaceup,1-tp,LOCATION_MZONE,0,nil):GetSum(Card.GetLevel)
+	return lv1<=lv2
 end
-
-function c511005710.op(e,tp,eg,ep,ev,re,r,rp)
-local g=Duel.GetMatchingGroup(c511005710.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-local tc=g:GetFirst()
-while tc do
-local e1=Effect.CreateEffect(e:GetHandler())
-e1:SetType(EFFECT_TYPE_SINGLE)
-e1:SetCode(EFFECT_CHANGE_LEVEL)
-e1:SetValue(4)
-e1:SetReset(RESET_EVENT+0x1fe0000)
-tc:RegisterEffect(e1)
-
-tc:RegisterFlagEffect(511005710,RESET_EVENT+0x1ec0000,0,1)
-tc=g:GetNext()
+function c511005710.dtarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
-end
-
---------------------------------
-
---increase level by 1
-----------------------------------
-
-function c511005710.con3(e,tp,eg,ep,ev,re,r,rp)
-return Duel.GetTurnPlayer()==tp
-end
-
-function c511005710.filter2(c)
-return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetFlagEffect(511005710)>0
-end
-
-function c511005710.tg3(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return Duel.IsExistingMatchingCard(c511005710.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-end
-
-function c511005710.op3(e,tp,eg,ep,ev,re,r,rp)
-local g=Duel.GetMatchingGroup(c511005710.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-local tc=g:GetFirst()
-while tc do
-local e1=Effect.CreateEffect(e:GetHandler())
-e1:SetType(EFFECT_TYPE_SINGLE)
-e1:SetCode(EFFECT_UPDATE_LEVEL)
-e1:SetValue(1)
-e1:SetReset(RESET_EVENT+0x1fe0000)
-tc:RegisterEffect(e1)
-tc=g:GetNext()
-end
+function c511005710.doperation(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsRelateToEffect(e) then
+		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+	end
 end
