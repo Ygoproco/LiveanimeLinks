@@ -29,7 +29,6 @@ function c511005710.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511005710.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c511005710.afilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,g:GetCount(),0,0)
 	Duel.SetTargetCard(g)
@@ -68,7 +67,6 @@ function c511005710.lvfilter(c)
 	return c:GetFlagEffect(511005710)~=0
 end
 function c511005710.lvcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local sg=e:GetLabelObject()
 	if sg:FilterCount(c511005710.lvfilter,nil)>0 then
 		return Duel.GetTurnPlayer()==tp
