@@ -1,5 +1,6 @@
 --Raigeki (DOR)
 --scripted by GameMaster(GM)
+--updated by Edo
 function c511005783.initial_effect(c)
 --Activate
 local e1=Effect.CreateEffect(c)
@@ -11,6 +12,7 @@ e1:SetOperation(c511005783.op)
 c:RegisterEffect(e1)
 end
 
+--Thanks to edo for helping update filter using coulum funtions
 function c511005783.filter(c,g)
 return g:IsContains(c)
 end
