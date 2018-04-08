@@ -27,17 +27,30 @@ function c100000478.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000478.activate(e,tp,eg,ep,ev,re,r,rp)
 	local race=0
-	Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil):ForEach(function(tc)
+	for c in aux.Next(Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)) do
 		race=race|c:GetRace() 
-	end)
+	end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local g=Duel.GetMatchingGroup(c100000478.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,e,tp,race)
-	if ft<=0 or g:GetCount()==0 then return end
+	if ft<1 or g:GetCount()==0 then return end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	ft=math.min(ft,2)
-	local sg=g:Select(tp,1,ft,nil)
-	local tc=sg:GetFirst()
-	while tc do
+	local sg=Group.CreateGroup()
+	while sg:GetCount()<math.min(ft,2) do
+		local cancel=sg:GetCount()>0
+		local cg=g
+		if sg:GetCount()>0 then
+			cg=g:Filter(Card.IsRace,sg:GetFirst(),sg:GetFirst():GetRace())
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=Group.SelectUnselect(cg,sg,tp,cancel,cancel,1,2)
+		if not tc then break end
+		if not sg:IsContains(tc) then
+			sg:AddCard(tc)
+		else
+			sg:RemoveCard(tc)
+		end
+	end
+	for tc in aux.Next(sg) do
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
