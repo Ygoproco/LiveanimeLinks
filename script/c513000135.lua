@@ -24,7 +24,7 @@ function c513000135.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCost(c513000135.atkcost)
+	e3:SetCost(c513000135.cost)
 	e3:SetTarget(c513000135.destg)
 	e3:SetOperation(c513000135.desop)
 	c:RegisterEffect(e3)
@@ -34,7 +34,7 @@ function c513000135.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCost(c513000135.atkcost)
+	e4:SetCost(c513000135.cost)
 	e4:SetCondition(c513000135.atkcon)
 	e4:SetOperation(c513000135.atkop)
 	c:RegisterEffect(e4)
@@ -116,6 +116,12 @@ function c513000135.sumonop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
 -----------------------------------------------------------------
+function c513000135.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,nil,2,false,nil,e:GetHandler()) end
+	local g=Duel.SelectReleaseGroupCost(tp,nil,2,2,false,nil,e:GetHandler())
+	Duel.Release(g,REASON_COST)
+end
+-----------------------------------------------------------------
 function c513000135.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
@@ -127,18 +133,14 @@ function c513000135.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil),REASON_EFFECT)
 end
 -----------------------------------------------------------------
-function c513000135.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,2,false,nil,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,nil,2,2,false,nil,e:GetHandler())
-	Duel.Release(g,REASON_COST)
-end
+
 function c513000135.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 		and e:GetHandler():IsAttackable()
 end
 function c513000135.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToEffect(e) then
+	if c:IsFaceup() and c:IsRelateToEffect(e) and c:IsAttackable() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -157,18 +159,11 @@ function c513000135.atkop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e2)
 		Duel.BreakEffect()
 		local ag,direct=c:GetAttackableTarget()
-		if direct and ag:GetCount()>0 then
-			if Duel.SelectYesNo(tp,aux.Stringid(41077745,0)) then
-				Duel.CalculateDamage(c,nil)
-			else
-				Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(36708764,0))
-				Duel.CalculateDamage(c,ag:Select(tp,1,1,nil):GetFirst())
-			end
-		elseif ag:GetCount()>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(36708764,0))
-			Duel.CalculateDamage(c,ag:Select(tp,1,1,nil):GetFirst())
-		elseif direct then
+		if direct and (#ag<=0 or (#ag>0 and Duel.SelectYesNo(tp,31))) then
 			Duel.CalculateDamage(c,nil)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,549)
+			Duel.CalculateDamage(c,ag:Select(tp,1,1,nil):GetFirst())
 		end
 	end
 end

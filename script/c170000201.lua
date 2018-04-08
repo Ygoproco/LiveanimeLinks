@@ -46,9 +46,9 @@ function c170000201.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	g:Merge(g2)
 	g:Merge(g3)
 	if chk==0 then return ft>-4 and Duel.CheckLPCost(tp,1000) and g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 
-		and Duel.CheckReleaseGroupCost(tp,c170000201.cfilter,1,false,nil,nil,ft,e,tp,g) end
+		and Duel.CheckReleaseGroupCost(tp,c170000201.cfilter,1,nil,ft,e,tp,g) end
 	Duel.PayLPCost(tp,1000)
-	local rg=Duel.SelectReleaseGroupCost(tp,c170000201.cfilter,1,1,false,nil,nil,ft,e,tp,g)
+	local rg=Duel.SelectReleaseGroupCost(tp,c170000201.cfilter,1,1,nil,ft,e,tp,g)
 	g:Sub(rg)
 	local c=rg:GetFirst()
 	local ct=(c:GetSequence()<5 and c:IsControler(tp)) and 1 or 0
