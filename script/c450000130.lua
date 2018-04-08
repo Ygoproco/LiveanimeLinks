@@ -19,7 +19,7 @@ function c450000130.cfilter(c,tp)
 	return c:IsControler(tp) and val>0 and c:GetAttack()<=0
 end
 function c450000130.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511000883.cfilter,1,nil,tp)
+	return eg:IsExists(c450000130.cfilter,1,nil,tp)
 end
 function c450000130.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
