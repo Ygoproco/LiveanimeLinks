@@ -6,32 +6,31 @@ local e1=Effect.CreateEffect(c)
 e1:SetCategory(CATEGORY_DESTROY)
 e1:SetType(EFFECT_TYPE_ACTIVATE)
 e1:SetCode(EVENT_FREE_CHAIN)
-e1:SetTarget(c511005783.target)
-e1:SetOperation(c511005783.activate)
+e1:SetTarget(c511005783.tg)
+e1:SetOperation(c511005783.op)
 c:RegisterEffect(e1)
 end
 
-function c511005783.filter(c)
-return c:IsType(TYPE_MONSTER)
+function c511005783.filter(c,g)
+return g:IsContains(c)
 end
 
-function c511005783.target(e,tp,eg,ep,ev,re,r,rp,chk)
-local c=e:GetHandler()
-local seq=e:GetHandler():GetSequence()
-local tc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,4-seq)
-local tc=Duel.GetFieldCard(tp,LOCATION_MZONE,seq)
+function c511005783.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return true end
-local g=Group.CreateGroup()
-if tc then g:AddCard(tc) end
+local cg=e:GetHandler():GetColumnGroup()
+local g=Duel.GetMatchingGroup(c511005783.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,cg)
 Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 
-function c511005783.activate(e,tp,eg,ep,ev,re,r,rp)
-local seq=e:GetHandler():GetSequence()
- local g=Group.CreateGroup()
- local tc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,4-seq)
- if tc then g:AddCard(tc) end
- local tc=Duel.GetFieldCard(tp,LOCATION_MZONE,seq)
-if tc then g:AddCard(tc) end
-if g:GetCount()>0 then Duel.Destroy(g,REASON_EFFECT) end
+function c511005783.op(e,tp,eg,ep,ev,re,r,rp)
+local c=e:GetHandler()
+local cg=c:GetColumnGroup()
+if c:IsRelateToEffect(e) then
+local g=Duel.GetMatchingGroup(c511005783.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,cg)
+if g:GetCount()>0 then
+Duel.Destroy(g,REASON_EFFECT)
 end
+end
+end
+
+
