@@ -29,11 +29,12 @@ end
 
 function c511000970.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 local race=e:GetLabelObject():GetLabel()
-if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsRace,1,nil,race) end
-local g=Duel.SelectReleaseGroup(tp,Card.IsRace,1,1,nil,race)
+if chk==0 then return ft>-1 and 
+Duel.CheckReleaseGroupCost(tp,Card.IsRace,1,false,nil,nil,race) end
+local g=Duel.SelectReleaseGroupCost(tp,Card.IsRace,1,1,false,nil,nil,race)
 Duel.Release(g,REASON_COST)
 local subr=g:GetFirst():GetRace()
-race=race-subr
+race=race&~subr
 e:GetLabelObject():SetLabel(race)
 end
 
