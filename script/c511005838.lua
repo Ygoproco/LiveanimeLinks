@@ -1,28 +1,28 @@
---Hightide (DOR)
+--Machine Conversion Factory (DOR)
 --scripted by GameMaster (GM)
-function c511005756.initial_effect(c)
+function c511005838.initial_effect(c)
 --Activate
 local e1=Effect.CreateEffect(c)
 e1:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 e1:SetType(EFFECT_TYPE_ACTIVATE)
-e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 e1:SetCode(EVENT_FREE_CHAIN)
-e1:SetTarget(c511005756.target)
-e1:SetOperation(c511005756.activate)
+e1:SetTarget(c511005838.target)
+e1:SetOperation(c511005838.activate)
 c:RegisterEffect(e1)
 end
 
-function c511005756.filter(c)
-return c:IsRace(RACE_FISH+RACE_SEASERPENT) and c:IsFaceup()
+function c511005838.filter(c)
+return c:IsRace(RACE_MACHINE) and c:IsFaceup()
 end
 
-function c511005756.target(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return Duel.IsExistingTarget(c511005756.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+function c511005838.target(e,tp,eg,ep,ev,re,r,rp,chk)
+local tc=Duel.GetFirstTarget()
+if chk==0 then return Duel.IsExistingTarget(c511005838.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,tc) end
 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-Duel.SelectTarget(tp,c511005756.filter,tp,LOCATION_MZONE,0,1,1,nil)
+Duel.SelectTarget(tp,c511005838.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,tc)
 end
 
-function c511005756.activate(e,tp,eg,ep,ev,re,r,rp)
+function c511005838.activate(e,tp,eg,ep,ev,re,r,rp)
 local tc=Duel.GetFirstTarget()
 if tc:IsRelateToEffect(e)  then
 local e1=Effect.CreateEffect(e:GetHandler())
