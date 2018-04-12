@@ -76,7 +76,7 @@ function c513000133.dcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(tov,REASON_COST)
 end
 function c513000133.dfilter(c)
-	return (c:GetAttack()~=c:GetBaseAttack() and c:GetDefense()~=c:GetBaseDefense()) or (not c:IsType(TYPE_NORMAL))
+	return (c:GetAttack()~=c:GetBaseAttack() and c:GetDefense()~=c:GetBaseDefense()) or aux.disfilter1(c)
 end
 function c513000133.dtarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
