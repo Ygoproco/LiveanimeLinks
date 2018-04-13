@@ -2,8 +2,8 @@
 --Odd-Eyes Revolution Dragon (Manga)
 --Scripted by Larry126
 function c511600090.initial_effect(c)
-	--pendulum summons
-	c:EnablePendulumAttribute()
+	--pendulum summon
+	aux.EnablePendulumAttribute(c)
 	--revive limit
 	c:EnableReviveLimit()
 	--spsummon condition

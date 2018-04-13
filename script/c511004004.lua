@@ -31,7 +31,7 @@ function c511004004.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if tg:GetCount()>0 then
 		local tc=tg:GetFirst()
 		while tc do
-			if Duel.CheckReleaseGroup(tp,nil,2,false,nil,tc) then
+			if Duel.CheckReleaseGroupCost(tp,nil,2,false,nil,tc) then
 				ch=1
 				tc=nil
 			else
@@ -44,16 +44,16 @@ function c511004004.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g1=Duel.GetMatchingGroup(c511004004.cfilter,tp,LOCATION_MZONE,0,nil)
 	local ct=g1:GetCount()
 	if ct>2 then
-		g=Duel.SelectReleaseGroup(tp,nil,2,2,false,nil,nil)
+		g=Duel.SelectReleaseGroupCost(tp,nil,2,2,false,nil,nil)
 	elseif ct==1 then
-		g=Duel.SelectReleaseGroup(tp,nil,2,2,false,nil,g1:GetFirst())
+		g=Duel.SelectReleaseGroupCost(tp,nil,2,2,false,nil,g1:GetFirst())
 	elseif ct==2 then
-		g=Duel.SelectReleaseGroup(tp,nil,1,1,false,nil,nil)
+		g=Duel.SelectReleaseGroupCost(tp,nil,1,1,false,nil,nil)
 		g1=Duel.GetMatchingGroup(c511004004.cfilter,tp,LOCATION_MZONE,0,g:GetFirst())
 		if g1:GetCount()==2 then
-			g:AddCard(Duel.SelectReleaseGroup(tp,nil,1,1,false,nil,g:GetFirst()):GetFirst())
+			g:AddCard(Duel.SelectReleaseGroupCost(tp,nil,1,1,false,nil,g:GetFirst()):GetFirst())
 		else
-			g:AddCard(Duel.SelectReleaseGroup(tp,c511004004.rfilter,1,1,false,nil,g:GetFirst(),g1:GetFirst():GetFieldID()):GetFirst())
+			g:AddCard(Duel.SelectReleaseGroupCost(tp,c511004004.rfilter,1,1,false,nil,g:GetFirst(),g1:GetFirst():GetFieldID()):GetFirst())
 		end
 	end
 	Duel.Release(g,REASON_COST)
@@ -89,9 +89,43 @@ function c511004004.activate(e,tp,eg,ep,ev,re,r,rp)
 				and Duel.IsExistingMatchingCard(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil) then
 				Duel.BreakEffect()
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-				local dg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
-				Duel.HintSelection(dg)
-				Duel.Destroy(dg,REASON_BATTLE)
+				local tg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
+				Duel.HintSelection(tg)
+				local dg=Group.CreateGroup()
+				local tc=tg:GetFirst()
+				if tc:IsHasEffect(EFFECT_INDESTRUCTABLE_BATTLE) then
+					local bdind={tc:GetCardEffect(EFFECT_INDESTRUCTABLE_BATTLE)}
+					for i=1,#bdind do
+						local te=bdind[i]
+						local f=te:GetValue()
+						if type(f)=='function' then
+							if not f(te,tc) then dg:AddCard(tc) end
+						end
+					end
+				else dg:AddCard(tc)
+				end
+				if #dg>0 then
+					e:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+					local edind,val={},{}
+					if tc:IsHasEffect(EFFECT_INDESTRUCTABLE_EFFECT) then
+						edind={tc:GetCardEffect(EFFECT_INDESTRUCTABLE_EFFECT)}
+						for i=1,#edind do
+							local te=edind[i]
+							val[i]=te:GetValue()
+							te:SetValue(0)
+						end
+					end
+					Duel.Destroy(dg,REASON_BATTLE)
+					e:SetProperty(0)
+					if #edind>0 then
+						for i=1,#edind do
+							edind[i]:SetValue(val[i])
+						end
+					end
+				else
+					Duel.Hint(HINT_CARD,tp,tc:GetCode())
+					Duel.Hint(HINT_CARD,1-tp,tc:GetCode())
+				end
 			end
 		end
 	end
