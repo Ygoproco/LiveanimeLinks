@@ -14,7 +14,7 @@ function c511600073.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCountLimit(1,511600073)
+	e2:SetCountLimit(1,63492244)
 	e2:SetCondition(c511600073.spcon)
 	e2:SetTarget(c511600073.sptg)
 	e2:SetOperation(c511600073.spop)
@@ -76,7 +76,7 @@ function c511600073.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600073.spfilter(c,e,tp)
 	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(tp) and c:IsSetCard(0xfb)
-		and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function c511600073.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mg=eg:GetFirst():GetMaterial()
@@ -110,11 +110,11 @@ function c511600073.operation(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsFacedown() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		e:SetLabelObject(tc)
-		c:ResetFlagEffect(511600073)
-		tc:ResetFlagEffect(511600073)
+		c:ResetFlagEffect(63492244)
+		tc:ResetFlagEffect(63492244)
 		local fid=c:GetFieldID()
-		c:RegisterFlagEffect(511600073,RESET_EVENT+0x1fe0000,0,1,fid)
-		tc:RegisterFlagEffect(511600073,RESET_EVENT+0x1fe0000,0,1,fid)
+		c:RegisterFlagEffect(63492244,RESET_EVENT+0x1fe0000,0,1,fid)
+		tc:RegisterFlagEffect(63492244,RESET_EVENT+0x1fe0000,0,1,fid)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
@@ -160,13 +160,13 @@ function c511600073.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511600073.rcon(e)
-	return e:GetOwner():IsHasCardTarget(e:GetHandler()) and e:GetHandler():GetFlagEffect(511600073)~=0
+	return e:GetOwner():IsHasCardTarget(e:GetHandler()) and e:GetHandler():GetFlagEffect(63492244)~=0
 end
 function c511600073.rstcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject():GetLabelObject()
-	if tc:GetFlagEffectLabel(511600073)==e:GetLabel()
-		and c:GetFlagEffectLabel(511600073)==e:GetLabel() then
+	if tc:GetFlagEffectLabel(63492244)==e:GetLabel()
+		and c:GetFlagEffectLabel(63492244)==e:GetLabel() then
 		return not c:IsDisabled()
 	else
 		e:Reset()
@@ -181,8 +181,8 @@ end
 function c511600073.agcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
-	if tc:GetFlagEffectLabel(511600073)==e:GetLabel()
-		and c:GetFlagEffectLabel(511600073)==e:GetLabel() then
+	if tc:GetFlagEffectLabel(63492244)==e:GetLabel()
+		and c:GetFlagEffectLabel(63492244)==e:GetLabel() then
 		return not c:IsDisabled()
 	else
 		e:Reset()
@@ -195,10 +195,10 @@ function c511600073.agop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600073.rstop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	if tc:GetFlagEffectLabel(511600073)~=e:GetLabel() then return end
+	if tc:GetFlagEffectLabel(63492244)~=e:GetLabel() then return end
 	local c=e:GetHandler()
 	c:CancelCardTarget(tc)
 	local te=e:GetLabelObject()
-	tc:ResetFlagEffect(511600073)
+	tc:ResetFlagEffect(63492244)
 	if te then te:Reset() end
 end
