@@ -27,11 +27,11 @@ local e2=Effect.CreateEffect(c)
 e2:SetType(EFFECT_TYPE_FIELD)
 e2:SetCode(73206827)
 e2:SetRange(LOCATION_FZONE)
-e2:SetTargetRange(LOCATION_MZONE,0)
+e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x5))
 e2:SetCondition(c511005633.effectcon)
 c:RegisterEffect(e2)
---recover lp if you destroy monster with field active
+--recover lp if you destroy monster with field active-/coin choice for arcanca summoning player
 local e4=Effect.CreateEffect(c)
 e4:SetDescription(aux.Stringid(73206827,1))
 e4:SetCategory(CATEGORY_RECOVER)
@@ -51,7 +51,7 @@ e5:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 e5:SetTarget(c511005633.tg5)
 e5:SetCondition(c511005633.con5)
 c:RegisterEffect(e5)
---recover lp if your destroy monster with field active
+--recover lp if your destroy monster with field active-/coin choice for arcanca summoning player
 local e6=Effect.CreateEffect(c)
 e6:SetDescription(aux.Stringid(73206827,1))
 e6:SetCategory(CATEGORY_RECOVER)
@@ -71,39 +71,12 @@ e7:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 e7:SetTarget(c511005633.tg5)
 e7:SetCondition(c511005633.effectcon)
 c:RegisterEffect(e7)
---coin adjust for if arcana monster summoned to opponents field
-local e8=Effect.CreateEffect(c)
-e8:SetType(EFFECT_TYPE_FIELD)
-e8:SetCode(511005633)
-e8:SetRange(LOCATION_FZONE)
-e8:SetTargetRange(0,LOCATION_MZONE)
-e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CARD_TARGET)
-e8:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x5))
-e8:SetCondition(c511005633.effectcon1)
-c:RegisterEffect(e8)
---function overwrite scripted by MLD
-local f=Duel.TossCoin
-Duel.TossCoin=function(tp,ct)
-if not c:IsType(TYPE_MONSTER) and c:IsSetCard(0x5) then return false end	
-if Duel.IsPlayerAffectedByEffect(tp,511005633) and c:GetFlagEffect(73206827)==0   and (c:GetSummonPlayer()==tp or c:GetSummonPlayer()~=tp)   then
-	local tct=ct
-	local t={}
-	for i=1,ct do
-		local res=1-Duel.SelectOption(1-tp,60,61)
-		table.insert(t,res)
-	end
-	return table.unpack(t)
-else
-	return f(tp,ct)
-end
-end
 end
 
 
 c511005633.collection={  [5861892]=true; [8396952]=true; [23846921]=true; [34568403]=true; [511016000]=true; 
 [35781051]=true; [60953118]=true; [61175706]=true; [62892347]=true;[511016002]=true; [69831560]=true;[97452817]=true; [97574404]=true; 
 [100000116]=true; [513000126]=true; [100000106]=true; [511005634]=true; }
-
 
 --e2
 function c511005633.coincon(e,tp,eg,ep,ev,re,r,rp)
@@ -138,16 +111,11 @@ local c=e:GetHandler()
 return c:GetFlagEffect(73206827)==0 or c:IsHasEffect(EFFECT_CANNOT_DISABLE) and (c:IsType(TYPE_MONSTER) and c:IsSetCard(0x5))
 end
 
---e3
-
-
---e4
 function c511005633.reccon(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
 local rc=eg:GetFirst()
 return rc:IsRelateToBattle()  and rc:IsFaceup() and rc:IsControler(tp) and c:GetFlagEffect(73206827)==0
 end
-
 
 function c511005633.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return true end
@@ -158,12 +126,39 @@ Duel.SetTargetPlayer(tp)
 Duel.SetTargetParam(atk)
 Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,atk)
 end
+
 function c511005633.recop(e,tp,eg,ep,ev,re,r,rp)
 if not e:GetHandler():IsRelateToEffect(e) then return end
 local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 Duel.Recover(p,d,REASON_EFFECT)
+--coin adjust for if arcana monster summoned to opponents field
+local e8=Effect.CreateEffect(c)
+e8:SetType(EFFECT_TYPE_FIELD)
+e8:SetCode(511005633)
+e8:SetRange(LOCATION_FZONE)
+e8:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CARD_TARGET)
+e8:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x5))
+e8:SetCondition(c511005633.effectcon1)
+c:RegisterEffect(e8)
+--function overwrite scripted by MLD
+local f=Duel.TossCoin
+Duel.TossCoin=function(tp,ct)
+local tp=c:GetControler()
+if not c:IsType(TYPE_MONSTER) and c:IsSetCard(0x5)  then return false end	
+if  c:GetFlagEffect(73206827)~=0     then
+	local tct=ct
+	local t={}
+	for i=1,ct do
+		local res=1-Duel.SelectOption(tp,60,61)
+		table.insert(t,res)
+	end
+	return table.unpack(t)
+else
+	return f(tp,ct)
 end
-
+end
+end
 
 --e5
 function c511005633.tg5(e,c)
@@ -175,13 +170,11 @@ return e:GetHandler():GetFlagEffectLabel(73206827)==1
 end
 
 --e6
-
 function c511005633.reccon2(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
 local rc=eg:GetFirst()
 return rc:IsRelateToBattle()  and rc:IsFaceup() and rc:IsControler(1-tp) and c:GetFlagEffect(73206827)==0
 end	
-
 
 function c511005633.rectg2(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return true end
@@ -192,9 +185,36 @@ Duel.SetTargetPlayer(1-tp)
 Duel.SetTargetParam(atk)
 Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,1-tp,atk)
 end
+
 function c511005633.recop2(e,tp,eg,ep,ev,re,r,rp)
 if not e:GetHandler():IsRelateToEffect(e) then return end
 local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 Duel.Recover(p,d,REASON_EFFECT)
+--coin adjust for if arcana monster summoned to opponents field
+local e8=Effect.CreateEffect(c)
+e8:SetType(EFFECT_TYPE_FIELD)
+e8:SetCode(511005633)
+e8:SetRange(LOCATION_FZONE)
+e8:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CARD_TARGET)
+e8:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x5))
+e8:SetCondition(c511005633.effectcon1)
+c:RegisterEffect(e8)
+--function overwrite scripted by MLD
+local f=Duel.TossCoin
+Duel.TossCoin=function(tp,ct)
+local tp=c:GetControler()
+if not c:IsType(TYPE_MONSTER) and c:IsSetCard(0x5)  then return false end	
+if  c:GetFlagEffect(73206827)~=0     then
+	local tct=ct
+	local t={}
+	for i=1,ct do
+		local res=1-Duel.SelectOption(tp,60,61)
+		table.insert(t,res)
+	end
+	return table.unpack(t)
+else
+	return f(tp,ct)
 end
-
+end
+end
