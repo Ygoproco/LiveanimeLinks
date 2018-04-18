@@ -1,5 +1,5 @@
---暗黒魔族ギルファー・デーモン (Anime)
---Archfiend of Gilfer (Anime)
+--暗黒魔族ギルファー・デーモン (Manga)
+--Archfiend of Gilfer (Manga)
 --scripted by Larry126
 function c511600061.initial_effect(c)
 	--atk change
@@ -18,7 +18,7 @@ function c511600061.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511600061.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		local e1=Effect.CreateEffect(e:GetHandler())
