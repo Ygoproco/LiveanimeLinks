@@ -2,7 +2,6 @@
 --Shootingcode Talker
 --scripted by Larry126
 function c511600110.initial_effect(c)
-	--link summon
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_CYBERSE),2)
 	--attack
@@ -44,14 +43,13 @@ function c511600110.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511600110.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
 	local ct=c:GetLinkedGroupCount()
 	if ct~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
 		e1:SetValue(ct)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
+		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_BATTLE)
 		c:RegisterEffect(e1)
 	end
 	local e2=Effect.CreateEffect(c)
@@ -59,7 +57,7 @@ function c511600110.operation(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetCondition(c511600110.atkcon)
 	e2:SetValue(-400)
-	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	e2:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e2)
 end
 function c511600110.atkcon(e)
