@@ -78,7 +78,6 @@ c511005633.collection={  [5861892]=true; [8396952]=true; [23846921]=true; [34568
 [35781051]=true; [60953118]=true; [61175706]=true; [62892347]=true;[511016002]=true; [69831560]=true;[97452817]=true; [97574404]=true; 
 [100000116]=true; [513000126]=true; [100000106]=true; [511005634]=true; }
 
-
 --e2
 function c511005633.coincon(e,tp,eg,ep,ev,re,r,rp)
 return tp==Duel.GetTurnPlayer()
@@ -133,7 +132,7 @@ if not e:GetHandler():IsRelateToEffect(e) then return end
 local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 Duel.Recover(p,d,REASON_EFFECT)
 --coin adjust for if arcana monster summoned to opponents field
-local e8=Effect.CreateEffect(e:GetHandler())
+local e8=Effect.CreateEffect(c)
 e8:SetType(EFFECT_TYPE_FIELD)
 e8:SetCode(511005633)
 e8:SetRange(LOCATION_FZONE)
@@ -141,7 +140,7 @@ e8:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CARD_TARGET)
 e8:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x5))
 e8:SetCondition(c511005633.effectcon1)
-e:GetHandler():RegisterEffect(e8)
+c:RegisterEffect(e8)
 --function overwrite scripted by MLD
 local f=Duel.TossCoin
 Duel.TossCoin=function(tp,ct)
@@ -165,7 +164,6 @@ end
 function c511005633.tg5(e,c)
 return c:IsType(TYPE_MONSTER) and not c:IsSetCard(0x5)
 end
-
 function c511005633.con5(e)
 local c=e:GetHandler()
 return e:GetHandler():GetFlagEffectLabel(73206827)==1
@@ -193,7 +191,7 @@ if not e:GetHandler():IsRelateToEffect(e) then return end
 local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 Duel.Recover(p,d,REASON_EFFECT)
 --coin adjust for if arcana monster summoned to opponents field
-local e8=Effect.CreateEffect(e:GetHandler())
+local e8=Effect.CreateEffect(c)
 e8:SetType(EFFECT_TYPE_FIELD)
 e8:SetCode(511005633)
 e8:SetRange(LOCATION_FZONE)
@@ -201,7 +199,7 @@ e8:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CARD_TARGET)
 e8:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x5))
 e8:SetCondition(c511005633.effectcon1)
-e:GetHandler():RegisterEffect(e8)
+c:RegisterEffect(e8)
 --function overwrite scripted by MLD
 local f=Duel.TossCoin
 Duel.TossCoin=function(tp,ct)
