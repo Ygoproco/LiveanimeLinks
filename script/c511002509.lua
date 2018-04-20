@@ -59,7 +59,7 @@ function c511002509.eqop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511002509.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
+	return e:GetHandler():GetTurnID()~=Duel.GetTurnCount()
 end
 function c511002509.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

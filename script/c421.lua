@@ -172,7 +172,7 @@ function c421.stgcon(e,tp,eg,ep,ev,re,r,rp)
 			and (eff:GetTarget()==aux.PersistentTargetFilter or not eff:IsHasType(EFFECT_TYPE_GRANT+EFFECT_TYPE_FIELD)))
 			or owner
 	end
-	return c:GetFlagEffect(513000065)>0 and (owner or c:IsSummonType(SUMMON_TYPE_SPECIAL))
+	return c:GetFlagEffect(513000065)>0 and (owner or c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:GetPreviousLocation()~=0)
 end
 function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -186,13 +186,13 @@ function c421.stgop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if c:IsSummonType(SUMMON_TYPE_SPECIAL) then
 		if c:IsPreviousLocation(LOCATION_GRAVE) then
-			Duel.SendtoGrave(c,REASON_EFFECT)
+			Duel.SendtoGrave(c,REASON_RULE,c:GetPreviousControler())
 		elseif c:IsPreviousLocation(LOCATION_DECK) then
-			Duel.SendtoDeck(c,nil,2,REASON_RULE)
+			Duel.SendtoDeck(c,c:GetPreviousControler(),2,REASON_RULE)
 		elseif c:IsPreviousLocation(LOCATION_HAND) then
-			Duel.SendtoHand(c,nil,REASON_RULE)
+			Duel.SendtoHand(c,c:GetPreviousControler(),REASON_RULE)
 		elseif c:IsPreviousLocation(LOCATION_REMOVED) then
-			Duel.Remove(c,c:GetPreviousPosition(),REASON_RULE)
+			Duel.Remove(c,c:GetPreviousPosition(),REASON_RULE,c:GetPreviousControler())
 		end
 	end
 end
