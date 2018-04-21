@@ -18,11 +18,9 @@ function c511009617.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(c511009617.spcon)
 	e2:SetTarget(c511009617.sptg)
 	e2:SetOperation(c511009617.spop)
 	c:RegisterEffect(e2)
-	
 	--counter
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_COUNTER)
@@ -33,30 +31,23 @@ function c511009617.initial_effect(c)
 	e3:SetOperation(c511009617.ctop)
 	c:RegisterEffect(e3)
 end
-
 function c511009617.atcon(e)
 	return e:GetHandler():GetMutualLinkedGroupCount()>0
 end
-
-
-function c511009617.spcon(e,c)
-	if c==nil then return true end
-	local tp=e:GetHandlerPlayer()
-	local zone=Duel.GetLinkedZone(tp)
-	return zone~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
-end
 function c511009617.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local zone=Duel.GetLinkedZone(tp)
+	local c=e:GetHandler()
+	local zone=Duel.GetLinkedZone(tp)&0x1f
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and zone~=0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK,tp,zone) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c511009617.spop(e,tp,eg,ep,ev,re,r,rp)
-	local zone=Duel.GetLinkedZone(tp)
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,zone)
+	local c=e:GetHandler()
+	local zone=Duel.GetLinkedZone(tp)&0x1f
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK,zone)
+	end
 end
-
-
 function c511009617.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
