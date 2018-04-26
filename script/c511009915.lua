@@ -2,7 +2,7 @@
 function c511009915.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,c739444.matfilter,2
+	aux.AddLinkProcedure(c,c511009915.matfilter,2)
 	--todeck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511009915,0))
@@ -32,7 +32,7 @@ function c511009915.initial_effect(c)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
 end
-function c739444.matfilter(c,scard,sumtype,tp)
+function c511009915.matfilter(c,scard,sumtype,tp)
 	return c:IsType(TYPE_EFFECT,lc,sumtype,tp) and c:IsAttribute(ATTRIBUTE_FIRE,scard,sumtype,tp)
 end
 function c511009915.condition(e,tp,eg,ep,ev,re,r,rp)
