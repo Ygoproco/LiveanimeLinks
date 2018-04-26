@@ -1,4 +1,4 @@
---???? High Drive
+--Coolant High Drive
 function c511009714.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,c511009714.matfilter,1,1)
@@ -7,8 +7,8 @@ function c511009714.initial_effect(c)
 	-- cannot link
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetValue(c511009714.lnklimit)
 	c:RegisterEffect(e1)
 	--direct attack
@@ -34,8 +34,9 @@ function c511009714.matfilter(c)
 end
 function c511009714.lnklimit(e,c)
 	if not c then return false end
-	return c:IsLink(1)
+	return not c:IsLinkAbove(2)
 end
+
 function c511009714.spfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
 end
