@@ -11,7 +11,7 @@ function c511009007.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009007.lvfilter(c)
-	return c:IsFaceup() and not c:IsLevel(1)
+	return c:IsFaceup() and not c:IsLevel(1) and c:IsLevelBelow(2147483647)
 end
 function c511009007.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
