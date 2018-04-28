@@ -6,8 +6,8 @@ function c511009711.initial_effect(c)
 	-- cannot link
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetValue(c511009711.lnklimit)
 	c:RegisterEffect(e1)
 	--direct attack
@@ -33,7 +33,7 @@ function c511009711.matfilter(c)
 end
 function c511009711.lnklimit(e,c)
 	if not c then return false end
-	return not c:IsLinkAbove(2)
+	return c:IsLink(1)
 end
 function c511009711.spfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND)
