@@ -1,7 +1,5 @@
 --Performapal Miss Director
 function c511009022.initial_effect(c)
-	--pendulum summon
-	aux.EnablePendulumAttribute(c)
 	--cannot be battle target
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
