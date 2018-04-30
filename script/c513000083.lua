@@ -99,6 +99,6 @@ function c513000083.atkop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 	if not c:IsImmuneToEffect(e1) then
-		Duel.ChainAttack(ec)
+		Duel.ChainAttack()
 	end
 end

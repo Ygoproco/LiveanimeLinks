@@ -1,4 +1,5 @@
 --D－HERO Bloo－D (Anime)
+--Destiny HERO - Plasma (Anime)
 function c511000614.initial_effect(c)
 	c:EnableReviveLimit()
 	--cannot special summon
@@ -39,14 +40,14 @@ function c511000614.initial_effect(c)
 	e4:SetCode(EFFECT_DISABLE)
 	e4:SetCondition(c511000614.econ)
 	c:RegisterEffect(e4)
+	--disable
 	local e5=Effect.CreateEffect(c)
-    e5:SetType(EFFECT_TYPE_SINGLE)
-    e5:SetCode(EFFECT_IMMUNE_EFFECT)
-    e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-    e5:SetRange(LOCATION_MZONE)
-    e5:SetCondition(c511000614.econ)
-	e5:SetValue(c511000614.efilter)
-    c:RegisterEffect(e5)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_CHAINING)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCondition(c511000614.discon)
+	e5:SetOperation(c511000614.disop)
+	c:RegisterEffect(e5)
 end
 function c511000614.mzfilter(c,tp)
 	return c:IsControler(tp) and c:GetSequence()<5
@@ -80,11 +81,10 @@ function c511000614.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 end
 function c511000614.eqfilter(c)
-	return c:GetFlagEffect(511000614)~=0 
+	return c:GetFlagEffect(83965310)~=0 
 end
 function c511000614.eqcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=c:GetEquipGroup():Filter(c511000614.eqfilter,nil)
+	local g=e:GetHandler():GetEquipGroup():Filter(c511000614.eqfilter,nil)
 	return g:GetCount()==0
 end
 function c511000614.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -130,7 +130,7 @@ function c511000614.eqop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000614.econ(e)
 	local g=Duel.GetDecktopGroup(e:GetHandlerPlayer(),1)
-	return g and g:GetFirst():GetCode()==100000270 and g:GetFirst():IsFaceup()
+	return g:GetCount()>0 and g:GetFirst():IsCode(100000270) and g:GetFirst():IsFaceup()
 end
 function c511000614.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -141,7 +141,7 @@ function c511000614.op(e,tp,eg,ep,ev,re,r,rp)
 		local cid=eq:CopyEffect(code,RESET_EVENT+0x1fe0000,1)
 		eq:RegisterFlagEffect(code,RESET_EVENT+0x1fe0000,0,1)
 		e:SetLabel(cid)
-	end	
+	end 
 	if not eq or o~=eq or eq:IsDisabled() then
 		local cid=e:GetLabel()
 		o:ResetEffect(cid,RESET_COPY)
@@ -150,6 +150,21 @@ function c511000614.op(e,tp,eg,ep,ev,re,r,rp)
 		e:Reset()
 	end
 end
-function c511000614.efilter(e,te)
-	return (te:IsActiveType(TYPE_SPELL) or te:IsActiveType(TYPE_TRAP)) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
+function c511000614.dfilter(c,tp)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD)
+end
+function c511000614.discon(e,tp,eg,ep,ev,re,r,rp)
+	local dg=Duel.GetDecktopGroup(tp,1)
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)	
+	return dg:GetCount()>0 and dg:GetFirst():IsCode(100000270) and dg:GetFirst():IsFaceup()
+		and re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and g and g:IsExists(c511000614.dfilter,1,nil,tp)
+		and Duel.IsChainDisablable(ev) and Duel.IsChainNegatable(ev)
+end
+function c511000614.disop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if ((re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.NegateActivation(ev))
+		or (not re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.NegateEffect(ev)))
+		and rc:IsRelateToEffect(re) then
+		Duel.Destroy(rc,REASON_EFFECT)
+	end
 end
