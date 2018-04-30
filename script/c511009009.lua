@@ -29,7 +29,7 @@ function c511009009.target(e,tp,eg,ep,ev,re,r,rp,chk
 	local ct=mg:GetCount()
 	if chk==0 then return ct<=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133))
-		and mg:FilterCount(aux.NecroValleyFilter(c511009009.mgfilter),nil,e,tp,rc)==ct end
+		and mg:FilterCount(c511009009.mgfilter,nil,e,tp,rc)==ct end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,mg:GetCount(),0,LOCATION_GRAVE)
 end
 function c511009009.operation(e,tp,eg,ep,ev,re,r,rp)
