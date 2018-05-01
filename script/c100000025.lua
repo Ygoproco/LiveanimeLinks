@@ -13,7 +13,7 @@ function c100000025.filter1(c,e)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and (not e or not c:IsImmuneToEffect(e))
 end
 function c100000025.filter2(c,e,tp,m,f)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x512) and (not f or f(c)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
+	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x521) and (not f or f(c)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 		and c:CheckFusionMaterial(m,nil,tp)
 end
 function c100000025.fcheck(tp,sg,fc)
