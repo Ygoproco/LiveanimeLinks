@@ -1,5 +1,5 @@
---融合解除 (Manga)
---De-Fusion (Manga)
+--融合解除n (Anime)
+--De-Fusion (Anime)
 --updated by Larry126
 function c511000987.initial_effect(c)
 	--Activate
@@ -48,14 +48,14 @@ function c511000987.mgfilter(c,e,tp,fusc,mg)
 end
 function c511000987.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
-	if not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
+	if not (tc:IsRelateToEffect(e) and tc:IsFaceup()) then return end
 	local mg=tc:GetMaterial()
 	local ct=mg:GetCount()
 	local p=tc:GetControler()
 	if Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
 		Duel.SkipPhase(Duel.GetTurnPlayer(),PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
-		if tc:IsSummonType(SUMMON_TYPE_FUSION) and ct>0 and ct<=Duel.GetLocationCount(p,LOCATION_MZONE)
+		if c:IsSummonType(SUMMON_TYPE_FUSION) and ct>0 and ct<=Duel.GetLocationCount(p,LOCATION_MZONE)
 			and mg:FilterCount(aux.NecroValleyFilter(c511000987.mgfilter),nil,e,p,tc,mg)==ct
 			and (ct<=1 or not Duel.IsPlayerAffectedByEffect(p,59822133)) then
 			Duel.SpecialSummon(mg,0,tp,p,false,false,POS_FACEUP)
