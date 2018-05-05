@@ -11,7 +11,7 @@ function c511020009.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511020009.filter(c,e,tp)
-	return c:GetPreviousControler()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511020009.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(c511020009.filter,nil,e,tp)

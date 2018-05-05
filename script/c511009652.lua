@@ -1,6 +1,5 @@
---ダークマミー・サージカル・クーパー
---Dark Mummy Surgical Forceps
---fixed by Larry126
+-- Dark mummy Copper Forceps
+--fixed by MLD
 function c511009652.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x56f),3,3)
@@ -16,8 +15,8 @@ function c511009652.initial_effect(c)
 	--damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(114932,0))
-	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DRAW)
@@ -34,6 +33,7 @@ function c511009652.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e3:SetCondition(c511009652.spcon)
 	e3:SetTarget(c511009652.sptg)
 	e3:SetOperation(c511009652.spop)
 	c:RegisterEffect(e3)
@@ -81,23 +81,31 @@ end
 function c511009652.lkfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_LINK)
 end
-function c511009652.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009652.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local zone=0
 	local lg=Duel.GetMatchingGroup(c511009652.lkfilter,tp,0,LOCATION_MZONE,nil)
-	for tc in aux.Next(lg) do
+	lg:ForEach(function(tc)
 		zone=zone|tc:GetLinkedZone()
-	end
+	end)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c511009652.cfilter,1,nil,tp,zone)
+end
+function c511009652.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local zone=0
+	local lg=Duel.GetMatchingGroup(c511009652.lkfilter,tp,0,LOCATION_MZONE,nil)
+	lg:ForEach(function(tc)
+		zone=zone|tc:GetLinkedZone()
+	end)
 	if chk==0 then return eg:IsExists(c511009652.cfilter,1,nil,tp,zone) end
 	Duel.SetTargetCard(eg)
-	local g=eg:Filter(c511009652.cfilter,nil,tp,zone)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,LOCATION_MZONE)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,eg:GetCount(),0,0)
 end
 function c511009652.spop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=0
 	local lg=Duel.GetMatchingGroup(c511009652.lkfilter,tp,0,LOCATION_MZONE,nil)
-	for tc in aux.Next(lg) do
+	lg:ForEach(function(tc)
 		zone=zone|tc:GetLinkedZone()
-	end
+	end)
 	local g=eg:Filter(c511009652.cfilter,nil,tp,zone,e)
 	Duel.Destroy(g,REASON_EFFECT)
 end

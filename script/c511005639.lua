@@ -121,30 +121,30 @@ function c511005639.dregop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511005639.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and not e:GetHandler():IsLocation(LOCATION_DECK)
+	local c=e:GetHandler()
+	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK) and c:GetFlagEffect(511005639)~=0
 end
 function c511005639.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	Duel.SetTargetCard(e:GetHandler())
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511005639.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetFlagEffect(511005639)~=0 then
-		local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
-		if Duel.Destroy(g,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) then
-			c:ResetFlagEffect(511005639)
-			c:RegisterFlagEffect(511005639,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,1)
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-			e1:SetCountLimit(1)
-			e1:SetCondition(c511005639.spcon)
-			e1:SetOperation(c511005639.spop)
-			e1:SetLabelObject(c)
-			e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN)
-			Duel.RegisterEffect(e1,tp)
-		end
+	local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
+	if Duel.Destroy(g,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) then
+		c:ResetFlagEffect(511005639)
+		c:RegisterFlagEffect(511005639,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,1)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCountLimit(1)
+		e1:SetCondition(c511005639.spcon)
+		e1:SetOperation(c511005639.spop)
+		e1:SetLabelObject(c)
+		e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
 function c511005639.spcon(e,tp,eg,ep,ev,re,r,rp)
