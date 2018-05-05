@@ -1,6 +1,7 @@
 --デフコンバード
 --Defcon Bird
 --scripted by Larry126
+--fixed by MLD
 function c511600107.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -8,23 +9,24 @@ function c511600107.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCost(c511600107.spcost)
+	e1:SetCountLimit(1,51160107)
 	e1:SetTarget(c511600107.sptg)
 	e1:SetOperation(c511600107.spop)
 	c:RegisterEffect(e1)
 	--DEF
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_DEFCHANGE+CATEGORY_POSITION)
 	e2:SetDescription(aux.Stringid(37256334,0))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetTarget(c511600107.target)
-	e2:SetOperation(c511600107.operation)
+	e2:SetTarget(c511600107.deftg)
+	e2:SetOperation(c511600107.defop)
 	c:RegisterEffect(e2)
 end
 function c511600107.cfilter(c)
-	return c:IsRace(RACE_CYBERSE) and c:IsDiscardable() and c:IsAbleToGraveAsCost()
+	return c:IsRace(RACE_CYBERSE) and c:IsDiscardable()
 end
 function c511600107.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511600107.cfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
@@ -37,15 +39,16 @@ function c511600107.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511600107.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
-function c511600107.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511600107.deftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local at=Duel.GetAttackTarget()
 	if chk==0 then return at and at:IsControler(tp) and at:IsFaceup() and at:IsRace(RACE_CYBERSE) end
 	Duel.SetTargetCard(at)
 end
-function c511600107.operation(e,tp,eg,ep,ev,re,r,rp)
+function c511600107.defop(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetFirstTarget()
 	if not at or not at:IsRelateToEffect(e) or at:IsFacedown() then return end
 	local e1=Effect.CreateEffect(e:GetHandler())
