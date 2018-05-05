@@ -9,7 +9,8 @@ function c511600107.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,51160107)
+	e1:SetCountLimit(1,511600107)
+	e1:SetCost(c511600107.spcost)
 	e1:SetTarget(c511600107.sptg)
 	e1:SetOperation(c511600107.spop)
 	c:RegisterEffect(e1)
@@ -58,6 +59,7 @@ function c511600107.defop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
 	at:RegisterEffect(e1)
 	if at:IsAttackPos() and Duel.SelectYesNo(tp,aux.Stringid(423585,0)) then
+		Duel.BreakEffect()
 		Duel.ChangePosition(at,POS_FACEUP_DEFENSE)
 	end
 end
