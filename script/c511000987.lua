@@ -1,4 +1,4 @@
---融合解除n (Manga)
+--融合解除 (Manga)
 --De-Fusion (Manga)
 --updated by Larry126
 function c511000987.initial_effect(c)
