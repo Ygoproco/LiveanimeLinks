@@ -57,10 +57,9 @@ function c511600039.filter(c)
 end
 function c511600039.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local g=e:GetLabelObject()
-	if chk==0 then return g and not c:IsStatus(STATUS_CHAINING)
+	if chk==0 then return not c:IsStatus(STATUS_CHAINING)
 		and c:GetFlagEffect(511600039)<Duel.GetMatchingGroupCount(c511600039.filter,tp,LOCATION_PZONE,0,nil) end
-	Duel.SetTargetCard(g)
+	Duel.SetTargetCard(e:GetLabelObject())
 end
 function c511600039.cfilter(c,e,tp)
 	return c:IsOnField() and c:IsType(TYPE_MONSTER) and c:IsRelateToEffect(e) and c:IsRelateToBattle()
