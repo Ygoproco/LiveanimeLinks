@@ -1,7 +1,7 @@
 --クリスタルウィング・シンクロ・ドラゴン
 function c511003047.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,nil,1,1,aux.NonTuner(nil),1,99,nil,nil,nil,nil,c511003047.cfilter,1)
+	aux.AddSynchroProcedure(c,nil,1,1,aux.NonTuner(nil),1,99,nil,nil,nil,c511003047.matfilter)
 	c:EnableReviveLimit()
 	--negate
 	local e1=Effect.CreateEffect(c)
@@ -24,6 +24,9 @@ function c511003047.initial_effect(c)
 	e2:SetCondition(c511003047.atkcon)
 	e2:SetOperation(c511003047.atkop)
 	c:RegisterEffect(e2)
+end
+function c511003047.matfilter(g,sc,tp)
+	return g:IsExists(c511003047.cfilter,1,nil)
 end
 function c511003047.cfilter(c)
 	return c:IsLevelAbove(5) and c:IsType(TYPE_SYNCHRO)
