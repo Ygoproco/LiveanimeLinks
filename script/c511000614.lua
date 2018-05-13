@@ -1,5 +1,6 @@
 --D－HERO Bloo－D (Anime)
 --Destiny HERO - Plasma (Anime)
+--fixed by Larry126
 function c511000614.initial_effect(c)
 	c:EnableReviveLimit()
 	--cannot special summon
@@ -11,7 +12,7 @@ function c511000614.initial_effect(c)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(511000614,0))
+	e2:SetDescription(aux.Stringid(83965310,0))
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -21,7 +22,7 @@ function c511000614.initial_effect(c)
 	c:RegisterEffect(e2)
 	--equip
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(511000614,1))
+	e3:SetDescription(aux.Stringid(83965310,1))
 	e3:SetCategory(CATEGORY_EQUIP)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -40,7 +41,6 @@ function c511000614.initial_effect(c)
 	e4:SetCode(EFFECT_DISABLE)
 	e4:SetCondition(c511000614.econ)
 	c:RegisterEffect(e4)
-	--disable
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_CHAINING)
@@ -154,11 +154,11 @@ function c511000614.dfilter(c,tp)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD)
 end
 function c511000614.discon(e,tp,eg,ep,ev,re,r,rp)
-	local dg=Duel.GetDecktopGroup(tp,1)
+	local dc=Duel.GetDecktopGroup(tp,1):GetFirst()
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)	
-	return dg:GetCount()>0 and dg:GetFirst():IsCode(100000270) and dg:GetFirst():IsFaceup()
+	return dc and dc:IsCode(100000270) and dc:IsFaceup()
+		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and rp~=tp
 		and re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and g and g:IsExists(c511000614.dfilter,1,nil,tp)
-		and Duel.IsChainDisablable(ev) and Duel.IsChainNegatable(ev)
 end
 function c511000614.disop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()

@@ -27,11 +27,12 @@ function c511600067.initial_effect(c)
 	e2:SetOperation(c511600067.drop)
 	c:RegisterEffect(e2)
 end
+duel.specialsum
 function c511600067.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,0x41)==0x41 and re:GetHandler():IsType(TYPE_LINK)
 end
 function c511600067.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	if chk==0 then return true end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
@@ -45,12 +46,14 @@ function c511600067.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600067.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	local zone=re:GetHandler():GetLinkedZone(tp)
+	local zone=re:GetHandler():GetLinkedZone(tp)&0x1f
 	if chk==0 then return zone~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK,tp,zone) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_GRAVE)
 end
 function c511600067.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK,re:GetHandler():GetLinkedZone(tp))
+	local zone=re:GetHandler():GetLinkedZone(tp)&0x1f
+	if c:IsRelateToEffect(e) and zone~=0 then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK,zone)
+	end
 end
