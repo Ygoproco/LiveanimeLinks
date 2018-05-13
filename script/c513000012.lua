@@ -90,6 +90,12 @@ function c513000012.mtop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 		e1:SetValue(ct-1)
 		c:RegisterEffect(e1)
+	elseif ct==0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CANNOT_ATTACK)
+		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
 	end
 end
 function c513000012.discon(e,tp,eg,ep,ev,re,r,rp)
