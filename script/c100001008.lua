@@ -1,4 +1,5 @@
 --プラズマ戦士エイトム
+--Plasma Warrior Eitom
 function c100001008.initial_effect(c)
 	c:EnableReviveLimit()
 	--cannot special summon
@@ -25,8 +26,8 @@ function c100001008.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e4:SetCondition(c100001008.atkcon)
-	e4:SetOperation(c100001008.atkop)
+	e4:SetCondition(c100001008.rdcon)
+	e4:SetOperation(c100001008.rdop)
 	c:RegisterEffect(e4)
 end
 function c100001008.rfilter(c,ft,tp)
@@ -42,10 +43,21 @@ function c100001008.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectReleaseGroup(c:GetControler(),c100001008.rfilter,1,1,nil,Duel.GetLocationCount(tp,LOCATION_MZONE),tp)
 	Duel.Release(g,REASON_COST)
 end
-function c100001008.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttackTarget()==nil and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)~=0 and Duel.GetAttacker()==e:GetHandler()
-		and e:GetHandler():GetEffectCount(EFFECT_DIRECT_ATTACK)==1 and ep~=tp
+function c100001008.rdcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and Duel.GetAttackTarget()==nil
+		and e:GetHandler():IsHasEffect(EFFECT_DIRECT_ATTACK)
+		and Duel.IsExistingMatchingCard(aux.NOT(Card.IsHasEffect),tp,0,LOCATION_MZONE,1,nil,EFFECT_IGNORE_BATTLE_TARGET)
 end
-function c100001008.atkop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(ep)/2)
+function c100001008.rdop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local effs={c:GetCardEffect(EFFECT_DIRECT_ATTACK)}
+	local eg=Group.CreateGroup()
+	for _,eff in ipairs(effs) do
+		eg:AddCard(eff:GetOwner())
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
+	local ec = #eg==1 and eg:GetFirst() or eg:Select(tp,1,1,nil):GetFirst()
+	if c==ec then
+		Duel.ChangeBattleDamage(ep,ev/2)
+	end
 end
