@@ -45,7 +45,9 @@ function c95000001.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c95000001.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and Duel.GetControl(tc,1-tp) then
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
+	local zone=Duel.SelectDisableField(tp,1,0,LOCATION_MZONE,0)>>16
+	if tc and tc:IsRelateToEffect(e) and Duel.GetControl(tc,1-tp,0,0,zone) then
 		local g=Duel.GetMatchingGroup(c95000001.spfilter,tp,0,LOCATION_DECK,nil,e,tp) 
 		if g:GetCount()>0 then
 			Duel.ConfirmCards(tp,g)

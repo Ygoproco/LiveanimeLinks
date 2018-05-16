@@ -63,7 +63,9 @@ function c100000274.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000274.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and not Duel.GetControl(c,1-tp) then
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
+	local zone=Duel.SelectDisableField(tp,1,0,LOCATION_MZONE,0)>>16
+	if c:IsRelateToEffect(e) and c:IsFaceup() and not Duel.GetControl(c,1-tp,0,0,zone) then
 		if not c:IsImmuneToEffect(e) and c:IsAbleToChangeControler() then
 			Duel.Destroy(c,REASON_EFFECT)
 		end
