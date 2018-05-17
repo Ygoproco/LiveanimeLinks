@@ -1,4 +1,5 @@
---Galaxy-eyes Full Armor Photon Dragon (anime)
+--ギャラクシーアイズ ＦＡ・フォトン・ドラゴン (Manga)
+--Galaxy Eyes Full Armor Photon Dragon (Manga)
 --fixed by MLD
 function c511009480.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,8,3)
@@ -61,6 +62,7 @@ function c511009480.initial_effect(c)
 		Duel.RegisterEffect(ge,0)
 	end
 end
+c511009480.listed_names={93717133}
 function c511009480.ovfilter(c,tp,xyz)
 	return c:IsFaceup() and c:IsCode(93717133) and c:GetEquipCount()==2 and Duel.GetLocationCountFromEx(tp,tp,c,xyz)>0
 end

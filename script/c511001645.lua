@@ -1,5 +1,6 @@
+--E・HERO ゴッド・ネオス (Anime)
 --Elemental HERO Divine Neos (Anime)
---E・HERO ゴッド・ネオス
+--fixed by Larry126
 function c511001645.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
@@ -14,6 +15,7 @@ function c511001645.initial_effect(c)
 	e1:SetOperation(c511001645.copyop)
 	c:RegisterEffect(e1)
 end
+c511001645.listed_names={89943723}
 function c511001645.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
 end
