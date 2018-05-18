@@ -1,4 +1,5 @@
---カオス・フォーム
+--カオス・フォーム (Anime)
+--Chaos Form (Anime)
 function c511002984.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -9,7 +10,7 @@ function c511002984.initial_effect(c)
 	e1:SetOperation(c511002984.activate)
 	c:RegisterEffect(e1)
 end
-c511002984.card_code_list={46986414}
+c511002984.listed_names={89631139,46986414}
 function c511002984.filter(c,e,tp,m1,ft)
 	if (not c:IsSetCard(0xcf) and not c:IsSetCard(0x1048)) or c:GetType()&0x81~=0x81
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
