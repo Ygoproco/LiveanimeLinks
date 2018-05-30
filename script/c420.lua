@@ -326,9 +326,9 @@ c420.OCGDrone={
 }
 function Card.IsDrone(c,fbool)
 	if fbool then
-		return c:IsFusionSetCard(0x580) or c:IsFusionCode(table.unpack(c420.OCGDrone))
+		return c:IsFusionSetCard(0x581) or c:IsFusionCode(table.unpack(c420.OCGDrone))
 	else
-		return c:IsSetCard(0x580) or c:IsCode(table.unpack(c420.OCGDrone))
+		return c:IsSetCard(0x581) or c:IsCode(table.unpack(c420.OCGDrone))
 	end
 end
 
