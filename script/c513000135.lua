@@ -135,8 +135,13 @@ end
 -----------------------------------------------------------------
 
 function c513000135.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
-		and e:GetHandler():IsAttackable()
+		and (not c:IsHasEffect(EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and not c:IsHasEffect(EFFECT_FORBIDDEN) and not c:IsHasEffect(EFFECT_CANNOT_ATTACK)
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_ATTACK)
+		or c:IsHasEffect(EFFECT_UNSTOPPABLE_ATTACK))
 end
 function c513000135.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
