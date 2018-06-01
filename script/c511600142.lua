@@ -66,5 +66,5 @@ function c511600142.rdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-e:GetValue()
 end
 function c511600142.rdop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(ep,Duel.GetBattleDamage()*2)
+	Duel.ChangeBattleDamage(ep,Duel.GetBattleDamage(ep)*2)
 end
