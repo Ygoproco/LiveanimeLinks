@@ -3,7 +3,7 @@
 --scripted by Larry126
 --fixed by MLD
 function c511600107.initial_effect(c)
-	--special summon
+	--Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(423585,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -46,7 +46,8 @@ function c511600107.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600107.deftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local at=Duel.GetAttackTarget()
-	if chk==0 then return at and at:IsControler(tp) and at:IsFaceup() and at:IsRace(RACE_CYBERSE) end
+	if chk==0 then return at and at:IsControler(tp) and at:IsRace(RACE_CYBERSE)
+		and at:IsDefenseBelow(2147483647) and at:IsFaceup() end
 	Duel.SetTargetCard(at)
 end
 function c511600107.defop(e,tp,eg,ep,ev,re,r,rp)
@@ -58,7 +59,7 @@ function c511600107.defop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(at:GetBaseAttack()*2)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
 	at:RegisterEffect(e1)
-	if at:IsAttackPos() and Duel.SelectYesNo(tp,aux.Stringid(423585,0)) then
+	if at:IsAttackPos() and at:IsCanChangePosition() and Duel.SelectYesNo(tp,aux.Stringid(423585,0)) then
 		Duel.BreakEffect()
 		Duel.ChangePosition(at,POS_FACEUP_DEFENSE)
 	end

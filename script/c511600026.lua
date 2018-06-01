@@ -20,26 +20,6 @@ function c511600026.initial_effect(c)
 	e2:SetOperation(c511600026.disop)
 	c:RegisterEffect(e2)
 end
-function c511600026.discon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and re:IsActiveType(TYPE_MONSTER)
-end
-function c511600026.filter(e,c)
-	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK)
-end
-function c511600026.efilter(e,te,c)
-	return te:GetOwner()~=c
-end
-function c511600026.disop(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(c511600026.filter)
-	e1:SetValue(c511600026.efilter)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-end
------------------------------------------------
 function c511600026.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsRace(RACE_CYBERSE)
 end
@@ -85,4 +65,25 @@ function c511600026.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	Duel.SpecialSummonComplete()
+end
+--------------------------------------------------------
+function c511600026.discon(e,tp,eg,ep,ev,re,r,rp)
+	return rp~=tp and re:IsActiveType(TYPE_MONSTER)
+end
+function c511600026.disop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_IMMUNE_EFFECT)
+	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(c511600026.filter)
+	e1:SetValue(c511600026.efilter)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function c511600026.filter(e,c)
+	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK)
+end
+function c511600026.efilter(e,te,c)
+	return te:GetOwner()~=c
 end

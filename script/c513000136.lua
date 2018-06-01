@@ -79,7 +79,13 @@ function c513000136.atkfilter(c,e,tp)
 	return c:IsControler(tp) and c:IsPosition(POS_FACEUP) and (not e or c:IsRelateToEffect(e))
 end
 function c513000136.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	return eg:IsExists(c513000136.atkfilter,1,nil,nil,1-tp)
+		and (not c:IsHasEffect(EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and not c:IsHasEffect(EFFECT_FORBIDDEN) and not c:IsHasEffect(EFFECT_CANNOT_ATTACK)
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_ATTACK)
+		or c:IsHasEffect(EFFECT_UNSTOPPABLE_ATTACK))
 end
 function c513000136.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRelateToEffect(e) end
@@ -89,8 +95,7 @@ function c513000136.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c513000136.atkfilter,nil,e,1-tp)
 	local dg=Group.CreateGroup()
 	local c=e:GetHandler()
-	local tc=g:GetFirst()
-	while tc do
+	for tc in aux.Next(g) do
 		if tc:IsPosition(POS_FACEUP_ATTACK) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -108,7 +113,6 @@ function c513000136.atkop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1)
 			if tc:GetDefense()==0 then dg:AddCard(tc) end
 		end
-		tc=g:GetNext()
 	end
 	Duel.Destroy(dg,REASON_EFFECT)
 end

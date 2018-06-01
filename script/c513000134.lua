@@ -431,7 +431,11 @@ function c513000134.imfilter(e,te)
 	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
 end
 function c513000134.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,1000) end
+	if chk==0 then return Duel.CheckLPCost(tp,1000) and ((not c:IsHasEffect(EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and not c:IsHasEffect(EFFECT_FORBIDDEN) and not c:IsHasEffect(EFFECT_CANNOT_ATTACK)
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_ATTACK))
+		or c:IsHasEffect(EFFECT_UNSTOPPABLE_ATTACK)) end
 	Duel.PayLPCost(tp,1000)
 end
 function c513000134.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
