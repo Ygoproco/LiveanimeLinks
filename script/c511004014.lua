@@ -137,6 +137,8 @@ function c511004014.op(e,tp,eg,ep,ev,re,r,rp)
 		e11a:SetCode(EVENT_BE_MATERIAL)
 		Duel.RegisterEffect(e11a,tp)
 		if Duel.SelectYesNo(tp,aux.Stringid(4013,14)) and Duel.SelectYesNo(tp,aux.Stringid(4013,14)) then
+			Duel.Hint(HINT_MESSAGE,0,aux.Stringid(4013,15))
+			Duel.Hint(HINT_MESSAGE,1,aux.Stringid(4013,15))
 			--manga rules
 			local e12=Effect.GlobalEffect()
 			e12:SetType(EFFECT_TYPE_FIELD)
@@ -242,7 +244,7 @@ function c511004014.block(e,tp,eg,ep,ev,re,r,rp)
 			atg:GetFirst():RegisterFlagEffect(511004019,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE,0,1)
 		else
 			Duel.ChangeAttackTarget(at)
-			if at then at:RegisterFlagEffect(511004019,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE,0,1) end		 
+			if at then at:RegisterFlagEffect(511004019,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE,0,1) end	   
 		end
 	end
 end
