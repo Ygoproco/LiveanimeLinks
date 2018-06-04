@@ -317,6 +317,22 @@ function Card.IsDoll(c,fbool)
 	end
 end
 
+
+-- Drone
+-- ドローン
+Star Drawing/Doron/SPYRAL GEAR - Drone
+c420.OCGDrone={
+	24610207,756652,4474060
+}
+function Card.IsDrone(c,fbool)
+	if fbool then
+		return c:IsFusionSetCard(0x581) or c:IsFusionCode(table.unpack(c420.OCGDrone))
+	else
+		return c:IsSetCard(0x581) or c:IsCode(table.unpack(c420.OCGDrone))
+	end
+end
+
+
 -- Druid ドルイド 
 -- Secret Sect Druid Wid/Secret Sect Druid Dru/Aurkus, Lightsworn Druid
 c420.OCGDruid={
