@@ -7,7 +7,7 @@ function c511004014.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_ADJUST)
 	e1:SetCountLimit(1)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_NO_TURN_RESET)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_NO_TURN_RESET+EFFECT_FLAG_IGNORE_IMMUNE)
 	e1:SetRange(0xff)
 	e1:SetOperation(c511004014.op)
 	c:RegisterEffect(e1)
@@ -27,12 +27,13 @@ end
 function c511004014.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetFlagEffect(tp,511004014)==0 and Duel.GetFlagEffect(1-tp,511004014)==0 then
+		Duel.ConfirmCards(tp,c)
 		Duel.ConfirmCards(1-tp,c)
 		Duel.RegisterFlagEffect(tp,511004014,0,0,0)
 		--To controler's grave
 		local e1=Effect.GlobalEffect()
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE) 
+		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE) 
 		e1:SetCode(EFFECT_SEND_REPLACE)
 		e1:SetTarget(c511004014.reptg)
 		e1:SetValue(c511004014.repval)
@@ -137,11 +138,13 @@ function c511004014.op(e,tp,eg,ep,ev,re,r,rp)
 		e11a:SetCode(EVENT_BE_MATERIAL)
 		Duel.RegisterEffect(e11a,tp)
 		if Duel.SelectYesNo(tp,aux.Stringid(4013,14)) and Duel.SelectYesNo(tp,aux.Stringid(4013,14)) then
+			Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(4013,15))
+			Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(4013,15))
 			--manga rules
 			local e12=Effect.GlobalEffect()
 			e12:SetType(EFFECT_TYPE_FIELD)
 			e12:SetCode(EFFECT_HAND_LIMIT)
-			e12:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+			e12:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_IGNORE_IMMUNE)
 			e12:SetTargetRange(1,1)
 			e12:SetValue(7)
 			Duel.RegisterEffect(e12,tp)
@@ -157,24 +160,39 @@ function c511004014.op(e,tp,eg,ep,ev,re,r,rp)
 			e15:SetCode(EFFECT_CANNOT_ACTIVATE)
 			e15:SetValue(c511004014.aclimit)
 			Duel.RegisterEffect(e15,tp)
-			local e16=e12:Clone()
-			e16:SetCode(EFFECT_CANNOT_SSET)
-			e16:SetTarget(c511004014.setlimit)
+			local e16=Effect.GlobalEffect()
+			e16:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+			e16:SetCode(EVENT_CHAINING)
+			e16:SetOperation(c511004014.aclimit1)
 			Duel.RegisterEffect(e16,tp)
-			local e17=Effect.GlobalEffect()
-			e17:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e17:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-			e17:SetCode(EVENT_CHAINING)
-			e17:SetOperation(c511004014.aclimit1)
+			local e17=e16:Clone()
+			e17:SetCode(EVENT_CHAIN_NEGATED)
+			e17:SetOperation(c511004014.aclimit2)
 			Duel.RegisterEffect(e17,tp)
-			local e18=e17:Clone()
-			e18:SetCode(EVENT_CHAIN_NEGATED)
-			e18:SetOperation(c511004014.aclimit2)
+			local e18=e16:Clone()
+			e18:SetCode(EVENT_SSET)
+			e18:SetOperation(c511004014.checkop)
 			Duel.RegisterEffect(e18,tp)
-			local e19=e17:Clone()
-			e19:SetCode(EVENT_SSET)
-			e19:SetOperation(c511004014.checkop)
+			local e19=Effect.GlobalEffect()
+			e19:SetType(EFFECT_TYPE_FIELD)
+			e19:SetCode(EFFECT_CANNOT_TURN_SET)
+			e19:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+			e19:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 			Duel.RegisterEffect(e19,tp)
+			local e20=e19:Clone()
+			e20:SetCode(EFFECT_CANNOT_MSET)
+			e20:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_IGNORE_IMMUNE)
+			e20:SetTargetRange(1,1)
+			Duel.RegisterEffect(e20,tp)
+			local e21=e20:Clone()
+			e21:SetCode(EFFECT_CANNOT_SSET)
+			e21:SetTarget(c511004014.setlimit)
+			Duel.RegisterEffect(e21,tp)
+			local e22=e19:Clone()
+			e22:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+			e22:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+			e22:SetTargetRange(LOCATION_SZONE,LOCATION_SZONE)
+			Duel.RegisterEffect(e22,tp)
 		end
 	end
 	Duel.DisableShuffleCheck()
@@ -242,7 +260,7 @@ function c511004014.block(e,tp,eg,ep,ev,re,r,rp)
 			atg:GetFirst():RegisterFlagEffect(511004019,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE,0,1)
 		else
 			Duel.ChangeAttackTarget(at)
-			if at then at:RegisterFlagEffect(511004019,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE,0,1) end		 
+			if at then at:RegisterFlagEffect(511004019,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE,0,1) end   
 		end
 	end
 end
@@ -289,17 +307,17 @@ function c511004014.aclimit(e,re,tp)
 	return false
 end
 function c511004014.setlimit(e,c,tp)
-	return (((c:IsType(TYPE_SPELL) and Duel.GetFlagEffect(c:GetControler(),TYPE_SPELL)>0)
-		or (c:IsType(TYPE_TRAP) and Duel.GetFlagEffect(c:GetControler(),TYPE_TRAP)>0)) and c:IsLocation(LOCATION_HAND))
+	return (c:IsLocation(LOCATION_HAND) and ((c:IsType(TYPE_SPELL) and Duel.GetFlagEffect(tp,TYPE_SPELL)>0)
+		or (c:IsType(TYPE_TRAP) and Duel.GetFlagEffect(tp,TYPE_TRAP)>(Duel.IsPlayerAffectedByEffect(tp,511004017) and 1 or 0))))
 		or (c:IsType(TYPE_FIELD) and not Duel.GetFieldCard(tp,LOCATION_SZONE,5) and Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>4)
 end
 function c511004014.aclimit1(e,tp,eg,ep,ev,re,r,rp)
-	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsPreviousLocation(LOCATION_HAND) then
+	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsPreviousLocation(LOCATION_HAND) then
 		re:GetHandler():RegisterFlagEffect(EFFECT_TYPE_ACTIVATE,RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function c511004014.aclimit2(e,tp,eg,ep,ev,re,r,rp)
-	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsPreviousLocation(LOCATION_HAND) then
+	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsPreviousLocation(LOCATION_HAND) then
 		re:GetHandler():ResetFlagEffect(EFFECT_TYPE_ACTIVATE)
 	end
 end
