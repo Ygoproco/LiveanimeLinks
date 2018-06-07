@@ -14,31 +14,34 @@ function c511009728.filter(c,e,tp,m1,m2,ft)
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
 	mg:Merge(m2)
+	if c.mat_filter then
+		mg=mg:Filter(c.mat_filter,nil)
+	end
+	if mg:IsContains(c) then mg:RemoveCard(c) end
 	if ft>0 then
-		return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetLevel(),1,99,c)
+		return mg:CheckWithSumGreater(Card.GetRitualLevel,c:GetLevel(),c)
 	else
-		return ft>-1 and mg:IsExists(c511009728.mfilterf,1,nil,tp,mg,c)
+		return mg:IsExists(c511009728.mfilterf,1,nil,tp,mg,c)
 	end
 end
 function c511009728.mfilterf(c,tp,mg,rc)
 	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
-		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel(),0,99,rc)
+		return mg:CheckWithSumGreater(Card.GetRitualLevel,rc:GetLevel(),rc)
 	else return false end
 end
 function c511009728.mfilter(c)
 	return c:GetLevel()>0 and c:IsSetCard(0x578) and c:IsAbleToDeck()
 end
-function c35950025.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x578)
+function c511009728.ckfilter(c,e,tp)
+	return c:IsSetCard(0x578) and c:IsType(TYPE_LINK)
 end
 function c511009728.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg1=Duel.GetRitualMaterial(tp)
-		if Duel.IsExistingMatchingCard(c511009728.cfilter,e::GetHandler():GetControler(),LOCATION_MZONE,0,1,nil) then
-			local mg2=Duel.GetMatchingGroup(c511009728.mfilter,tp,LOCATION_GRAVE,0,nil)
-		else
-			local mg2=Group.CreateGroup()
+		local mg2=Group.CreateGroup()
+		if Duel.IsExistingMatchingCard(c511009728.ckfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) then
+			mg2=Duel.GetMatchingGroup(c511009728.mfilter,tp,LOCATION_GRAVE,0,nil)
 		end
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		return Duel.IsExistingMatchingCard(c511009728.filter,tp,LOCATION_HAND,0,1,nil,e,tp,mg1,mg2,ft)
@@ -47,14 +50,13 @@ function c511009728.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511009728.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg1=Duel.GetRitualMaterial(tp)
-	if Duel.IsExistingMatchingCard(c511009728.cfilter,e::GetHandler():GetControler(),LOCATION_MZONE,0,1,nil) then
-		local mg2=Duel.GetMatchingGroup(c511009728.mfilter,tp,LOCATION_GRAVE,0,nil)
-	else
-		local mg2=Group.CreateGroup()
+	local mg2=Group.CreateGroup()
+	if Duel.IsExistingMatchingCard(c511009728.ckfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) then
+		mg2=Duel.GetMatchingGroup(c511009728.mfilter,tp,LOCATION_GRAVE,0,nil)
 	end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511009728.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp,mg1,mg2,ft)
+	local g=Duel.SelectMatchingCard(tp,c11398951.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp,mg1,mg2,ft)
 	local tc=g:GetFirst()
 	if tc then
 		local mg=mg1:Filter(Card.IsCanBeRitualMaterial,tc,tc)
@@ -62,13 +64,13 @@ function c511009728.activate(e,tp,eg,ep,ev,re,r,rp)
 		local mat=nil
 		if ft>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel(),1,99,tc)
+			mat=mg:SelectWithSumGreater(tp,Card.GetRitualLevel,tc:GetLevel(),1,99,tc)
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			mat=mg:FilterSelect(tp,c511009728.mfilterf,1,1,nil,tp,mg,tc)
+			mat=mg:FilterSelect(tp,c11398951.mfilterf,1,1,nil,tp,mg,tc)
 			Duel.SetSelectedCard(mat)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			local mat2=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel(),0,99,tc)
+			local mat2=mg:SelectWithSumGreater(tp,Card.GetRitualLevel,tc:GetLevel(),0,99,tc)
 			mat:Merge(mat2)
 		end
 		tc:SetMaterial(mat)
