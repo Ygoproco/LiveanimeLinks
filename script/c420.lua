@@ -320,7 +320,7 @@ end
 
 -- Drone
 -- ドローン
-Star Drawing/Doron/SPYRAL GEAR - Drone
+-- Star Drawing/Doron/SPYRAL GEAR - Drone
 c420.OCGDrone={
 	24610207,756652,4474060
 }
