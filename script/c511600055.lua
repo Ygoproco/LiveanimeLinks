@@ -15,7 +15,7 @@ function c511600055.initial_effect(c)
 	e2:SetDescription(aux.Stringid(71071546,0))
 	e2:SetCategory(CATEGORY_COUNTER)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_BATTLED)
+	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(c511600055.ctcon)
 	e2:SetTarget(c511600055.cttg)
@@ -30,24 +30,6 @@ function c511600055.initial_effect(c)
 	e3:SetCost(c511600055.atkcost)
 	e3:SetOperation(c511600055.atkop)
 	c:RegisterEffect(e3)
-end
-function c511600055.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:GetCounter(0x55)>0 end
-	local ct=c:GetCounter(0x55)
-	e:SetLabel(ct*1000)
-	c:RemoveCounter(tp,0x55,ct,REASON_COST)
-end
-function c511600055.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(e:GetLabel())
-		c:RegisterEffect(e1)
-	end
 end
 function c511600055.dirfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_CYBERSE)
@@ -67,5 +49,23 @@ function c511600055.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		c:AddCounter(0x55,1)
+	end
+end
+function c511600055.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetCounter(0x55)>0 end
+	local ct=c:GetCounter(0x55)
+	e:SetLabel(ct*1000)
+	c:RemoveCounter(tp,0x55,ct,REASON_COST)
+end
+function c511600055.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetValue(e:GetLabel())
+		c:RegisterEffect(e1)
 	end
 end
