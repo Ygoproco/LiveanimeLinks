@@ -38,7 +38,7 @@ function c511009919.initial_effect(c)
 	end
 end
 function c511009919.regfilter(c)
-	return c:IsSetCard(0x578) and c:IsType(TYPE_LINK) and c:GetFlagEffect(511009919)==0
+	return c:IsSetCard(0x220) and c:IsType(TYPE_LINK) and c:GetFlagEffect(511009919)==0
 end
 function c511009919.linkchk(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(c511009919.regfilter,tp,0xff,0xff,nil)
@@ -60,7 +60,7 @@ function c511009919.linkchk(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511009919.matfilter(c,lc,tp)
 	return c:IsFaceup() and c:IsCode(lc:GetCode()) and Duel.GetLocationCountFromEx(tp,tp,c,lc)>0
-		and c:IsType(TYPE_LINK) and c:IsCanBeLinkMaterial(lc,tp) and c:IsSetCard(0x578)
+		and c:IsType(TYPE_LINK) and c:IsCanBeLinkMaterial(lc,tp) and c:IsSetCard(0x220)
 end
 function c511009919.linkcon(e,c)
 	if c==nil then return true end
@@ -70,7 +70,7 @@ function c511009919.linkcon(e,c)
 	if mustg:IsExists(aux.NOT(Card.IsCanBeLinkMaterial),1,nil,c,tp) then return false end
 	local mg=Duel.GetMatchingGroup(c511009919.matfilter,tp,LOCATION_MZONE,0,nil,c,tp)
 	return mg:GetCount()>0 and Duel.GetFlagEffect(tp,5110099190)==0
-		and Duel.IsPlayerAffectedByEffect(tp,511009919) and c:IsSetCard(0x578) and c:IsType(TYPE_LINK)
+		and Duel.IsPlayerAffectedByEffect(tp,511009919) and c:IsSetCard(0x220) and c:IsType(TYPE_LINK)
 		and (mustg:GetCount()==0 or (mustg:GetCount()==1 and mg:Includes(mustg)))
 end
 function c511009919.linktg(e,tp,eg,ep,ev,re,r,rp,chk,c)
@@ -103,14 +103,14 @@ function c511009919.linkop(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	g:DeleteGroup()
 end
 function c511009919.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetBattleDamage(tp)>0 and (Duel.GetAttacker():IsSetCard(0x578) or Duel.GetAttackTarget():IsSetCard(0x578))
+	return Duel.GetBattleDamage(tp)>0 and (Duel.GetAttacker():IsSetCard(0x220) or Duel.GetAttackTarget():IsSetCard(0x220))
 end
 function c511009919.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
 	Duel.PayLPCost(tp,1000)
 end
 function c511009919.filter(c)
-	return aux.nzatk(c) and c:IsType(TYPE_LINK) and c:IsSetCard(0x578)
+	return aux.nzatk(c) and c:IsType(TYPE_LINK) and c:IsSetCard(0x220)
 end
 function c511009919.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511009919.filter(chkc) end
