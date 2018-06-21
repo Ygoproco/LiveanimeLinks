@@ -13,11 +13,11 @@ function c511600148.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511600148.costfilter(c)
-	return c:IsControler(tp) and c==Duel.GetAttackTarget()
+	return c==Duel.GetAttackTarget()
 end
 function c511600148.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511600148.costfilter,1,false,nil,nil,tp) end
-	local g=Duel.SelectReleaseGroupCost(tp,c511600148.costfilter,1,1,false,nil,nil,tp)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511600148.costfilter,1,false,nil,nil) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511600148.costfilter,1,1,false,nil,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c511600148.target(e,tp,eg,ep,ev,re,r,rp,chk)
