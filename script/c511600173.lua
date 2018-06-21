@@ -81,10 +81,13 @@ function c511600173.eqop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e3)
 	--damage
 	local e4=Effect.CreateEffect(tc)
+	e4:SetDescription(aux.Stringid(511600173,0))
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	e4:SetLabelObject(c)
 	e4:SetCondition(c511600173.damcon)
 	e4:SetOperation(c511600173.damop)
 	tc:RegisterEffect(e4,true)
@@ -93,6 +96,7 @@ function c511600173.eqop(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetType(EFFECT_TYPE_SINGLE)
 		e5:SetCode(EFFECT_ADD_TYPE)
 		e5:SetValue(TYPE_EFFECT)
+		e5:SetCondition(c511600173.eqcon)
 		e5:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e5,true)
 	end
@@ -103,10 +107,13 @@ end
 function c511600173.cfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0xfb) and c:IsControler(tp)
 end
+function c511600173.eqcon(e)
+	return e:GetOwner():GetEquipTarget()==e:GetHandler()
+end
 function c511600173.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511600173.cfilter,1,nil,tp)
+	return e:GetLabelObject():GetEquipTarget()==e:GetHandler() and eg:IsExists(c511600173.cfilter,1,nil,tp)
 end
 function c511600173.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,511600173)
+	Duel.Hint(HINT_CARD,0,e:GetHandler():GetCode())
 	Duel.Damage(1-tp,200,REASON_EFFECT)
 end
