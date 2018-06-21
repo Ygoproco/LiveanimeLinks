@@ -66,8 +66,9 @@ function c511600182.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return bc~=nil and bc:IsControler(1-tp) and bc:GetAttack()~=bc:GetBaseAttack()
 end
 function c511600182.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
 	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(511600182)==0 end
+	c:RegisterFlagEffect(511600182,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL+RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,c,1,tp,c:GetAttack())
 end
 function c511600182.atkop(e,tp,eg,ep,ev,re,r,rp)
