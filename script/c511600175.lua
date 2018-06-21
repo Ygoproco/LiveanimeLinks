@@ -4,8 +4,8 @@
 function c511600175.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	local eff=aux.AddFusionProcMixN(c,true,true,c511600175.ffilter,2)
-	eff[1]:SetValue(c511600175.matfilter)
+	aux.AddFusionProcMix(c,true,true,c511600175.matfilter,aux.FilterBoolFunction(Card.IsFusionSetCard,0xfb))
+--aux.FilterBoolFunctionEx(Card.IsSetCard,0xfb)
 	--avoid damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -38,14 +38,9 @@ function c511600175.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 c511600175.material_setcode={0xfb}
-function c511600175.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return (not sg or sg:IsExists(c511600175.fusfilter,1,nil,fc,sumtype,tp))
-end
-function c511600175.fusfilter(c,fc,sumtype,tp)
-	return c:IsType(TYPE_LINK,fc,sumtype,tp)
-end
-function c511600175.matfilter(c,fc,sub,sub2,mg,sg,tp,contact)
-	return c:IsSetCard(0xfb,fc,SUMMON_TYPE_FUSION,tp)
+function c511600175.matfilter(c,fc,sumtype,tp)
+	return c:IsType(TYPE_LINK,fc,sumtype,tp) and c:IsFusionSetCard(0xfb)
+--c:IsSetCard(0xfb,fc,sumtype,tp)
 end
 function c511600175.damval(e,re,val,r,rp,rc)
 	if re and r&REASON_EFFECT==REASON_EFFECT and re:GetHandler():IsFaceup()
