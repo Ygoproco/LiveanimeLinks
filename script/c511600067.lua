@@ -27,7 +27,6 @@ function c511600067.initial_effect(c)
 	e2:SetOperation(c511600067.drop)
 	c:RegisterEffect(e2)
 end
-duel.specialsum
 function c511600067.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,0x41)==0x41 and re:GetHandler():IsType(TYPE_LINK)
 end
