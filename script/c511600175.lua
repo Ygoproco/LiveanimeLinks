@@ -39,17 +39,8 @@ function c511600175.initial_effect(c)
 end
 c511600175.material_setcode={0xfb}
 function c511600175.matfilter(c,fc,sumtype,tp)
+	--c:IsSetCard(0xfb,fc,sumtype,tp)
 	return c:IsType(TYPE_LINK,fc,sumtype,tp) and c:IsFusionSetCard(0xfb)
---c:IsSetCard(0xfb,fc,sumtype,tp)
-end
-function c511600175.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return (not sg or sg:IsExists(c511600175.fusfilter,1,nil,fc,sumtype,tp))
-end
-function c511600175.fusfilter(c,fc,sumtype,tp)
-	return c:IsType(TYPE_LINK,fc,sumtype,tp)
-end
-function c511600175.matfilter(c,fc,sub,sub2,mg,sg,tp,contact)
-	return c:IsSetCard(0xfb,fc,SUMMON_TYPE_FUSION,tp)
 end
 function c511600175.damval(e,re,val,r,rp,rc)
 	if re and r&REASON_EFFECT==REASON_EFFECT and re:GetHandler():IsFaceup()
