@@ -1,5 +1,5 @@
 --シンデレラ (Anime)
---Cinderella (Anime)
+--Prinzessin (Anime)
 function c511000431.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
