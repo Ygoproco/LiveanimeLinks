@@ -70,10 +70,10 @@ function c511001132.retop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511001132.filter,tp,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED+LOCATION_EXTRA,nil)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if g:GetCount()<=0 or ft<g:GetCount() then return end
-	g:ForEach(function(tc)
+	for tc in aux.Next(g) do
 		Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,tc:GetPreviousPosition(),true)
 		tc:SetStatus(STATUS_FORM_CHANGED,true)
-	end)
+	end
 	if Duel.GetLP(tp)~=c511001132[tp] then
 		Duel.SetLP(tp,c511001132[tp],REASON_EFFECT)
 		Duel.BreakEffect()

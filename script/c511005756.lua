@@ -17,10 +17,9 @@ return c:IsRace(RACE_FISH+RACE_SEASERPENT) and c:IsFaceup()
 end
 
 function c511005756.target(e,tp,eg,ep,ev,re,r,rp,chk)
-local tc=Duel.GetFirstTarget()
-if chk==0 then return Duel.IsExistingTarget(c511005756.filter,tp,LOCATION_MZONE,0,1,tc) end
+if chk==0 then return Duel.IsExistingTarget(c511005756.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-Duel.SelectTarget(tp,c511005756.filter,tp,LOCATION_MZONE,0,1,1,tc)
+Duel.SelectTarget(tp,c511005756.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 
 function c511005756.activate(e,tp,eg,ep,ev,re,r,rp)

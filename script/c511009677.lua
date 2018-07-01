@@ -49,7 +49,7 @@ function c511009677.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c511009677.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if chk==0 then return g:GetCount()>0 end
 	Duel.SetTargetPlayer(1-tp)
-	local sg=g:GetMaxGroup(Card.GetLevel)
+	local sg=g:GetMaxGroup(Card.GetLink)
 	local tc=sg:GetFirst()
 	local dam=tc:GetLink()*100
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
@@ -57,7 +57,7 @@ end
 function c511009677.damop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511009677.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if g:GetCount()==0 or not e:GetHandler():IsRelateToEffect(e) then return end
-	local sg=g:GetMaxGroup(Card.GetLevel)
+	local sg=g:GetMaxGroup(Card.GetLink)
 	if sg:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 		sg=sg:Select(tp,1,1,nil)

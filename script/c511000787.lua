@@ -1,12 +1,13 @@
+--薔薇占術師
 --Rose Shaman
 function c511000787.initial_effect(c)
 	--search
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(511000787,0))
+	e1:SetDescription(aux.Stringid(22093873,0))
 	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetCost(c511000787.cost)
 	e1:SetTarget(c511000787.target)
 	e1:SetOperation(c511000787.operation)

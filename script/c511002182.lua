@@ -15,7 +15,7 @@ function c511002182.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,d,1,0,0)
 end
 function c511002182.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
+	local tc=Duel.GetAttackTarget()
 	if tc and tc:IsRelateToBattle() then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 		local e1=Effect.CreateEffect(e:GetHandler())

@@ -16,13 +16,12 @@ function c511001137.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001137.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=eg:FilterCount(Card.IsControler,nil,1-tp)
 	local lv=c:GetFlagEffectLabel(511001137)
 	if lv then
 		c:ResetFlagEffect(511001137)
-		c:RegisterFlagEffect(511001137,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,ct+lv,aux.Stringid(4015,ct+lv))
+		c:RegisterFlagEffect(511001137,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,lv+1,aux.Stringid(4015,lv+1))
 	else
-		c:RegisterFlagEffect(511001137,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,ct,aux.Stringid(4015,ct))
+		c:RegisterFlagEffect(511001137,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,1,aux.Stringid(4015,1))
 	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
@@ -30,6 +29,6 @@ function c511001137.atkop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
-	e1:SetValue(ct*500)
+	e1:SetValue(500)
 	c:RegisterEffect(e1)
 end

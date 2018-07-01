@@ -1,4 +1,5 @@
---Glass Slippers
+--ガラスの靴 (Anime)
+--Glass Slippers (Anime)
 function c511000433.initial_effect(c)
 	aux.AddEquipProcedure(c,nil,c511000433.filter)
 	--change equip
@@ -22,10 +23,13 @@ function c511000433.initial_effect(c)
 	c:RegisterEffect(e4)
 	--at limit
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_EQUIP)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetTargetRange(0,LOCATION_MZONE)
 	e5:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e5:SetCondition(c511000433.atkcon)
-	e5:SetValue(aux.TargetBoolFunction(Card.IsCode,511000431))
+	e5:SetTarget(c511000433.attg)
+	e5:SetValue(c511000433.atkval)
 	c:RegisterEffect(e5)
 	--reequip to Cinderella
 	local e6=Effect.CreateEffect(c)
@@ -39,23 +43,22 @@ function c511000433.initial_effect(c)
 	e6:SetOperation(c511000433.eqop)
 	c:RegisterEffect(e6)
 end
+c511000433.listed_names={78527720}
 function c511000433.filter(c,e,tp)
-	return c:IsCode(511000431) or c:GetControler()~=tp
+	return c:IsCode(78527720) or c:GetControler()~=tp
 end
 function c511000433.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local eq=e:GetHandler():GetEquipTarget()
-	return ep~=tp and eq and eq:IsCode(511000431) and eg:GetFirst()==eq
+	return ep~=tp and eq and eq:IsCode(78527720) and eg:GetFirst()==eq
 end
 function c511000433.atkcon(e)
-	local ec=e:GetHandler():GetEquipTarget()
-	return ec and ec:IsControler(1-e:GetHandlerPlayer())
+	local eq=e:GetHandler():GetEquipTarget()
+	return eq and eq:GetControler()~=e:GetHandlerPlayer()
 end
-function c511000433.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+function c511000433.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,0,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(511000433,1))
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function c511000433.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -66,14 +69,17 @@ function c511000433.eqop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(c,REASON_EFFECT) 
 	end
 end
+function c511000433.attg(e,c)
+	return c==e:GetHandler():GetEquipTarget() and not c:IsImmuneToEffect(e)
+end
+function c511000433.atkval(e,c)
+	return c:IsCode(78527720)
+end
 function c511000433.eqcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_LOST_TARGET) and e:GetHandler():GetPreviousEquipTarget():IsReason(REASON_DESTROY)
-		and e:GetHandler():GetPreviousEquipTarget():GetPreviousControler()~=tp
 end
-function c511000433.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511000433.filter(chkc) end
+function c511000433.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(c511000433.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(511000433,1))
 	Duel.SelectTarget(tp,c511000433.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end

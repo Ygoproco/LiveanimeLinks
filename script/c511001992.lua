@@ -22,9 +22,9 @@ function c511001992.initial_effect(c)
 	e3:SetOperation(c511001992.atkop)
 	c:RegisterEffect(e3)
 end
-function c34408491.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep==tp
-end
+--function c34408491.atkcon(e,tp,eg,ep,ev,re,r,rp)
+--	return ep==tp
+--end
 function c511001992.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFaceup() and c:IsRelateToEffect(e) then

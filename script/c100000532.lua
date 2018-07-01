@@ -1,4 +1,5 @@
 --Ｗａｌｋｕｒｅｎ Ｒｉｔｔ
+--Ride of the Valkyries
 function c100000532.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -6,31 +7,34 @@ function c100000532.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c100000532.target)
-	e1:SetOperation(c100000532.activate)
+	e1:SetOperation(c100000532.operation)
 	c:RegisterEffect(e1)
 end
-function c100000532.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_HAND,0,nil,0x55b)
-	local ct=g:GetCount()
-	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133)) 
-		and g:FilterCount(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)==ct end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,ct,0,0)
+function c100000532.filter(c)
+	return c:IsSetCard(0x55b) and c:IsType(TYPE_MONSTER)
 end
-function c100000532.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_HAND,0,nil,0x55b)
-	local ct=g:GetCount()
+function c100000532.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(c100000532.filter,tp,LOCATION_HAND,0,nil)
+	local ct=#g
+	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct
+		and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133)) 
+		and g:FilterCount(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)==ct end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,ct,tp,LOCATION_HAND)
+end
+function c100000532.operation(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c100000532.filter,tp,LOCATION_HAND,0,nil,e,tp)
+	local ct=#g
 	if ct<=0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<ct or (ct>1 and Duel.IsPlayerAffectedByEffect(tp,59822133)) 
 		or g:FilterCount(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)~=ct then return end
-	local fid=e:GetHandler():GetFieldID()
-	local tc=g:GetFirst()
-	while tc do
+	local c=e:GetHandler()
+	local fid=c:GetFieldID()
+	for tc in aux.Next(g) do
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 		tc:RegisterFlagEffect(100000532,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,fid)
-		tc=g:GetNext()
 	end
 	Duel.SpecialSummonComplete()
 	g:KeepAlive()
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
@@ -47,7 +51,7 @@ function c100000532.retfilter(c,fid)
 end
 function c100000532.retcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
-	if not g:IsExists(c100000532.retfilter,1,nil,e:GetLabel()) then
+	if not g:IsExists(c100000532.retfilter,1,nil,e:GetLabel()) or Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_EP) then
 		g:DeleteGroup()
 		e:Reset()
 		return false

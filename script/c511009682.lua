@@ -69,6 +69,7 @@ function c511009682.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e3,true)
 		local e4=e1:Clone()
 		e4:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		e4:SetValue(1)
 		c:RegisterEffect(e4,true)
 		Duel.SpecialSummonComplete()
 	end

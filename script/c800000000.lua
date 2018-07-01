@@ -27,7 +27,7 @@ end
 function c800000000.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetReleaseGroup(tp)
 	e:SetLabel(g:GetCount())
-	if chk==0 then return g:GetCount()>0 g:FilterCount(aux.MZFilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	if chk==0 then return g:GetCount()>0 and g:FilterCount(aux.MZFilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 	local exg=Duel.GetMatchingGroup(aux.ReleaseCostFilter,tp,0,LOCATION_MZONE,nil)
 	exg:Sub(g)

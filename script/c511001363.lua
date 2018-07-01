@@ -81,7 +81,7 @@ end
 function c511001363.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local a=c:CheckRemoveOverlayCard(tp,1,REASON_COST)
-	local b=Duel.CheckLPCost(tp,800)
+	local b=Duel.CheckLPCost(tp,400)
 	local ov=c:GetOverlayGroup()
 	if chkc then return false end
 	if chk==0 then return (a or b) and ov:IsExists(c511001363.filter,1,nil,e,tp) end
@@ -105,7 +105,7 @@ function c511001363.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if op==0 then
 		Duel.SendtoGrave(g,REASON_COST)	
 	else
-		Duel.PayLPCost(tp,800)
+		Duel.PayLPCost(tp,400)
 	end
 end
 function c511001363.copyop(e,tp,eg,ep,ev,re,r,rp)

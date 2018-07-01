@@ -1,4 +1,5 @@
---青眼の光龍
+--青眼の光龍 (Anime)
+--Blue-Eyes Shining Dragon (Anime)
 function c511002418.initial_effect(c)
 	c:EnableUnsummonable()
 	--cannot special summon
@@ -55,6 +56,7 @@ function c511002418.initial_effect(c)
 	e6:SetCode(3682106)
 	c:RegisterEffect(e6)
 end
+c511002418.listed_names={23995346}
 function c511002418.spfilter(c,ft,tp)
 	return c:IsCode(23995346) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
 end

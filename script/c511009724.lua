@@ -1,29 +1,34 @@
---Polarizing Prism
+--Dinomuscle
 function c511009724.initial_effect(c)
-	--Activate
+	--activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DESTROY)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e1:SetCondition(c511009724.condition)
-	e1:SetTarget(c511009724.target)
-	e1:SetOperation(c511009724.activate)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
+	--atk
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetRange(LOCATION_SZONE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x221))
+	e1:SetValue(400)
+	c:RegisterEffect(e1)
+	--indes
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetTargetRange(LOCATION_SZONE,0)
+	e3:SetTarget(c511009724.target)
+	e3:SetValue(c511009724.indct)
+	c:RegisterEffect(e3)
 end
-function c511009724.condition(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer()
+function c511009724.target(e,c)
+	return c:IsSetCard(0x221)
 end
-function c511009724.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local tg=Duel.GetAttacker()
-	if chkc then return chkc==tg end
-	if chk==0 then return tg:IsOnField() and tg:IsCanBeEffectTarget(e) end
-	Duel.SetTargetCard(tg)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tg,1,0,0)
-end
-function c511009724.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	if tc:IsRelateToEffect(e) and tc:IsAttackable() and not tc:IsStatus(STATUS_ATTACK_CANCELED) then
-		Duel.Destroy(tc,REASON_EFFECT)
-	end
+function c511009724.indct(e,re,r,rp)
+	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
+		return 1
+	else return 0 end
 end

@@ -20,7 +20,7 @@ end
 function c511009685.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lg=e:GetHandler():GetLinkedGroup()
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return ep~=tp and loc==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER)
+	return loc==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER)
 		and lg:IsContains(re:GetHandler()) and Duel.IsChainNegatable(ev)
 end
 function c511009685.target(e,tp,eg,ep,ev,re,r,rp,chk)

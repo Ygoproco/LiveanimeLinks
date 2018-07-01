@@ -1,4 +1,5 @@
---Chaos Phantom Demon Armityle
+--混沌幻魔アーミタイル (Anime)
+--Armityle the Chaos Phantom (Anime)
 function c511000253.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,6007213,32491822,69890967)
@@ -38,7 +39,7 @@ function c511000253.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetControler()~=tp and chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return c:IsAttackable() 
 		and Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil) end
-	Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)	
+	Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)   
 end
 function c511000253.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -101,7 +102,10 @@ function c511000253.retcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000253.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsControler(e:GetLabel()) then
-		Duel.GetControl(c,1-e:GetLabel())
+	local p=e:GetLabel()
+	if c:IsControler(p) then
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOZONE)
+		local zone=Duel.SelectDisableField(p,1,0,LOCATION_MZONE,0)>>16
+		Duel.GetControl(tc,1-p,0,0,zone)
 	end
 end

@@ -50,7 +50,7 @@ function c511600006.operation(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e2:SetLabelObject(tc2)
-		e2:SetCondition(c511600005.atkcon)
+		e2:SetCondition(c511600006.atkcon)
 		e2:SetValue(3000)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc1:RegisterEffect(e2)
@@ -59,7 +59,7 @@ function c511600006.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc2:RegisterEffect(e3)
 	end
 end
-function c511600005.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function c511600006.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetCardTarget():IsContains(e:GetLabelObject())
 end
 function c511600006.desop(e,tp,eg,ep,ev,re,r,rp)

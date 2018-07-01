@@ -17,97 +17,49 @@ function c511000915.initial_effect(c)
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 end
+-- [Toon]=original 
+c511000915.list={
+[53183600]=89631139,
+[38369349]=2964201,
+[31733941]=74677422,
+[7171149]=83104731,
+[28112535]=81480460,
+[61190918]=78193831,
+[79875176]=11384280,
+[83629030]=70095154,
+[21296502]=46986414,
+[90960358]=38033121,
+[42386471]=69140098,
+[15270885]=78658564,
+[16392422]=10189126,
+[65458948]=65570596,
+[91842653]=70781052
+}
 function c511000915.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsType,1,false,nil,nil,TYPE_TOON) end
 	local g=Duel.SelectReleaseGroupCost(tp,Card.IsType,1,1,false,nil,nil,TYPE_TOON)
 	Duel.Release(g,REASON_COST)
 end
-function c511000915.cfilter(c,tp)
-	return c:GetSummonPlayer()==1-tp 
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),0,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute())
+function c511000915.toonfilter(c,code,e,tp)
+	return (c.toonVersion==code or c511000915.list[c:GetCode()]==code ) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c511000915.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511000915.cfilter,1,nil,tp)
+	return tp~=ep and eg:GetCount()==1 and Duel.GetCurrentChain()==0	
 end
 function c511000915.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
-	Duel.SetTargetCard(eg)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	local tc=eg:GetFirst()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and eg:GetCount()==1 
+		and Duel.IsExistingTarget(c511000915.toonfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,tc:GetCode(),e,tp) end
+	Duel.SetTargetCard(tc)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c511000915.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=eg:Filter(c511000915.cfilter,nil,tp)
-	local tc=g:GetFirst()
-	if not tc then return end
+	local tc=Duel.GetFirstTarget()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,tc:GetCode(),0,0x4011,tc:GetAttack(),tc:GetDefense(),tc:GetLevel(),tc:GetRace(),tc:GetAttribute()) then return end	
-	if g:GetCount()>1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		tc=g:Select(tp,1,1,nil):GetFirst()
+	if not tc then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c511000915.toonfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,tc:GetCode(),e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-	local token=Duel.CreateToken(tp,tc:GetCode())
-	if Duel.SpecialSummonStep(token,0,tp,tp,true,false,POS_FACEUP)~=0 then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_TYPE)
-		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CLIENT_HINT)
-		e1:SetValue(tc:GetType()+TYPE_TOON)
-		e1:SetDescription(aux.Stringid(511000915,0))
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e1)
-		--destroy
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e3:SetRange(LOCATION_MZONE)
-		e3:SetCode(EVENT_LEAVE_FIELD)
-		e3:SetCondition(c511000915.sdescon)
-		e3:SetOperation(c511000915.sdesop)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e3)
-		--direct attack
-		local e4=Effect.CreateEffect(c)
-		e4:SetType(EFFECT_TYPE_SINGLE)
-		e4:SetCode(EFFECT_DIRECT_ATTACK)
-		e4:SetCondition(c511000915.dircon)
-		e4:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e4)
-		local e5=Effect.CreateEffect(c)
-		e5:SetType(EFFECT_TYPE_FIELD)
-		e5:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-		e5:SetRange(LOCATION_MZONE)
-		e5:SetTargetRange(0,LOCATION_MZONE)
-		e5:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsType,TYPE_TOON)))
-		e5:SetCondition(c511000915.atcon)
-		e5:SetValue(c511000915.atval)
-		e5:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e5)
-		local e6=Effect.CreateEffect(c)
-		e6:SetType(EFFECT_TYPE_SINGLE)
-		e6:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-		e6:SetCondition(c511000915.atcon)
-		e6:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e6)
-		Duel.SpecialSummonComplete()
-	end
-end
-function c511000915.sfilter(c)
-	return c:IsReason(REASON_DESTROY) and c:IsCode(15259703) and c:IsPreviousLocation(LOCATION_ONFIELD)
-end
-function c511000915.sdescon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511000915.sfilter,1,nil)
-end
-function c511000915.sdesop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
-end
-function c511000915.atkfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_TOON)
-end
-function c511000915.dircon(e)
-	return not Duel.IsExistingMatchingCard(c511000915.atkfilter,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil)
-end
-function c511000915.atcon(e)
-	return Duel.IsExistingMatchingCard(c511000915.atkfilter,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil)
-end
-function c511000915.atval(e,c)
-	return c==e:GetHandler()
 end

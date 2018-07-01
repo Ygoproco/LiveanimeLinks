@@ -22,7 +22,7 @@ function c100000312.spfilter(c,lv,atk,e,tp)
 end
 function c100000312.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	if chk==0 then return ft>-1 and Duel.CheckReleaseGroupCost(tp,c100000312.cfilter,1,false,nil,nil,e,tp) end
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c100000312.cfilter,1,false,nil,nil,e,tp) end
 	local rg=Duel.SelectReleaseGroupCost(tp,c100000312.cfilter,1,1,false,nil,nil,e,tp)
 	Duel.Release(rg,REASON_COST)
 	local atk=rg:GetFirst():GetAttack()<<8
