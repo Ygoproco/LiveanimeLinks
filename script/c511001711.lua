@@ -39,7 +39,7 @@ function c511001711.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001711.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c511001711.spfilter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and c511001711.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c511001711.spfilter,tp,LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
