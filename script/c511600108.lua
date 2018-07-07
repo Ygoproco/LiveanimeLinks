@@ -25,12 +25,12 @@ function c511600108.filter(c,e,tp,eg,ep,ev,re,r,rp,b)
 	return false
 end
 function c511600108.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511600108.filter,tp,0,LOCATION_GRAVE,1,e:GetHandler(),e,tp,eg,ep,ev,re,r,rp,e:GetHandler():IsLocation(LOCATION_HAND)) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.NecroValleyFilter(c511600108.filter),tp,0,LOCATION_GRAVE,1,e:GetHandler(),e,tp,eg,ep,ev,re,r,rp,e:GetHandler():IsLocation(LOCATION_HAND)) end
 end
 function c511600108.operation(e,tp,eg,ep,ev,re,r,rp)
 	local b=e:GetHandler():IsLocation(LOCATION_HAND)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
-	local tc=Duel.SelectMatchingCard(tp,c511600108.filter,tp,0,LOCATION_GRAVE,1,1,nil,e,tp,eg,ep,ev,re,r,rp,b):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511600108.filter),tp,0,LOCATION_GRAVE,1,1,nil,e,tp,eg,ep,ev,re,r,rp,b):GetFirst()
 	if not tc then return end
 	local tpe=tc:GetType()
 	local te=tc:GetActivateEffect()
@@ -73,7 +73,7 @@ function c511600108.operation(e,tp,eg,ep,ev,re,r,rp)
 			etc:ReleaseEffectRelation(te)
 		end
 	end
-	local e1=Effect.GlobalEffect()
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetReset(RESET_PHASE+PHASE_END)

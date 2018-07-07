@@ -3,7 +3,7 @@
 --scripted by Larry126
 function c511600113.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x579),2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x579),2)
 	c:EnableReviveLimit()
 	--indes
 	local e1=Effect.CreateEffect(c)
