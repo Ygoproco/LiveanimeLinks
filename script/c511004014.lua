@@ -38,6 +38,20 @@ function c511004014.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTarget(c511004014.reptg)
 		e1:SetValue(c511004014.repval)
 		Duel.RegisterEffect(e1,tp)
+		local e1a=Effect.GlobalEffect()
+		e1a:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1a:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		e1a:SetCode(EVENT_ADJUST)
+		e1a:SetCondition(c511004014.grepcon)
+		e1a:SetOperation(c511004014.grepop)
+		Duel.RegisterEffect(e1a,tp)
+		local e1b=Effect.GlobalEffect()
+		e1b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1b:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		e1b:SetCode(EVENT_CHAIN_END)
+		e1b:SetCondition(c511004014.grepcon2)
+		e1b:SetOperation(c511004014.grepop2)
+		Duel.RegisterEffect(e1b,tp)
 		--Double Tribute
 		local e2=Effect.GlobalEffect()
 		e2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
@@ -280,6 +294,29 @@ function c511004014.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511004014.repval(e,c)
 	return c:GetControler()~=c:GetOwner() and c:GetDestination()==LOCATION_GRAVE and c:GetFlagEffect(511004018)==0
+end
+function c511004014.grepcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsStatus,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,STATUS_LEAVE_CONFIRMED)
+end
+function c511004014.grepop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsStatus,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,STATUS_LEAVE_CONFIRMED)
+	for c in aux.Next(g) do
+		c:CancelToGrave()
+		c:RegisterFlagEffect(STATUS_LEAVE_CONFIRMED,RESET_EVENT+0x1fe0000,0,1)
+	end
+end
+function c511004014.grepfilter(c)
+	return c:GetFlagEffect(STATUS_LEAVE_CONFIRMED)>0
+end
+function c511004014.grepcon2(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c511004014.grepfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+end
+function c511004014.grepop2(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c511004014.grepfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	for c in aux.Next(g) do
+		c:CancelToGrave(false)
+		Duel.SendtoGrave(c,REASON_RULE,c:GetControler())
+	end
 end
 function c511004014.mvalue(e,fp,rp,r)
 	return 5-Duel.GetFieldGroupCount(fp,LOCATION_SZONE,0)
