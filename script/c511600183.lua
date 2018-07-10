@@ -12,18 +12,15 @@ function c511600183.initial_effect(c)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(c511600183.condition)
-	e1:SetOperation(c511600183.activate)
+	e1:SetOperation(c511600183.operation)
 	c:RegisterEffect(e1)
-	--damage after destroying
+	--Material
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(91034681,0))
-	e2:SetCategory(CATEGORY_DAMAGE)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_BATTLE_DESTROYING)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCondition(aux.bdocon)
-	e2:SetTarget(c511600183.damtg)
-	e2:SetOperation(c511600183.damop)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_BE_MATERIAL)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCondition(c511600183.matcon)
+	e2:SetOperation(c511600183.matop)
 	c:RegisterEffect(e2)
 end
 function c511600183.matfilter(c,lc,sumtype,tp)
@@ -36,7 +33,7 @@ function c511600183.condition(e,tp,eg,ep,ev,re,r,rp)
 	if a:IsControler(1-tp) then a,at=at,a end
 	return a:IsFaceup() and a:IsRace(RACE_CYBERSE)
 end
-function c511600183.activate(e,tp,eg,ep,ev,re,r,rp)
+function c511600183.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
@@ -61,6 +58,16 @@ function c511600183.activate(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e3:SetReset(RESET_PHASE+PHASE_DAMAGE)
 	Duel.RegisterEffect(e3,tp)
+	--damage after destroying
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_BATTLE_DESTROYED)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	e4:SetCondition(c511600183.damcon)
+	e4:SetTarget(c511600183.damtg)
+	e4:SetOperation(c511600183.damop)
+	Duel.RegisterEffect(e4,tp)
 	if a:IsRelateToBattle() then
 		local aa=a:GetTextAttack()
 		local ad=a:GetTextDefense()
@@ -121,13 +128,34 @@ function c511600183.disop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.NegateEffect(ev)
 	end
 end
+function c511600183.damcon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	local bc=tc:GetBattleTarget()
+	return tc:IsLocation(LOCATION_GRAVE) and tc:IsType(TYPE_MONSTER) and tc:GetPreviousControler()~=tp
+		and bc:IsRelateToBattle() and bc:IsStatus(STATUS_OPPO_BATTLE) and bc:IsRace(RACE_CYBERSE)
+end
 function c511600183.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(1000)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
 end
 function c511600183.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
+end
+function c511600183.matcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r & REASON_LINK == REASON_LINK
+end
+function c511600183.matop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local sc=c:GetReasonCard()
+	if sc and sc:IsFaceup() then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		sc:RegisterEffect(e1)
+	end
 end

@@ -13,10 +13,13 @@ function c511600051.initial_effect(c)
 	e1:SetOperation(c511600051.spop)
 	c:RegisterEffect(e1)
 end
+function c511600051.filter(c)
+	return c:IsFaceup() and c:IsStone()
+end
 function c511600051.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingMatchingCard(Card.IsStone,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(c511600051.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c511600051.spop(e,tp,eg,ep,ev,re,r,rp)
