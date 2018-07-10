@@ -52,7 +52,7 @@ function c511001596.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001596.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsReason(REASON_DESTROY+REASON_BATTLE) then
+	if c:IsReason(REASON_DESTROY) and c:IsReason(REASON_BATTLE) then
 		Duel.Damage(1-c:GetPreviousControler(),c:GetPreviousAttackOnField(),REASON_EFFECT)
 	end
 	e:Reset()
