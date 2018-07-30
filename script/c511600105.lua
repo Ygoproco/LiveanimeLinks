@@ -7,7 +7,7 @@ function c511600105.initial_effect(c)
 	c:EnableReviveLimit()
 	--pos
 	local e1=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(37993923,0))
+	e1:SetDescription(aux.Stringid(37993923,0))
 	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
