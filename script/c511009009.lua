@@ -22,7 +22,7 @@ function c511009009.mgfilter(c,e,tp,rc)
 		and c:GetReasonCard()==rc
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c511009009.target(e,tp,eg,ep,ev,re,r,rp,chk
+function c511009009.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
 	local mg=tc:GetMaterial()
