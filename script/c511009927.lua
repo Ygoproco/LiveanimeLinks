@@ -16,7 +16,7 @@ function c511009927.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tc and tc:IsControler(tp) and Duel.GetTurnPlayer()==1-tp 
 end
 function c511009927.filter(c,e,tp)
-	return c:GetAttack()>0 and c:IsSetCard(0x578) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:GetAttack()>0 and c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c511009927.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c38815069.filter(chkc) end
