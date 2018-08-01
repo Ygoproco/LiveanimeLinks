@@ -13,7 +13,7 @@ end
 function c511009927.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
 	e:SetLabelObject(tc)
-	return tc and tc:IsControler(tp) and Duel.GetTurnPlayer()==1-tp 
+	return tc and tc:IsControler(tp) and Duel.GetTurnPlayer()==1-tp
 end
 function c511009927.filter(c,e,tp)
 	return c:GetAttack()>0 and c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
