@@ -20,12 +20,12 @@ function c511600124.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511600124.spfilter(c,e,tp,sc)
-	return c:IsSetCard(0x220) and c:IsSummonType(SUMMON_TYPE_LINK)
+	return c:IsSetCard(0x119) and c:IsSummonType(SUMMON_TYPE_LINK)
 		and c:IsStatus(STATUS_SPSUMMON_TURN) and c:IsType(TYPE_LINK)
 		and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,c:GetFreeLinkedZone()&0x1f)
 end
 function c511600124.rfilter(c)
-	return c:IsSetCard(0x220) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x119) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER)
 end
 function c511600124.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

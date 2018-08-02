@@ -45,7 +45,7 @@ function c511009918.spop1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511009918.spcfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x220) and c:IsAbleToGraveAsCost()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x119) and c:IsAbleToGraveAsCost()
 end
 function c511009918.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

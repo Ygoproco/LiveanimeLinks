@@ -17,7 +17,7 @@ function c511009917.filter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsFaceup()
 end
 function c511009917.costfilter(c)
-	return c:IsSetCard(0x220) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function c511009917.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
