@@ -13,3 +13,4 @@ function c511000108.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2)
 end
+c511000108.listed_names={511000107}
