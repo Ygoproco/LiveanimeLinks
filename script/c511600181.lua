@@ -12,7 +12,7 @@ function c511600181.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511600181.ffilter(c,e,tp,m,f)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x220) and (not f or f(c))
+	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x119) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
 end
 function c511600181.filter(c,e)

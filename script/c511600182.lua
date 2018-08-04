@@ -4,7 +4,7 @@
 function c511600182.initial_effect(c)
 	--Fusion Material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,101006040,aux.FilterBoolFunctionEx(Card.IsType,TYPE_LINK))
+	aux.AddFusionProcMix(c,true,true,41463181,aux.FilterBoolFunctionEx(Card.IsType,TYPE_LINK))
 	--ATK UP
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2091298,0))
@@ -35,7 +35,7 @@ function c511600182.initial_effect(c)
 	e3:SetOperation(c511600182.atkop)
 	c:RegisterEffect(e3)
 end
-c511600182.material_setcode={0x220}
+c511600182.material_setcode={0x119}
 function c511600182.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end

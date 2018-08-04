@@ -14,7 +14,7 @@ function c511009916.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009916.filter(c,ft)
-	return c:IsFaceup() and (ft>0 or c:GetSequence()<5) and c:IsSetCard(0x220) and c:IsAbleToHand()
+	return c:IsFaceup() and (ft>0 or c:GetSequence()<5) and c:IsSetCard(0x119) and c:IsAbleToHand()
 end
 function c511009916.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)

@@ -40,7 +40,7 @@ function c511009919.initial_effect(c)
 end
 function c511009919.lmfilter(c,lc,tp)
 	return c:IsFaceup() and c:IsCode(lc:GetCode()) and Duel.GetLocationCountFromEx(tp,tp,c,lc)>0
-		and c:IsType(TYPE_LINK) and c:IsCanBeLinkMaterial(lc,tp) and c:IsSetCard(0x220)
+		and c:IsType(TYPE_LINK) and c:IsCanBeLinkMaterial(lc,tp) and c:IsSetCard(0x119)
 end
 function c511009919.linkcon(e,c)
 	if c==nil then return true end
@@ -73,17 +73,17 @@ function c511009919.linkop(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	Duel.RegisterFlagEffect(tp,101006051,RESET_PHASE+PHASE_END,0,1)
 end
 function c511009919.mattg(e,c)
-	return c:IsSetCard(0x220) and c:IsType(TYPE_LINK)
+	return c:IsSetCard(0x119) and c:IsType(TYPE_LINK)
 end
 function c511009919.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetBattleDamage(tp)>0 and (Duel.GetAttacker():IsSetCard(0x220) or Duel.GetAttackTarget():IsSetCard(0x220))
+	return Duel.GetBattleDamage(tp)>0 and (Duel.GetAttacker():IsSetCard(0x119) or Duel.GetAttackTarget():IsSetCard(0x119))
 end
 function c511009919.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
 	Duel.PayLPCost(tp,1000)
 end
 function c511009919.filter(c)
-	return aux.nzatk(c) and c:IsType(TYPE_LINK) and c:IsSetCard(0x220)
+	return aux.nzatk(c) and c:IsType(TYPE_LINK) and c:IsSetCard(0x119)
 end
 function c511009919.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511009919.filter(chkc) end
