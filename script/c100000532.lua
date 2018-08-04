@@ -51,7 +51,7 @@ function c100000532.retfilter(c,fid)
 end
 function c100000532.retcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
-	if not g:IsExists(c100000532.retfilter,1,nil,e:GetLabel()) or Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_EP) then
+	if not g:IsExists(c100000532.retfilter,1,nil,e:GetLabel()) then
 		g:DeleteGroup()
 		e:Reset()
 		return false

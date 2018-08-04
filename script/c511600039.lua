@@ -23,15 +23,18 @@ function c511600039.condition(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsPosition(POS_FACEUP_DEFENSE) then
 		if not tc:IsHasEffect(EFFECT_DEFENSE_ATTACK) then return false end
 		if tc:IsHasEffect(75372290) then
-			bd:Merge(bc:IsAttackPos() and tc:GetAttack()>0 and (tc:GetAttack()>bc:GetAttack() and Group.FromCards(bc)
+			bd:Merge(bc:IsAttackPos() and (tc:GetAttack()>0 or bc:GetAttack()>0)
+				and (tc:GetAttack()>bc:GetAttack() and Group.FromCards(bc)
 				or bc:GetAttack()>tc:GetAttack() and Group.FromCards(tc) or Group.FromCards(bc,tc))
 				or tc:GetAttack()>bc:GetDefense() and Group.FromCards(bc) or bd)
 		else
-			bd:Merge(bc:IsAttackPos() and tc:GetDefense()>0 and tc:GetDefense()>=bc:GetAttack() and Group.FromCards(bc)
-			or tc:GetDefense()>bc:GetDefense() and Group.FromCards(bc) or bd)
+			bd:Merge(bc:IsAttackPos() and (tc:GetDefense()>0 or bc:GetDefense()>0)
+				and tc:GetDefense()>=bc:GetAttack() and Group.FromCards(bc)
+				or tc:GetDefense()>bc:GetDefense() and Group.FromCards(bc) or bd)
 		end
 	else
-		bd:Merge(bc:IsAttackPos() and tc:GetAttack()>0 and (tc:GetAttack()>bc:GetAttack() and Group.FromCards(bc)
+		bd:Merge(bc:IsAttackPos() and (tc:GetAttack()>0 or bc:GetAttack()>0)
+			and (tc:GetAttack()>bc:GetAttack() and Group.FromCards(bc)
 			or bc:GetAttack()>tc:GetAttack() and Group.FromCards(tc) or Group.FromCards(bc,tc))
 			or tc:GetAttack()>bc:GetDefense() and Group.FromCards(bc) or bd)
 	end

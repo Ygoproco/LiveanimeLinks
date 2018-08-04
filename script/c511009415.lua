@@ -1,10 +1,11 @@
---Starving Venemy Dragon
+--スターヴ・ヴェネミー・ドラゴン (Manga)
+--Starving Venemy Dragon (Manga)
 function c511009415.initial_effect(c)
 	c:EnableReviveLimit()
 	--pendulum summon
 	aux.EnablePendulumAttribute(c,false)
 	--fusion material
-	aux.AddFusionProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),2)
+	aux.AddFusionProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsType,TYPE_PENDULUM),2)
 	--reduce
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16178681,0))
@@ -18,10 +19,12 @@ function c511009415.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_ATKCHANGE+CATEGORY_DAMAGE)
 	e2:SetDescription(aux.Stringid(41209827,1))
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetCondition(c511009415.copycon)
 	e2:SetTarget(c511009415.copytg)
 	e2:SetOperation(c511009415.copyop)
 	c:RegisterEffect(e2)
@@ -66,6 +69,11 @@ function c511009415.rdop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterFlagEffect(511009415,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 		Duel.ChangeBattleDamage(tp,0)
 	end
+end
+function c511009415.copycon(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetTurnPlayer()~=tp then return false end
+	local ph=Duel.GetCurrentPhase()
+	return ph==PHASE_MAIN1 or (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) or ph==PHASE_MAIN2
 end
 function c511009415.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and aux.disfilter1(chkc) end
