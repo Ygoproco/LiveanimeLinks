@@ -40,9 +40,12 @@ end
 function c511600000.pcfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
 end
+function c511600000.stfilter(c)
+	return c:GetSequence()<5
+end
 function c511600000.pencost(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetFieldGroup(tp,LOCATION_PZONE,0)
-	local sct=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+	local sct=Duel.GetMatchingGroupCount(c511600000.stfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	if chk==0 then return g:GetCount()==g:FilterCount(Card.IsAbleToRemoveAsCost,nil) and sct>0 
 		and Duel.GetMatchingGroupCount(c511600000.emfilter,tp,LOCATION_DECK,0,nil)>=sct end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
@@ -55,12 +58,12 @@ function c511600000.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+	local g=Duel.GetMatchingGroup(c511600000.stfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),PLAYER_ALL,LOCATION_SZONE)
 end
 function c511600000.penop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+	local g=Duel.GetMatchingGroup(c511600000.stfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	if (Duel.Destroy(g,REASON_EFFECT)>0 or g:GetCount()==0) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		local pc=Duel.GetMatchingGroupCount(c511600000.pcfilter,tp,LOCATION_MZONE,0,nil)
