@@ -11,7 +11,7 @@ function c100000532.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000532.filter(c)
-	return c:IsSetCard(0x55b) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x228) and c:IsType(TYPE_MONSTER)
 end
 function c100000532.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c100000532.filter,tp,LOCATION_HAND,0,nil)
