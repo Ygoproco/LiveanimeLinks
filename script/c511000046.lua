@@ -26,7 +26,7 @@ function c511000046.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
 	e3:SetCondition(c511000046.atcon)
-	e3:SetValue(1)
+	e3:SetValue(aux.imval2)
 	c:RegisterEffect(e3)
 end
 function c511000046.spcon(e,c)
