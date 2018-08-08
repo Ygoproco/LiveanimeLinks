@@ -1,4 +1,4 @@
---Ultimitl Bishbalkin the Ultimate Legendary God
+--Phantasmal Lord Ultimitl Bishbaalkin (Anime)
 function c511001952.initial_effect(c)
 	--level 0
 	aux.AddDarkSynchroProcedure(c,aux.NonTuner(nil),nil,0)
@@ -74,6 +74,13 @@ function c511001952.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(100)
 			e1:SetReset(RESET_EVENT+0xfe0000)
 			token:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UNRELEASABLE_SUM)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetValue(1)
+			e2:SetReset(RESET_EVENT+0x1fe0000)
+			token:RegisterEffect(e2)
 		end
 	end
 	local ft2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
@@ -91,6 +98,13 @@ function c511001952.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(100)
 			e1:SetReset(RESET_EVENT+0xfe0000)
 			token:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UNRELEASABLE_SUM)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetValue(1)
+			e2:SetReset(RESET_EVENT+0x1fe0000)
+			token:RegisterEffect(e2)
 		end
 	end
 	Duel.SpecialSummonComplete()
