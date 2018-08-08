@@ -42,22 +42,26 @@ function c511009657.condition(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function c511009657.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:GetAttack()>0
+	return c:IsFaceup() and c:IsType(TYPE_LINK) and (c:GetAttack()>0 or not c:IsDisabled())
 end
 function c511009657.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009657.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 end
 function c511009657.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511009657.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
+	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		tc=g:GetNext()
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE)
+		tc:RegisterEffect(e2)
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_DISABLE_EFFECT)
+		tc:RegisterEffect(e3)
 	end
 end
 function c511009657.regop(e,tp,eg,ep,ev,re,r,rp)
