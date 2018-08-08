@@ -25,7 +25,7 @@ function c511009018.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511009018.indesfil(c)
-	return c:IsFaceup() and c:IsSetCard(0x71)
+	return c:IsFaceup() and c:IsSetCard(0xfc)
 end
 
 function c511009018.incon(e)
