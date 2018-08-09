@@ -38,11 +38,11 @@ function c511018000.filter(c)
 	return c:GetReasonEffect() and c:GetReasonEffect():GetOwner():IsCode(100000246)
 end
 function c511018000.vatk(e,c)
-	local g=Duel.GetMatchingGroup(c511018000.filter,0,LOCATION_REMOVED,LOCATION_REMOVED,nil)
+	local rg=Duel.GetMatchingGroup(c511018000.filter,0,LOCATION_REMOVED,LOCATION_REMOVED,nil)
 	return rg:GetSum(Card.GetAttack)
 end
 function c511018000.vdef(e,c)
-	local g=Duel.GetMatchingGroup(c511018000.filter,0,LOCATION_REMOVED,LOCATION_REMOVED,nil)
+	local rg=Duel.GetMatchingGroup(c511018000.filter,0,LOCATION_REMOVED,LOCATION_REMOVED,nil)
 	return rg:GetSum(Card.GetDefense)
 end
 function c511018000.descon(e,tp,eg,ep,ev,re,r,rp)
