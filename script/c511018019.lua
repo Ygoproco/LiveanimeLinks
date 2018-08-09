@@ -1,16 +1,12 @@
---Winged Kuriboh
+--ハネクリボー （Anime）
+--Winged Kuriboh (Anime)
 function c511018019.initial_effect(c)
 	--no battle damage
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-	e1:SetValue(1)
-	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetOperation(c511018019.op)
-	c:RegisterEffect(e2)	
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_DESTROYED)
+	e1:SetOperation(c511018019.op)
+	c:RegisterEffect(e1)	
 end
 function c511018019.op(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
