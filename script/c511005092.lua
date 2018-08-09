@@ -1,11 +1,12 @@
 --Sealed Duel
 --rescripted by MLD
 --credits to andre and AlphaKretin
+--tag functionality by senpaizuri
 function c511005092.initial_effect(c)
 	--Pre-draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PREDRAW)
+	e1:SetCode(EVENT_PHASE_START+PHASE_DRAW)
 	e1:SetCountLimit(1)
 	e1:SetOperation(c511005092.op)
 	Duel.RegisterEffect(e1,0)
@@ -28,7 +29,7 @@ end
 --define pack
 --pack[1]=BP01, [2]=BP02, [3]=BPW2, [4]=BP03
 --[1]=rare, [2]=common, [3]=foil
-local pack={}
+pack={}
 	pack[1]={}
 	pack[1][1]={
 		78010363,34124316,77585513,79575620,89111398,61370518,40737112,25551951,4929256,88753985,83104731,
@@ -217,100 +218,97 @@ function c511005092.alternate(code,anime)
 	return namechange[code][chk][num]
 end
 function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
-	if packopen then e:Reset() return end
+	if Duel.GetFlagEffect(0,511005092)>0 then return end
+	if (packopen and not Duel.IsDuelType(DUEL_TAG_MODE)) or (Duel.GetTurnCount()==4) then e:Reset() return end
 	packopen=true
 	Duel.DisableShuffleCheck()
 	Duel.Hint(HINT_CARD,0,511005092)
-	--check if people want to duel
-	if not Duel.SelectYesNo(tp,aux.Stringid(4006,9)) or not Duel.SelectYesNo(1-tp,aux.Stringid(4006,9)) then
-		local sg=Duel.GetMatchingGroup(Card.IsCode,tp,0x7f,0x7f,nil,511005092)
-		Duel.SendtoDeck(sg,nil,-2,REASON_RULE)
-		return
-	end
-	local startct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
-	Duel.SendtoDeck(Duel.GetFieldGroup(0,0x43,0x43),nil,-2,REASON_RULE)
-	for p=0,1 do
-		local ca=Duel.CreateToken(p,511005092)
-		Duel.Remove(ca,POS_FACEUP,REASON_RULE)
-	end
-	--pack selection
-	local ca=Duel.CreateToken(p,511005092)
-	local pack1=Duel.CreateToken(tp,511003041)
-	local pack2=Duel.CreateToken(tp,511003042)
-	local pack3=Duel.CreateToken(tp,511003043)
-	local pack4=Duel.CreateToken(tp,511003044)
-	local g=Group.FromCards(pack1,pack2,pack3,pack4)
-	selectpack={}
-	local tc=g:GetFirst()
-	while tc do
-		local loc=LOCATION_MZONE
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then loc=LOCATION_SZONE end
-		Duel.MoveToField(tc,tp,tp,loc,POS_FACEUP,true)
-		tc=g:GetNext()
-	end
-	--pack select
-	local sg=g:Select(tp,1,4,nil)
-	Duel.HintSelection(sg)
-	Duel.Hint(HINT_MESSAGE,1-tp,1211)
-	
-	--pack checking
-	if sg:IsContains(pack1) then
-		selectpack[1]=true
-	else
-		selectpack[1]=false
-	end
-	if sg:IsContains(pack2) then
-		selectpack[2]=true
-	else
-		selectpack[2]=false
-	end
-	if sg:IsContains(pack3) then
-		selectpack[3]=true
-	else
-		selectpack[3]=false
-	end
-	if sg:IsContains(pack4) then
-		selectpack[4]=true
-	else
-		selectpack[4]=false
-	end
-	if selectpack[3] and not selectpack[1] and not selectpack[2] and not selectpack[4] then
-		selectpack[2]=true
-	end
-	Duel.SendtoDeck(g,nil,-2,REASON_RULE)
-	
-	--treat as all monster types
-	if Duel.SelectYesNo(tp,aux.Stringid(4009,0)) then
-		Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(4009,0))
-		local getrc=Card.GetRace
-		Card.GetRace=function(c)
-			if c:IsType(TYPE_MONSTER) then return 0xfffffff end
-			return getrc(c)
+	--tag variable defining
+	local tp=Duel.GetTurnPlayer()
+	if Duel.IsDuelType(DUEL_TAG_MODE) and Duel.GetTurnCount()>1 then tag=true end
+	z,o=tp,1-tp
+	if tag then o,z=tp,tp end
+	--first turn
+	if Duel.GetTurnCount()==1 then
+		--check if people want to duel
+		if not Duel.SelectYesNo(tp,aux.Stringid(4006,9)) or not Duel.SelectYesNo(1-tp,aux.Stringid(4006,9)) then
+			local sg=Duel.GetMatchingGroup(Card.IsCode,tp,0x7f,0x7f,nil,511005092)
+			Duel.SendtoDeck(sg,nil,-2,REASON_RULE)
+			return
 		end
-		local getorigrc=Card.GetOriginalRace
-		Card.GetOriginalRace=function(c)
-			if c:IsType(TYPE_MONSTER) then return 0xfffffff end
-			return getorigrc(c)
+		startct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+		Duel.SendtoDeck(Duel.GetFieldGroup(0,0x43,0x43),nil,-2,REASON_RULE)
+		for p=z,o do
+			local ca=Duel.CreateToken(p,511005092)
+			Duel.Remove(ca,POS_FACEUP,REASON_RULE)
 		end
-		local getprevrc=Card.GetPreviousRaceOnField
-		Card.GetPreviousRaceOnField=function(c)
-			if bit.band(c:GetPreviousTypeOnField(),TYPE_MONSTER)~=0 then return 0xfffffff end
-			return getprevrc(c)
+		--pack selection
+		pack1=Duel.CreateToken(tp,511003041)
+		pack2=Duel.CreateToken(tp,511003042)
+		pack3=Duel.CreateToken(tp,511003043)
+		pack4=Duel.CreateToken(tp,511003044)
+		local g=Group.FromCards(pack1,pack2,pack3,pack4)
+		selectpack={}
+		local tc=g:GetFirst()
+		while tc do
+			local loc=LOCATION_MZONE
+			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then loc=LOCATION_SZONE end
+			Duel.MoveToField(tc,tp,tp,loc,POS_FACEUP_ATTACK,true)
+			tc=g:GetNext()
 		end
-		local isrc=Card.IsRace
-		Card.IsRace=function(c,r)
-			if c:IsType(TYPE_MONSTER) then return true end
-			return isrc(c,r)
+
+		-- pack select
+		local sg=g:Select(tp,1,4,nil)
+		Duel.HintSelection(sg)
+		Duel.Hint(HINT_MESSAGE,1-tp,1211)
+		
+		--pack checking
+		selectpack[1]=sg:IsContains(pack1)
+		selectpack[2]=sg:IsContains(pack2)
+		selectpack[3]=sg:IsContains(pack3)
+		selectpack[4]=sg:IsContains(pack4)
+		if selectpack[3] and not selectpack[1] and not selectpack[2] and not selectpack[4] then
+			selectpack[2]=true
 		end
+		Duel.SendtoDeck(g,nil,-2,REASON_RULE)
+		
+		--treat as all monster types
+		if Duel.SelectYesNo(tp,aux.Stringid(4009,0)) then
+			Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(4009,0)) 
+			local getrc=Card.GetRace
+			Card.GetRace=function(c)
+				if c:IsType(TYPE_MONSTER) then return 0xfffffff end
+				return getrc(c)
+			end
+			local getorigrc=Card.GetOriginalRace
+			Card.GetOriginalRace=function(c)
+				if c:IsType(TYPE_MONSTER) then return 0xfffffff end
+				return getorigrc(c)
+			end
+			local getprevrc=Card.GetPreviousRaceOnField
+			Card.GetPreviousRaceOnField=function(c)
+				if bit.band(c:GetPreviousTypeOnField(),TYPE_MONSTER)~=0 then return 0xfffffff end
+				return getprevrc(c)
+			end
+			local isrc=Card.IsRace
+			Card.IsRace=function(c,r)
+				if c:IsType(TYPE_MONSTER) then return true end
+				return isrc(c,r)
+			end
+		end
+		--anime counterparts select
+		anime=false
+		if Duel.SelectYesNo(tp,aux.Stringid(4006,15)) or Duel.SelectYesNo(1-tp,aux.Stringid(4006,15)) then
+			anime=true
+		end
+
+	--even if not first turn
+	else
+		Duel.SendtoDeck(Duel.GetFieldGroup(tp,0x43,0),nil,-2,REASON_RULE)
 	end
-	
 	--anime counterparts
-	local anime=false
-	if Duel.SelectYesNo(tp,aux.Stringid(4006,15)) or Duel.SelectYesNo(1-tp,aux.Stringid(4006,15)) then
-		anime=true
-	end
-	for i=1,9 do
-		for p=0,1 do
+	for i=1,1--[[9]] do
+		for p=z,o do
 			local g=Group.CreateGroup()
 			local packnum=0
 			--random set among selected sets
@@ -345,7 +343,7 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	
-	for p=0,1 do
+	for p=z,o do
 		--card removal up to 20
 		local ct=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)-20
 		if ct>0 and Duel.SelectYesNo(p,aux.Stringid(4002,7)) then
@@ -355,17 +353,17 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	
-	for p=0,1 do
+	for p=z,o do
 		Duel.ShuffleDeck(p)
 		Duel.Draw(p,startct,REASON_RULE)
 	end
 	
-	for p=0,1 do
+	for p=z,o do
 		if Duel.SelectYesNo(p,aux.Stringid(4002,2)) then
 			local hg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
 			Duel.SendtoDeck(hg,nil,1,REASON_RULE)
 			Duel.Draw(p,startct,REASON_RULE)
 		end
 	end
-	e:Reset()
+	Duel.RegisterFlagEffect(0,511005092,RESET_PHASE+PHASE_END,0,1)
 end
