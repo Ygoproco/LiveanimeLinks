@@ -42,26 +42,29 @@ function c511009657.condition(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function c511009657.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:GetAttack()>0
+	return c:IsFaceup() and c:IsType(TYPE_LINK) and (c:GetAttack()>0 or not c:IsDisabled())
 end
 function c511009657.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009657.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 end
 function c511009657.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511009657.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
+	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		tc=g:GetNext()
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE)
+		tc:RegisterEffect(e2)
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_DISABLE_EFFECT)
+		tc:RegisterEffect(e3)
 	end
 end
-function c511009657.regop(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+function c511009657.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:SetTurnCounter(0)
 	--destroy
@@ -73,14 +76,24 @@ function c511009657.regop(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(c511009657.rmcon)
 	e1:SetOperation(c511009657.rmop)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,2)
+	if Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_END then
+		e1:SetLabel(Duel.GetTurnCount())
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
+	else
+		e1:SetLabel(Duel.GetTurnCount()-1)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,2)
+	end
 	c:RegisterEffect(e1)
 end
 function c511009657.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+	return Duel.GetTurnPlayer()==1-tp
 end
 function c511009657.rmop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
+	if Duel.GetTurnCount()<=e:GetLabel() then return end
+	local c=e:GetHandler()
+	local ct=c:GetTurnCounter()+1
+	c:SetTurnCounter(ct)
+	if ct==2 then
 		Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 	end
 end
