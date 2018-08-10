@@ -1,0 +1,32 @@
+--Fires of Shiranui
+function c511002391.initial_effect(c)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e1)
+	--cannot tograve
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCode(EFFECT_CANNOT_TO_GRAVE)
+	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e3:SetTarget(function(e,c) return not c:IsReason(REASON_MATERIAL) end)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+	--cannot be material
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e4:SetTarget(function(e,c) return not (c:IsHasEffect(EFFECT_TO_GRAVE_REDIRECT) or c:IsHasEffect(EFFECT_LEAVE_FIELD_REDIRECT)) end)
+	e4:SetValue(1)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	c:RegisterEffect(e5)
+	local e6=e4:Clone()
+	e6:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	c:RegisterEffect(e6)
+end
