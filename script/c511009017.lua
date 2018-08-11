@@ -29,13 +29,13 @@ end
 function c511009017.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsAbleToEnterBP()
 end
-function c15844566.cfilter(c,g)
+function c511009017.cfilter(c,g)
 	return g:IsContains(c) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c511009017.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lg=e:GetHandler():GetLinkedGroup()
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c15844566.cfilter,1,false,nil,nil,lg) end
-	local g=Duel.SelectReleaseGroupCost(tp,c15844566.cfilter,1,1,false,nil,nil,lg)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c511009017.cfilter,1,false,nil,nil,lg) end
+	local g=Duel.SelectReleaseGroupCost(tp,c511009017.cfilter,1,1,false,nil,nil,lg)
 	Duel.Release(g,REASON_COST)
 end
 function c511009017.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
