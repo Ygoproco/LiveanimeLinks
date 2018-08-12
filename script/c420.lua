@@ -1531,7 +1531,7 @@ end
 -- Yubel (archetype) ユベル
 c420.OCGYubel={
 	-- Yubel, Yubel terror, Yubel nighmare
-	78371393,4779091,78371393
+	78371393,4779091,31764700
 }
 function Card.IsYubel(c,fbool)
 	if fbool then
