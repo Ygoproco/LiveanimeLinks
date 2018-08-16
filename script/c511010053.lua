@@ -103,14 +103,14 @@ function c511010053.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
-function c511010053.equipop(c,e,tp,tc)
+function c511010053.equipop(c,e,tp,tc,a)
+	if not aux.EquipByEffectAndLimitRegister(c,e,tp,tc,511010053,true) or not a then return end
 	local atk=a:GetAttack()
 	if atk<0 then atk=0 end
-	if not aux.EquipByEffectAndLimitRegister(c,e,tp,tc,511010053,true) then return end
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetReset(RESET_EVENT+0x1fe0000)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 	e2:SetValue(atk)
 	tc:RegisterEffect(e2)
 end
@@ -119,7 +119,7 @@ function c511010053.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local a=Duel.GetAttacker()
 	if tc and tc:IsRelateToEffect(e) and c:IsFaceup() and c:IsRelateToEffect(e) and a and a:IsRelateToBattle() then
-		c511010053.equipop(c,e,tp,tc)
+		c511010053.equipop(c,e,tp,tc,a)
 	end
 end
 function c511010053.repfilter(c,ec)
