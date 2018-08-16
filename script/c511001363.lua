@@ -1,4 +1,6 @@
---CX 冀望皇バリアン
+--CX 冀望皇バリアン (Anime)
+--CXyz Barian Hope (Anime)
+--fixed by Larry126
 function c511001363.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,7,3,nil,nil,5)
@@ -32,6 +34,50 @@ function c511001363.initial_effect(c)
 	e2:SetTarget(c511001363.copytg)
 	e2:SetOperation(c511001363.copyop)
 	c:RegisterEffect(e2)
+	if not c511001363.global_check then
+		c511001363.global_check=true
+		--Copy
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetOperation(c511001363.op)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function c511001363.cfilter(c)
+	return c:IsHasEffect(511002571) and not c:IsHasEffect(5110013630)
+end
+function c511001363.op(e)
+	local g=Duel.GetMatchingGroup(c511001363.cfilter,0,0xff,0xff,nil)
+	for c in aux.Next(g) do
+		local effs={c:GetCardEffect(511002571)}
+		Debug.Message(#effs)
+		for _,eff in ipairs(effs) do
+			local resetflag,resetcount=eff:GetLabelObject():GetReset()
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,EFFECT_FLAG2_MAJESTIC_MUST_COPY)
+			e1:SetType(EFFECT_TYPE_XMATERIAL)
+			e1:SetCode(511001363)
+			e1:SetLabel(c:GetOriginalCode())
+			e1:SetLabelObject(eff:GetLabelObject())
+			if resetflag and resetcount then
+				e1:SetReset(resetflag,resetcount)
+			elseif resetflag then
+				e1:SetReset(resetflag)
+			end
+			c:RegisterEffect(e1,true)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(5110013630)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,EFFECT_FLAG2_MAJESTIC_MUST_COPY)
+			if resetflag and resetcount then
+				e2:SetReset(resetflag,resetcount)
+			elseif resetflag then
+				e2:SetReset(resetflag)
+			end
+			c:RegisterEffect(e2,true)
+		end
+	end
 end
 function c511001363.ovfilter(c)
 	local code=c:GetCode()
@@ -69,12 +115,12 @@ function c511001363.copycon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c511001363.filter(c,e,tp)
-	if not c:IsCanBeEffectTarget(e) or not c:IsHasEffect(511002571) then return false end
-	local eff={c:GetCardEffect(511002571)}
-	for _,teh in ipairs(eff) do
+	if not c:IsCanBeEffectTarget(e) then return false end
+	local effs={e:GetHandler():GetCardEffect(511001363)}
+	for _,teh in ipairs(effs) do
 		local te=teh:GetLabelObject()
 		local tg=te:GetTarget()
-		if te:GetValue()~=1 and (not tg or tg(e,tp,Group.CreateGroup(),PLAYER_NONE,0,teh,REASON_EFFECT,PLAYER_NONE,0)) then return true end
+		if te:GetHandler()==c and te:GetValue()~=1 and (not tg or tg(e,tp,Group.CreateGroup(),PLAYER_NONE,0,teh,REASON_EFFECT,PLAYER_NONE,0)) then return true end
 	end
 	return false
 end
@@ -84,7 +130,7 @@ function c511001363.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b=Duel.CheckLPCost(tp,400)
 	local ov=c:GetOverlayGroup()
 	if chkc then return false end
-	if chk==0 then return (a or b) and ov:IsExists(c511001363.filter,1,nil,e,tp) end
+	if chk==0 then return (a or b) and #{c:GetCardEffect(511001363)}>0 and ov:IsExists(c511001363.filter,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=ov:FilterSelect(tp,c511001363.filter,1,1,nil,e,tp)
 	Duel.Hint(HINT_CARD,0,g:GetFirst():GetOriginalCode())
@@ -103,7 +149,7 @@ function c511001363.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		op=1
 	end
 	if op==0 then
-		Duel.SendtoGrave(g,REASON_COST)	
+		Duel.SendtoGrave(g,REASON_COST) 
 	else
 		Duel.PayLPCost(tp,400)
 	end
@@ -112,6 +158,12 @@ function c511001363.copyop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc then
 		local eff={tc:GetCardEffect(511002571)}
+		local tes={e:GetHandler():GetCardEffect(511001363)}
+		for _,te in ipairs(tes) do
+			if te:GetLabelObject():GetHandler()==tc then
+				table.insert(eff,te)
+			end
+		end
 		local te=nil
 		local acd={}
 		local ac={}
@@ -148,7 +200,7 @@ function c511001363.copyop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if op then op(e,tp,Group.CreateGroup(),PLAYER_NONE,0,teh,REASON_EFFECT,PLAYER_NONE,1) end
 		tc:ReleaseEffectRelation(e)
-		if etc then	
+		if etc then 
 			etc=g:GetFirst()
 			while etc do
 				etc:ReleaseEffectRelation(e)
