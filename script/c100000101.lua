@@ -25,7 +25,7 @@ function card.spcost(e, tp, eg, ep, ev, re, r, rp, chk)
 end
 function card.spfilter(c, e, tp)
     return c:IsCode(CARD_OJAMA_YELLOW, CARD_OJAMA_BLACK, CARD_OJAMA_GREEN) and
-        c:IsCanBeSpecialSummoned(e, 0, tp, false, false)
+    	c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e, 0, tp, false, false)
 end
 function card.rescon(sg, e, tp, mg)
     --3 different names when the filter requires all cards have one of three names ensures one of each name
