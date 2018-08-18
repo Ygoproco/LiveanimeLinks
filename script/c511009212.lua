@@ -32,7 +32,7 @@ function c511009212.initial_effect(c)
 	end
 end
 function c511009212.faketg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetTurnPlayer()~=tp and Duel.GetDrawCount(1-tp)>0 end
+	if chk==0 then return Duel.GetTurnPlayer()~=tp and Duel.GetDrawCount(1-tp)>0 and Duel.IsExistingMatchingCard(c511009212.afilter,1-tp,LOCATION_DECK,0,1,nil) end
 	local dt=Duel.GetDrawCount(1-tp)
 	if dt~=0 then
 		_replace_count=0
