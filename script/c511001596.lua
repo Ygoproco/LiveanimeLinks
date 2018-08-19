@@ -58,7 +58,7 @@ function c511001596.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:Reset()
 end
-function c511001596.mtcon(e,tp,eg,ep,ev,re,r,rp)
+function c511001596.rtcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c511001596.rtcost(e,tp,eg,ep,ev,re,r,rp)
