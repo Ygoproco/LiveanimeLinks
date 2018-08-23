@@ -11,7 +11,7 @@ function c511014000.initial_effect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetRange(LOCATION_FZONE)
-	e4:SetCode(EVENT_CUSTOM+71645242)
+	e4:SetCode(EVENT_CUSTOM+511014000)
 	e4:SetTarget(c511014000.tktg)
 	e4:SetOperation(c511014000.tkop)
 	c:RegisterEffect(e4)
@@ -53,7 +53,7 @@ function c511014000.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return sf~=0
 end
 function c511014000.regop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RaiseEvent(eg,EVENT_CUSTOM+71645242,e,r,rp,ep,e:GetLabel())
+	Duel.RaiseEvent(eg,EVENT_CUSTOM+511014000,e,r,rp,ep,e:GetLabel())
 end
 function c511014000.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRelateToEffect(e) end
