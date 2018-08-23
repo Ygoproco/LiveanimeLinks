@@ -821,7 +821,7 @@ end
 -- F.A. Circuit Grand Prix/Ancient Lamp/Mystic Lamp
 -- Lord of the Lamp/ La Jinn the Mystical Genie of the Lamp
 c420.OCGLamp={
-	54912977,97590747,98049915,	39838559,99510761,91584698,
+	54912977,97590747,98049915, 39838559,99510761,91584698,
 	42002073,63545455
 }
 function Card.IsLamp(c,fbool)
@@ -1288,9 +1288,9 @@ end
 --- Blue-Eyes Spirit Dragon
 function Card.IsSpirit(c,fbool)
 	if fbool then
- 		return (c:IsFusionSetCard(0x54e) or c:IsFusionCode(59822133))
+		return (c:IsFusionSetCard(0x54e) or c:IsFusionCode(59822133))
 	else
-	 	return (c:IsSetCard(0x54e) or c:IsCode(59822133))
+		return (c:IsSetCard(0x54e) or c:IsCode(59822133))
 	end
 end
 
@@ -1424,10 +1424,10 @@ end
 --W
 -- Arcana Force XXI - The World/VW-Tiger Catapult/VWXYZ-Dragon Catapult Cannon
 -- Malefic Claw Stream/Malefic World/Earthbound Immortal Wiraqocha Rasca/
--- W Nebula Meteorite
+-- W Nebula Meteorite/Ride of the Valkyries
 c420.OCGW={
 	23846921,41181774,27564031,90075978,96300057,58859575,
-	84243274
+	84243274,65687442
 	--Windwitch/ ZW
 }
 
@@ -1610,9 +1610,9 @@ c420.OCGMonarch={
 04591250,62188962,40473581,56907389
 }
 function Card.IsMonarch(c,fbool)
-    if fbool then
-        return c:IsFusionSetCard(0x571) or c:IsFusionSetCard(0xbe) or c:IsFusionCode(table.unpack(c420.OCGMonarch))
-    else
-        return c:IsSetCard(0x571) or c:IsSetCard(0xbe) or c:IsCode(table.unpack(c420.OCGMonarch))
-    end
+	if fbool then
+		return c:IsFusionSetCard(0x571) or c:IsFusionSetCard(0xbe) or c:IsFusionCode(table.unpack(c420.OCGMonarch))
+	else
+		return c:IsSetCard(0x571) or c:IsSetCard(0xbe) or c:IsCode(table.unpack(c420.OCGMonarch))
+	end
 end
