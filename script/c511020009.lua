@@ -1,10 +1,12 @@
---命の綱
---fixed by MLD
+--命の綱 (Anime)
+--Rope of Life (Anime)
+--fixed by MLD & Larry126
 function c511020009.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetTarget(c511020009.target)
 	e1:SetOperation(c511020009.activate)
