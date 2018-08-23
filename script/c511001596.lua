@@ -46,6 +46,7 @@ function c511001596.activate(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1)
+	e3:SetCondition(c511001596.rtcon)
 	e3:SetOperation(c511001596.rtcost)
 	e3:SetReset(RESET_EVENT+0x1fe0000)
 	token:RegisterEffect(e3,true)
@@ -57,8 +58,10 @@ function c511001596.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:Reset()
 end
+function c511001596.rtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c511001596.rtcost(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	if Duel.GetLP(tp)>1000 and Duel.SelectYesNo(tp,aux.Stringid(24874630,0)) then
 		Duel.PayLPCost(tp,1000)
 	else
