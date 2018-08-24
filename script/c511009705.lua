@@ -31,9 +31,9 @@ function c511009705.initial_effect(c)
 	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_BATTLED)
-	e3:SetCondition(c511009705.damcon)
-	e3:SetTarget(c511009705.damtg)
-	e3:SetOperation(c511009705.damop)
+	e3:SetCondition(c511009705.atkcon)
+	e3:SetTarget(c511009705.atktg)
+	e3:SetOperation(c511009705.atkop)
 	c:RegisterEffect(e3)
 end
 function c511009705.valcon(e,re,r,rp)
@@ -43,7 +43,7 @@ function c511009705.changefilter(c)
 	return c:IsAttackPos() and c:IsCanChangePosition()
 end
 function c511009705.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsAttackPos() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009705.changefilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511009705.changefilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	local g=Duel.SelectTarget(tp,c511009705.changefilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
@@ -54,6 +54,7 @@ function c511009705.chlimit(e,ep,tp)
 	return tp==ep
 end
 function c511009705.posop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
