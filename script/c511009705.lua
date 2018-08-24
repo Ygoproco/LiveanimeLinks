@@ -54,6 +54,7 @@ function c511009705.chlimit(e,ep,tp)
 	return tp==ep
 end
 function c511009705.posop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
