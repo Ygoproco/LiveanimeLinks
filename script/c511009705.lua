@@ -43,7 +43,7 @@ function c511009705.changefilter(c)
 	return c:IsAttackPos() and c:IsCanChangePosition()
 end
 function c511009705.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsAttackPos() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009705.changefilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511009705.changefilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	local g=Duel.SelectTarget(tp,c511009705.changefilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
