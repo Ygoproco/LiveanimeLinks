@@ -50,7 +50,7 @@ function c513000059.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetLabelObject(e1)
-	e5:SetCost(c513000059.spcost2)
+	e5:SetCost(c513000059.spcost)
 	e5:SetTarget(c513000059.sptg2)
 	e5:SetOperation(c513000059.spop2)
 	c:RegisterEffect(e5,false,1)
@@ -119,20 +119,21 @@ function c513000059.rankupregop(e,tp,eg,ep,ev,re,r,rp)
 		e:SetLabel(0)
 	end
 end
-function c513000059.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
+function c513000059.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST)
+	local ct=c:GetOverlayCount()
+	if chk==0 then return ct>0 and c:CheckRemoveOverlayCard(tp,ct,REASON_COST)
 		and e:GetLabelObject():GetLabel()==1 end
-	local g=c:GetOverlayGroup()
-	Duel.SendtoGrave(g,REASON_COST) 
+	c:RemoveOverlayCard(tp,ct,ct,REASON_COST)
 end
 function c513000059.spfilter(c,e,tp)
 	return c:IsCode(48739166) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c513000059.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c513000059.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+		and (Duel.IsExistingMatchingCard(c513000059.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+		or e:GetHandler():GetOverlayGroup():IsExists(c513000059.spfilter,1,nil,e,tp)) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_OVERLAY)
 end
 function c513000059.spop2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
