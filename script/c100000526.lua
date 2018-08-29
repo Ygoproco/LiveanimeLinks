@@ -1,4 +1,5 @@
 --天馬之翼
+--Pegasus Wings
 function c100000526.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -14,7 +15,7 @@ function c100000526.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,100243005)
 end
 function c100000526.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x228) and not c:IsHasEffect(EFFECT_CANNOT_DIRECT_ATTACK) and not c:IsHasEffect(EFFECT_DIRECT_ATTACK)
+	return c:IsFaceup() and c:IsSetCard(0x122) and not c:IsHasEffect(EFFECT_CANNOT_DIRECT_ATTACK) and not c:IsHasEffect(EFFECT_DIRECT_ATTACK)
 end
 function c100000526.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c100000526.filter(chkc) end
