@@ -1,4 +1,5 @@
 --ローゲの焔
+--Loge's Flame
 function c100000542.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -29,7 +30,7 @@ function c100000542.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c100000542.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(100243004)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(2204038)
 end
 function c100000542.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
