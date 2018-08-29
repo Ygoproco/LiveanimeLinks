@@ -1,6 +1,7 @@
---運命の戦車
+--運命の戦車 (Anime)
+--Fortune Chariot (Anime)
 function c100000527.initial_effect(c)
-	aux.AddUnionProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x228),true)
+	aux.AddUnionProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x122),true)
 	--direct_attack
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(100000527,2))
