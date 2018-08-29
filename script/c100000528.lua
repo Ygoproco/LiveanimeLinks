@@ -1,4 +1,5 @@
 --白鳥の乙女
+--Swan Maiden
 function c100000528.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -10,7 +11,7 @@ function c100000528.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000528.filter(c,e,tp)
-	return c:IsSetCard(0x228) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x122) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000528.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
