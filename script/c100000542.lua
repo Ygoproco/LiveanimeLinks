@@ -29,6 +29,7 @@ function c100000542.initial_effect(c)
 	e4:SetOperation(c100000542.desop)
 	c:RegisterEffect(e4)
 end
+c100000542.listed_names={2204038}
 function c100000542.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(2204038)
 end
