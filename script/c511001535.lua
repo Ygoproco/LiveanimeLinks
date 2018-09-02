@@ -1,3 +1,4 @@
+--ヘイル・サイバー
 --Cyber Valkyrie
 function c511001535.initial_effect(c)
 	--
@@ -7,6 +8,7 @@ function c511001535.initial_effect(c)
 	e2:SetOperation(c511001535.atkop)
 	c:RegisterEffect(e2)
 end
+c511001535.listed_names={511001535}
 function c511001535.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()

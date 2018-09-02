@@ -1,4 +1,5 @@
 --ワルキューレの抱擁
+--Valkyrie's Embrace
 function c100000529.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +12,7 @@ function c100000529.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000529.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x228)
+	return c:IsFaceup() and c:IsSetCard(0x122)
 end
 function c100000529.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

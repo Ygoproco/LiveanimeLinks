@@ -1,4 +1,5 @@
 --天馬之翼
+--Pegasus Wings
 function c100000526.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -10,11 +11,12 @@ function c100000526.initial_effect(c)
 	e1:SetOperation(c100000526.activate)
 	c:RegisterEffect(e1)
 end
+c100000526.listed_names={39299733}
 function c100000526.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,100243005)
+	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,39299733)
 end
 function c100000526.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x228) and not c:IsHasEffect(EFFECT_CANNOT_DIRECT_ATTACK) and not c:IsHasEffect(EFFECT_DIRECT_ATTACK)
+	return c:IsFaceup() and c:IsSetCard(0x122) and not c:IsHasEffect(EFFECT_CANNOT_DIRECT_ATTACK) and not c:IsHasEffect(EFFECT_DIRECT_ATTACK)
 end
 function c100000526.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c100000526.filter(chkc) end
@@ -28,13 +30,13 @@ function c100000526.activate(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e1:SetValue(tc:GetAttack()/2)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DIRECT_ATTACK)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
 	end
 end
