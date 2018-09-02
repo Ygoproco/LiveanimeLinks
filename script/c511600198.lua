@@ -20,6 +20,11 @@ function c511600198.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_MATERIAL_CHECK)
+	e3:SetValue(c511600198.valcheck)
+	c:RegisterEffect(e3)
 end
 function c511600198.matfilter(c,lc,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE,lc,sumtype,tp) and c:IsType(TYPE_EFFECT,lc,sumtype,tp)
@@ -47,5 +52,11 @@ function c511600198.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+	end
+end
+function c511600198.valcheck(e,c)
+	local g=c:GetMaterial()
+	if g:IsExists(Card.IsLinkCode,1,nil,511600198) and c:IsSummonType(SUMMON_TYPE_LINK) then
+		c:RegisterFlagEffect(41463181,RESET_EVENT+0x6e0000,0,1)
 	end
 end
