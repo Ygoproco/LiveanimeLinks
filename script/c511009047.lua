@@ -4,7 +4,7 @@
 function c511009047.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--draw
+	--draw P
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -13,13 +13,13 @@ function c511009047.initial_effect(c)
 	e2:SetTarget(c511009047.drawtg)
 	e2:SetOperation(c511009047.drawop)
 	c:RegisterEffect(e2)
-	--drawp
+	--draw M
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_DESTROYED)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetCountLimit(1)
 	e3:SetCondition(c511009047.drcon)
 	e3:SetTarget(c511009047.drtg)
