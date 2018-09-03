@@ -52,7 +52,7 @@ function c511009047.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,ct) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(ct)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,ct)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
 end
 function c511009047.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(c511009047.filter,tp,LOCATION_MZONE,0,nil)
