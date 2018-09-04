@@ -4,7 +4,7 @@
 function c511009047.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--draw
+	--draw P
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -13,18 +13,18 @@ function c511009047.initial_effect(c)
 	e2:SetTarget(c511009047.drawtg)
 	e2:SetOperation(c511009047.drawop)
 	c:RegisterEffect(e2)
-	--drawp
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetCountLimit(1)
-	e2:SetCondition(c511009047.drcon)
-	e2:SetTarget(c511009047.drtg)
-	e2:SetOperation(c511009047.drop)
-	c:RegisterEffect(e2)
+	--draw M
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DRAW)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_DESTROYED)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCountLimit(1)
+	e3:SetCondition(c511009047.drcon)
+	e3:SetTarget(c511009047.drtg)
+	e3:SetOperation(c511009047.drop)
+	c:RegisterEffect(e3)
 end
 function c511009047.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
@@ -52,7 +52,7 @@ function c511009047.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,ct) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(ct)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,ct)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
 end
 function c511009047.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(c511009047.filter,tp,LOCATION_MZONE,0,nil)
