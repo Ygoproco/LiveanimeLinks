@@ -17,7 +17,7 @@ end
 function c511001121.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local at=Duel.GetAttacker()
 	if chk==0 then return at:IsRelateToBattle() end
-	local dam=math.max(at:GetBaseAttack()/2,0)
+	local dam=math.max(at:GetAttack()/4,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,at,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
