@@ -14,13 +14,13 @@ function c511000418.filter(c)
 	return c:IsFaceup()
 end
 function c511000418.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000418.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(c511000418.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c511000418.filter,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(c511000418.filter,tp,0,LOCATION_MZONE,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,LOCATION_MZONE)
 end
 function c511000418.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c511000418.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c511000418.filter,tp,0,LOCATION_MZONE,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		Duel.SendtoGrave(g,REASON_EFFECT)
