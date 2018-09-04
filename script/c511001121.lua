@@ -24,7 +24,7 @@ end
 function c511001121.activate(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
 	if at:IsRelateToBattle() and Duel.Destroy(at,REASON_EFFECT)~=0 then
-		local atk=at:GetPreviousAttackOnField()/2
+		local atk=at:GetPreviousAttackOnField()/4
 		if atk>0 then
 			Duel.Damage(1-tp,atk,REASON_EFFECT)
 		end
