@@ -71,13 +71,9 @@ function c511009717.attop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 	end
 end
-function c511009717.distarget(e,c)
+function c511009717.distg(e,c)
 	return c:IsAttribute(e:GetHandler():GetAttribute())
 end
-
-
-
-
 function c511009717.filter(c,tp)
 	return c:IsFaceup() and Duel.IsExistingMatchingCard(c64514622.attfilter,tp,LOCATION_MZONE,0,1,nil,c:GetAttribute())
 end
