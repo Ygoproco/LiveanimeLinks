@@ -1,3 +1,4 @@
+--テンタクラスター・ノーチラス
 --Tentacluster Nautilus
 --scripted by Larry126
 function c511600032.initial_effect(c)
@@ -15,23 +16,22 @@ function c511600032.initial_effect(c)
 	e1:SetOperation(c511600032.spop)
 	c:RegisterEffect(e1)
 	--destroy
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(31226177,1))
-	e1:SetCategory(CATEGORY_DAMAGE)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetCountLimit(1)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetTarget(c511600032.destg)
-	e1:SetOperation(c511600032.desop)
-	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(31226177,0))
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCountLimit(1)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetTarget(c511600032.destg)
+	e2:SetOperation(c511600032.desop)
+	c:RegisterEffect(e2)
 end
 function c511600032.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local lg=e:GetHandler():GetLinkedGroup()
 	if chkc then return lg:IsContains(chkc) end
-	if chk==0 then return lg:Filter(Card.IsCanBeEffectTarget,nil,e):GetCount()==lg:GetCount()
-		and lg:Filter(Card.IsDestructable,nil):GetCount()==lg:GetCount() end
+	if chk==0 then return lg:FilterCount(Card.IsCanBeEffectTarget,nil,e)==#lg end
 	Duel.SetTargetCard(lg)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,lg,lg:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,lg,#lg,0,LOCATION_MZONE)
 end
 function c511600032.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
@@ -50,13 +50,11 @@ function c511600032.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c511600032.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local zone=c:GetLinkedZone()
-	if zone==0 then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local zone=e:GetHandler():GetLinkedZone()
+	if zone==0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511600032.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp,zone)
-	if g:GetCount()>0 then
+	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
