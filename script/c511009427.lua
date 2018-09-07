@@ -28,7 +28,7 @@ end
 function c511009427.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>2
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009428,0,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009428,0,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) then
 		for i=1,3 do
 			local token=Duel.CreateToken(tp,511009428)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
