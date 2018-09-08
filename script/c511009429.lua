@@ -1,5 +1,6 @@
 --Ｇゴーレム・インヴァリッド・ドルメン
 --G Golem Invalid Dolmen
+--fixed by Larry126
 function c511009429.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_EARTH),2)
