@@ -18,7 +18,7 @@ function c511010535.descon(e,tp,eg,ep,ev,re,r,rp)
     if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
     local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
     if g:FilterCount(c511010535.cfilter,nil,tp)==0 then return false end
-    --if not Duel.IsChainNegatable(ev) then return false end
+    if not Duel.IsChainNegatable(ev) then return false end
     local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
     return ex and tg~=nil and tc+tg:FilterCount(c511010535.cfilter,nil,tp)-tg:GetCount()>0
 end
