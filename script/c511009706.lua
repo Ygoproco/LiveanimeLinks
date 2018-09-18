@@ -1,5 +1,5 @@
 -- ヴァレルガード・ドラゴン
---Borrelguard Dragon
+--Borrelguard Dragon (Anime)
 function c511009706.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_EFFECT),3)
@@ -99,7 +99,7 @@ function c511009706.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(tc,REASON_EFFECT)
 end
 function c511009706.posfilter(c)
-	return c:IsCanChangePosition() and not c:IsPosition(POS_FACEUP_DEFENSE)
+	return c:IsFaceup() and c:IsCanChangePosition() and not c:IsPosition(POS_FACEUP_ATTACK)
 end
 function c511009706.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009706.posfilter(chkc) end
@@ -114,7 +114,7 @@ function c511009706.chlimit(e,ep,tp)
 end
 function c511009706.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not tc:IsPosition(POS_FACEUP_DEFENSE) then
-		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
+	if tc:IsRelateToEffect(e) and not tc:IsPosition(POS_FACEUP_ATTACK) then
+		Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
 	end
 end
