@@ -105,8 +105,8 @@ function c511009706.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009706.posfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511009706.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-	Duel.SelectTarget(tp,c511009706.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
+	local g=Duel.SelectTarget(tp,c511009706.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
 	Duel.SetChainLimit(c511009706.chlimit)
 end
 function c511009706.chlimit(e,ep,tp)
