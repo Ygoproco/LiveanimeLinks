@@ -41,7 +41,7 @@ function c511001675.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:Select(tp,1,1,nil)
 			Duel.BreakEffect()
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
