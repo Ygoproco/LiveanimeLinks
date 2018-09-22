@@ -22,6 +22,7 @@ function c511009429.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_MUST_ATTACK_MONSTER)
+--	e3:SetValue(c511009429.atklimit)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
@@ -44,6 +45,9 @@ function c511009429.initial_effect(c)
 	e6:SetTarget(c511009429.distg)
 	e6:SetOperation(c511009429.disop)
 	c:RegisterEffect(e6)
+end
+function c511009429.atklimit(e,c)
+    return c==e:GetHandler()
 end
 function c511009429.indtg(e,c)
 	return c:GetMutualLinkedGroupCount()>0
