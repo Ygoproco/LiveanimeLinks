@@ -462,7 +462,7 @@ function c513000134.desop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetValue(function(e,te) return te:GetOwner()~=e:GetOwner() end)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CHAIN)
 		tc:RegisterEffect(e3,true)
-		Duel.BreakEffect()
+		Duel.AdjustInstantly(c)
 	end
 	Duel.SendtoGrave(tc,REASON_EFFECT)
 	e:SetProperty(e:GetProperty()&~EFFECT_FLAG_IGNORE_IMMUNE)
