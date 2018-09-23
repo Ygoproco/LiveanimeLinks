@@ -18,7 +18,7 @@ function cid.dfilter(c,atk)
 	return c:IsFaceup() and c:GetAttack()<=atk
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cid.filter(chkc,tp) endend
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cid.filter(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,0,1,nil,tp) end
 	local tc=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	local dg=Duel.GetMatchingGroup(cid.dfilter,tp,0,LOCATION_MZONE,1,1,nil,tc:GetFirst():GetAttack())
