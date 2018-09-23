@@ -20,7 +20,7 @@ end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cid.filter(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,0,1,nil,tp) end
-	local tc=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	local tc=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	local dg=Duel.GetMatchingGroup(cid.dfilter,tp,0,LOCATION_MZONE,1,1,nil,tc:GetFirst():GetAttack())
 	dg=dg+tc
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,2,0,0)
