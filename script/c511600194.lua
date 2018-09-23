@@ -13,6 +13,16 @@ function c511600194.initial_effect(c)
 	e1:SetTarget(c511600194.target)
 	e1:SetOperation(c511600194.operation)
 	c:RegisterEffect(e1)
+	--lvchange
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(44635489,0))
+	e2:SetCategory(CATEGORY_LVCHANGE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetTarget(c511600194.lvtg)
+	e2:SetOperation(c511600194.lvop)
+	c:RegisterEffect(e2)
 end
 function c511600194.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetBattleDamage(tp)>0 and Duel.GetAttackTarget()==nil
@@ -40,4 +50,25 @@ function c511600194.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600194.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(tp,Duel.GetBattleDamage(tp)/2)
+end
+function c511600194.lvfilter(c,lv)
+	return c:IsFaceup() and c:IsLevelBelow(2147483647) and c:GetLevel()~=lv
+end
+function c511600194.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c511600194.lvfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),e:GetHandler():GetLevel()) end
+end
+function c511600194.lvop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local tc=Duel.SelectMatchingCard(tp,c511600194.lvfilter,tp,LOCATION_MZONE,0,1,1,c,c:GetLevel()):GetFirst()
+		if tc then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CHANGE_LEVEL)
+			e1:SetValue(tc:GetLevel())
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			c:RegisterEffect(e1)
+		end
+	end
 end
