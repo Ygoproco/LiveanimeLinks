@@ -16,6 +16,9 @@ function c511009742.initial_effect(c)
 	c:RegisterEffect(e3)
 	aux.CallToken(420)
 end
+function c511009742.matfilter(c)
+	return c:IsLinkSetCard(0x581)
+end
 function c511009742.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and eg:GetFirst():IsControler(tp) and eg:GetFirst():IsDrone() and Duel.GetAttackTarget()==nil and 
 	not e:GetHandler():IsHasEffect(EFFECT_DIRECT_ATTACK) and not eg:GetFirst():IsCode(511009742)
