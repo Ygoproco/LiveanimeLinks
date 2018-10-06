@@ -2,8 +2,8 @@
 --Remote Revenge (Anime)
 function c511010535.initial_effect(c)
 	--Activate
-	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCondition(c511010535.descon)
