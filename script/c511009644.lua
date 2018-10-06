@@ -9,7 +9,6 @@ function c511009644.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCost(c511009644.cost)
 	e2:SetTarget(c511009644.target)
 	e2:SetOperation(c511009644.operation)
 	c:RegisterEffect(e2)
@@ -20,8 +19,8 @@ function c511009644.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
-	e3:SetTarget(c511009644.target)
-	e3:SetOperation(c511009644.operation)
+	e3:SetTarget(c511009644.target2)
+	e3:SetOperation(c511009644.operation2)
 	c:RegisterEffect(e3)
 	--atk up
 	local e4=Effect.CreateEffect(c)
@@ -32,9 +31,7 @@ function c511009644.initial_effect(c)
 	e4:SetCondition(c511009644.atkcon)
 	e4:SetOperation(c511009644.atkop)
 	c:RegisterEffect(e4)
-	
 end
-
 function c511009644.spcfilter1(c,tp)
 	return c:IsType(TYPE_SPELL) and Duel.IsExistingMatchingCard(c511009644.spcfilter2,tp,LOCATION_GRAVE,0,2,c,c:GetCode()) and c:IsAbleToHand()
 end
@@ -59,27 +56,23 @@ function c511009644.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 	end
 end
-
-function c511009644.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009644.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function c511009644.operation(e,tp,eg,ep,ev,re,r,rp)
+function c511009644.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 	end
 end
-
-
 function c511009644.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	return bc and c:GetCardTarget():IsContains(bc)
 end
-
 function c511009644.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
