@@ -59,7 +59,6 @@ function c511009744.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
-
 function c511009744.damcon(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp then return false end
 	local rc=eg:GetFirst()
@@ -71,7 +70,6 @@ function c511009744.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(rc:GetAttack())
 	Duel.Release(rc,REASON_COST)
 end
-
 function c511009744.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
@@ -83,8 +81,6 @@ function c511009744.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-
-
 function c511009744.filter(c)
 	return c:IsFaceup() and c:IsDrone() and c:IsLevelBelow(4) and c:IsAttackBelow(1000) and not c:IsHasEffect(EFFECT_DIRECT_ATTACK)
 end
