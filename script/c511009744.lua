@@ -12,7 +12,6 @@ function c511009744.initial_effect(c)
 	e1:SetTarget(c511009744.sptg)
 	e1:SetOperation(c511009744.spop)
 	c:RegisterEffect(e1)
-	
 	-- Damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(511009744,1))
@@ -56,8 +55,8 @@ function c511009744.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local zone=c:GetLinkedZone(tp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)~=0
+	if tc:IsRelateToEffect(e) and zone~=0 then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
 
