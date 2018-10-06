@@ -45,7 +45,7 @@ end
 function c511009709.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c511009709.tgfilter,1,nil,nil,1-tp) 
 end
-function c511009709.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009709.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(511009709)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009710,0x577,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
