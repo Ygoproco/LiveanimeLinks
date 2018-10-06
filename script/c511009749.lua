@@ -39,7 +39,7 @@ function c511009749.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_ATTACK)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(c50371210.ftarget)
+	e4:SetTarget(c511009749.ftarget)
 	c:RegisterEffect(e4)
 	aux.CallToken(420)
 end

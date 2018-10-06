@@ -37,7 +37,7 @@ function c511009743.cfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp
 		and c:IsDrone()
 end
-function c511009743.reccon(e,tp,eg,ep,ev,re,r,rp)
+function c511009743.reccon1(e,tp,eg,ep,ev,re,r,rp)
 		local atk=0
 	local tc=eg:GetFirst()
 	while tc do
@@ -69,7 +69,7 @@ function c511009743.reccon2(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
 
-function c58074572.rectg2(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009743.rectg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local opt=Duel.SelectOption(tp,aux.Stringid(58074572,0),aux.Stringid(58074572,1))
 	local p=(opt==0 and tp or 1-tp)
