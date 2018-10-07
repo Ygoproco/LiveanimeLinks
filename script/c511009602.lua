@@ -80,7 +80,7 @@ function c511009602.spop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		local sg=g:RandomSelect(1-tp,1)
 		if Duel.SendtoGrave(sg,REASON_EFFECT)>0 and sg:GetFirst():IsLocation(LOCATION_GRAVE)
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsRelateToEffect(e)
 			and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then
 			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
