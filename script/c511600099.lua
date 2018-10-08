@@ -2,11 +2,13 @@
 --Cluster Congester (Anime)
 --scripted by Larry126
 function c511600099.initial_effect(c)
+	local g=Group.CreateGroup()
+	g:KeepAlive()
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e0:SetCode(EVENT_PHASE+PHASE_END)
-	e0:SetLabelObject(Group.CreateGroup)
+	e0:SetLabelObject(g)
 	e0:SetRange(0xff)
 	e0:SetCondition(c511600099.condition)
 	e0:SetTarget(c511600099.target)
@@ -82,7 +84,8 @@ function c511600099.tkcon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600099.tkcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
-		and Duel.GetAttackTarget() and Duel.GetAttackTarget():IsAbleToRemoveAsCost() and Duel.GetMZoneCount(tp,Duel.GetAttackTarget())>0 end
+		and Duel.GetAttackTarget() and Duel.GetAttackTarget():IsAbleToRemoveAsCost()
+		and Duel.GetMZoneCount(tp,Duel.GetAttackTarget())>0 end
 	local g=Group.FromCards(e:GetHandler(),Duel.GetAttackTarget())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
