@@ -42,7 +42,7 @@ function c511009917.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and #g>0 then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local dg:Select(tp,1,1,nil)
+		local dg=g:Select(tp,1,1,nil)
 		Duel.Destroy(dg,REASON_EFFECT)
 	end
 end

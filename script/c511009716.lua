@@ -5,7 +5,7 @@ function c511009716.initial_effect(c)
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(66015185,0))
+	e1:SetDescription(aux.Stringid(511009716,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -60,7 +60,6 @@ function c511009716.attop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 	end
 end
-
-function c511009716.distarget(e,c)
+function c511009716.distg(e,c)
 	return c:IsAttribute(e:GetHandler():GetAttribute())
 end
