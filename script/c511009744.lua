@@ -63,11 +63,12 @@ end
 function c511009744.damcon(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp then return false end
 	local rc=eg:GetFirst()
+	e:SetLabelObject(eg:GetFirst())
 	return rc:IsControler(tp) and rc:IsDrone() and Duel.GetAttackTarget()==nil
 end
 function c511009744.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rc=eg:GetFirst()
-	if chk==0 then return ep==tp and rc and rc:IsReleasable() end
+	local rc=e:GetLabelObject()
+	if chk==0 then return rc and rc:IsReleasable() end
 	e:SetLabel(rc:GetAttack())
 	Duel.Release(rc,REASON_COST)
 end
