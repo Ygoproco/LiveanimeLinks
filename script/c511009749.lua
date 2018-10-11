@@ -9,18 +9,7 @@ function c511009749.initial_effect(c)
 	e1:SetTarget(c511009749.target)
 	e1:SetOperation(c511009749.operation)
 	c:RegisterEffect(e1)
-	--Atk down
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_EQUIP)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetValue(500)
-	c:RegisterEffect(e2)
-	--disable
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_EQUIP)
-	e4:SetCode(EFFECT_DISABLE)
-	c:RegisterEffect(e4)
-	--destroy
+	--Destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -33,14 +22,23 @@ function c511009749.initial_effect(c)
 	e3:SetOperation(c511009749.desop)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
-	--cannot attack
+	--Disable effect
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_CANNOT_ATTACK)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(c511009749.ftarget)
+	e4:SetType(EFFECT_TYPE_EQUIP)
+	e4:SetCode(EFFECT_DISABLE)
 	c:RegisterEffect(e4)
+	--ATK gain
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_EQUIP)
+	e5:SetCode(EFFECT_UPDATE_ATTACK)
+	e5:SetValue(500)
+	c:RegisterEffect(e5)
+	--Cannot attack
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_EQUIP)
+	e6:SetCode(EFFECT_CANNOT_ATTACK)
+	e6:SetCondition(c511009749.fcon)
+	c:RegisterEffect(e6)
 	aux.CallToken(420)
 end
 function c511009749.spfilter(c,e,tp)
@@ -92,8 +90,4 @@ function c511009749.filter(c)
 end
 function c511009749.fcon(e,c)
 	return Duel.IsExistingMatchingCard(c511009749.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
-end
-
-function c511009749.ftarget(e,c)
-	return e:GetHandler():GetEquipTarget()~=c
 end
