@@ -43,7 +43,7 @@ function c511009716.atttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return mg:IsContains(chkc) end
 	if chk==0 then return aux.SelectUnselectGroup(mg,e,tp,1,2,c511009716.mgfilter,0) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=aux.SelectUnselectGroup(mg,e,tp,1,2s,c511009716.mgfilter,1,tp,HINTMSG_TARGET,c511009716.mgfilter)
+	local g=aux.SelectUnselectGroup(mg,e,tp,1,2,c511009716.mgfilter,1,tp,HINTMSG_TARGET,c511009716.mgfilter)
 	Duel.SetTargetCard(g)
 end
 function c511009716.attop(e,tp,eg,ep,ev,re,r,rp)
