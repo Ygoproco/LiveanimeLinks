@@ -27,7 +27,7 @@ function c511001045.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001045.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() and tc:GetAttack()>0 then
+	if tc:IsRelateToBattle() and aux.nzatk(tc) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
