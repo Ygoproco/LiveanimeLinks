@@ -1,5 +1,6 @@
 --リレーションシップ
 --Relationship
+--fixed by Larry126
 function c511001355.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
