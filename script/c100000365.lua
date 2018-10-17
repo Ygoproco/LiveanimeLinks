@@ -12,7 +12,7 @@ function c100000365.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000365.spfilter(c,e,tp)
-	return c:IsCode(43378048) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsCode(43378048) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000365.filter(c)
 	return c:IsCode(6007213,32491822,69890967) and c:IsAbleToRemove()
@@ -52,15 +52,13 @@ function c100000365.activate(e,tp,eg,ep,ev,re,r,rp)
 	while sg:GetCount()<3 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=mg:FilterSelect(tp,c100000365.fselect,1,1,sg,tp,mg,sg,6007213,32491822,69890967)
-		if not g or g:GetCount()<=0 then return false end
+		if not g or #g<=0 then return false end
 		sg:Merge(g)
 	end
 	if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>2 and Duel.GetLocationCountFromEx(tp)>0 then
-		local sc=Duel.SelectMatchingCard(tp,c100000365.tfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()
-		if sc:GetCount()>0 then
-			Duel.BreakEffect()
-			Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
-			sc:CompleteProcedure()
+		local sc=Duel.SelectMatchingCard(tp,c100000365.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()
+		if sc then
+			Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
