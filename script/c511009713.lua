@@ -1,4 +1,6 @@
+--バーン・ハイドライブ
 --Burn Hydradrive
+--fixed by Larry126
 function c511009713.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,c511009713.matfilter,1,1)
@@ -6,8 +8,8 @@ function c511009713.initial_effect(c)
 	-- cannot link
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
 	e1:SetValue(c511009713.lnklimit)
 	c:RegisterEffect(e1)
 	--direct attack
@@ -41,9 +43,6 @@ end
 function c511009713.dacon(e)
 	return  Duel.IsExistingMatchingCard(c511009713.spfilter,tp,0,LOCATION_MZONE,1,nil)
 end
-
-
-
 function c511009713.tkcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
