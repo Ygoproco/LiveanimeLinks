@@ -9,6 +9,7 @@ function c511000253.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetValue(function(e,se,sp,st) return se:GetHandler():IsCode(100000365) end)
 	c:RegisterEffect(e1)
 	--Cannot be Destroyed by Battle
 	local e2=Effect.CreateEffect(c)
@@ -35,6 +36,14 @@ function c511000253.initial_effect(c)
 	e4:SetTarget(c511000253.cttg)
 	e4:SetOperation(c511000253.ctop)
 	c:RegisterEffect(e4)
+	--Dimension Fusion Destruction Special Summon Success
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DAMAGE_STEP)
+	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e5:SetCondition(c511000253.sscon)
+	e5:SetOperation(c511000253.ssop)
+	c:RegisterEffect(e5)
 end
 function c511000253.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -112,4 +121,10 @@ function c511000253.retop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.GetControl(c,1-p,0,0)
 		e:Reset()
 	end
+end
+function c511000253.sscon(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:GetHandler():IsCode(100000365)
+end
+function c511000253.ssop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():CompleteProcedure()
 end

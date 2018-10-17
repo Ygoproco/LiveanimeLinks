@@ -1,4 +1,6 @@
---E・HERO Clay Guardian
+--Ｅ・ＨＥＲＯ クレイ・ガードマン
+--Elemental HERO Clay Guardian
+--fixed by Larry126
 function c511001013.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
@@ -7,66 +9,88 @@ function c511001013.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c511001013.splimit)
+	e1:SetValue(aux.FALSE)
 	c:RegisterEffect(e1)
-	--special summon rule
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_EXTRA)
-	e2:SetCondition(c511001013.spcon)
-	e2:SetOperation(c511001013.spop)
-	c:RegisterEffect(e2)
 	--change name
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetCode(EFFECT_CHANGE_CODE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetValue(84327329)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCode(EFFECT_CHANGE_CODE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetValue(84327329)
+	c:RegisterEffect(e2)
 	--damage
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(511001013,0))
-	e4:SetCategory(CATEGORY_DAMAGE)
-	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetTarget(c511001013.damtg)
-	e4:SetOperation(c511001013.damop)
-	c:RegisterEffect(e4)
-	--metamorphosis sp summon success
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DAMAGE_STEP)
-	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e5:SetCondition(c511001013.sscon)
-	e5:SetOperation(c511001013.ssop)
-	c:RegisterEffect(e5)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(511001013,0))
+	e3:SetCategory(CATEGORY_DAMAGE)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetTarget(c511001013.damtg)
+	e3:SetOperation(c511001013.damop)
+	c:RegisterEffect(e3)
+	if not c511001013.global_check then
+		c511001013.global_check=true
+		--Metamorphosis
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetCondition(c511001013.con)
+		ge1:SetOperation(c511001013.op)
+		Duel.RegisterEffect(ge1,0)
+	end
 end
-function c511001013.splimit(e,se,sp,st)
-	local sc=se:GetHandler()
-	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or sc:IsCode(46411259)
+function c511001013.filter(c)
+	return c:GetOriginalCode()==46411259
 end
-function c511001013.spfilter(c,code,ft)
-	return c:IsCode(code) and c:IsAbleToGraveAsCost() and (not ft or ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
+function c511001013.con(e,tp,eg,ev,ep,re,r,rp)
+	return Duel.IsExistingMatchingCard(c511001013.filter,tp,0xff,0xff,1,nil)
 end
-function c511001013.spcon(e,c)
-	if c==nil then return true end 
-	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	return ft>-1 and Duel.IsExistingMatchingCard(c511001013.spfilter,tp,LOCATION_ONFIELD,0,1,nil,84327329,ft)
-		and Duel.IsExistingMatchingCard(c511001013.spfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,nil,46411259)
+function c511001013.op(e,tp,eg,ev,ep,re,r,rp)
+	local g=Duel.GetMatchingGroup(c511001013.filter,tp,0xff,0xff,nil)
+	g:ForEach(function(c)
+		local acte=c:GetActivateEffect()
+		acte:SetTarget(c511001013.target)
+		acte:SetOperation(c511001013.activate)
+	end)
 end
-function c511001013.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,c511001013.spfilter,tp,LOCATION_ONFIELD,0,1,1,nil,84327329,Duel.GetLocationCount(tp,LOCATION_MZONE))
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g2=Duel.SelectMatchingCard(tp,c511001013.spfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil,46411259)
-	g1:Merge(g2)
-	Duel.SendtoGrave(g1,REASON_COST)
+function c511001013.filter1(c,e,tp)
+	local lv=c:GetLevel()
+	return lv>0 and Duel.IsExistingMatchingCard(c511001013.filter2,tp,LOCATION_EXTRA,0,1,nil,lv,e,tp,c)
+		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
+function c511001013.filter2(c,lv,e,tp,tc)
+	return c:IsType(TYPE_FUSION) and c:GetLevel()==lv
+		and c:IsCanBeSpecialSummoned(e,0,tp,tc:IsCode(84327329) and c:GetOriginalCode()==511001013,false)
+end
+function c511001013.filter3(c,lv,e,tp,tc)
+	return c:IsType(TYPE_FUSION) and c:GetLevel()==lv
+		and c:IsCanBeSpecialSummoned(e,0,tp,tc:GetPreviousCodeOnField()==84327329 and c:GetOriginalCode()==511001013,false)
+end
+function c511001013.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if e:GetLabel()~=100 then return false end
+		e:SetLabel(0)
+		return Duel.CheckReleaseGroup(tp,c511001013.filter1,1,nil,e,tp)
+	end
+	local rg=Duel.SelectReleaseGroup(tp,c511001013.filter1,1,1,nil,e,tp)
+	e:SetLabelObject(rg:GetFirst())
+	e:SetLabel(rg:GetFirst():GetLevel())
+	Duel.Release(rg,REASON_COST)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+end
+function c511001013.activate(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCountFromEx(tp)<=0 then return end
+	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sc=Duel.SelectMatchingCard(tp,c511001013.filter3,tp,LOCATION_EXTRA,0,1,1,nil,e:GetLabel(),e,tp,tc):GetFirst()
+	local clayGuardianChk=tc:GetPreviousCodeOnField()==84327329 and sc:GetOriginalCode()==511001013
+	if sc and Duel.SpecialSummon(sc,0,tp,tp,clayGuardianChk,false,POS_FACEUP)>0 and clayGuardianChk then
+		sc:CompleteProcedure()
+	end
+end
+---------------------------------------------------------------------
 function c511001013.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
@@ -77,11 +101,4 @@ function c511001013.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
 	Duel.Damage(p,ct*200,REASON_EFFECT)
-end
-function c511001013.sscon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsCode(46411259)
-end
-function c511001013.ssop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	c:CompleteProcedure()
 end
