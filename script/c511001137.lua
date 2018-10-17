@@ -1,4 +1,6 @@
---サイレント・ソードマン LV0
+--沈黙の剣士 ＬＶ０
+--Silent Swordsman LV0
+--fixed by Larry126
 function c511001137.initial_effect(c)
 	--LV/Attack
 	local e1=Effect.CreateEffect(c)
