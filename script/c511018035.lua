@@ -1,3 +1,4 @@
+--Ｇゴーレム・クリスタルハート
 --G Golem Crystal Heart
 local cid, id = GetID()
 function cid.initial_effect(c)
@@ -42,17 +43,20 @@ function cid.sptarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,tp,LOCATION_GRAVE)
 end
 function cid.spoperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		local zone=c:GetToBeLinkedZone(tc,tp,true)
-		if zone~=0 and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP,zone) then
-			c:AddCounter(0x1115,1)
+	if c:IsFaceup() and c:IsRelateToEffect(e) then
+		local tc=Duel.GetFirstTarget()
+		if tc and tc:IsRelateToEffect(e) then
+			local zone=c:GetToBeLinkedZone(tc,tp,true)
+			if zone>0 then
+				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
+			end
 		end
-		Duel.SpecialSummonComplete()
+		Duel.BreakEffect()
+		c:AddCounter(0x1115,1)
 	end
 end
 function cid.uatarget(e,c)
