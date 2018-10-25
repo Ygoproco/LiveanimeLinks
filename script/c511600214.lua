@@ -41,6 +41,7 @@ function s.initial_effect(c)
 end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst():GetBattleTarget()
+	if not tc then return end
 	if tc:GetFlagEffect(id)>0 then
 		tc:SetFlagEffectLabel(id,tc:GetFlagEffectLabel(id)+Duel.GetBattleDamage(ep))
 	else

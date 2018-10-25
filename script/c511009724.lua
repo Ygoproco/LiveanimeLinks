@@ -1,3 +1,4 @@
+--ダイナマッスル
 --Dinomuscle
 function c511009724.initial_effect(c)
 	--activate
@@ -11,7 +12,7 @@ function c511009724.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x221))
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x11a))
 	e1:SetValue(400)
 	c:RegisterEffect(e1)
 	--indes
@@ -25,7 +26,7 @@ function c511009724.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511009724.target(e,c)
-	return c:IsSetCard(0x221)
+	return c:IsSetCard(0x11a)
 end
 function c511009724.indct(e,re,r,rp)
 	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
