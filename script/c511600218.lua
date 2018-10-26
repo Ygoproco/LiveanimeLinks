@@ -50,7 +50,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		local ct=math.floor(Duel.GetBattleDamage(ep)/1000)
-		c:AddCounter(0xda,ct)
+		if c:AddCounter(0xda,ct) then
+			Duel.BreakEffect()
+			Duel.SkipPhase(Duel.GetTurnPlayer(),PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+		end
 	end
 end
 function s.cfilter(c)
