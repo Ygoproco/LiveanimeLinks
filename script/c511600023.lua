@@ -1,7 +1,8 @@
+--リミット・コード
 --Limit Code
 --scripted by Larry126
 function c511600023.initial_effect(c)
-	c:EnableCounterPermit(0x101)
+	c:EnableCounterPermit(0x47)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_COUNTER+CATEGORY_EQUIP)
@@ -40,8 +41,8 @@ function c511600023.rccon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511600023.rcop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	c:RemoveCounter(tp,0x101,1,REASON_EFFECT)
-	if c:GetCounter(0x101)<1 then
+	c:RemoveCounter(tp,0x47,1,REASON_EFFECT)
+	if c:GetCounter(0x47)<1 then
 		local tc=c:GetFirstCardTarget()
 		if tc and tc:IsLocation(LOCATION_MZONE) then
 			Duel.Destroy(tc,REASON_EFFECT)
@@ -52,7 +53,7 @@ function c511600023.aclimit(e,re,tp)
 	return re:GetHandler():IsCode(e:GetHandler():GetCode()) and not re:GetHandler():IsImmuneToEffect(e)
 end
 function c511600023.spfilter(c,e,tp)
-	return c:IsSetCard(0x101) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	return c:IsSetCard(0x47) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function c511600023.cfilter(c)
 	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK)
@@ -72,7 +73,7 @@ end
 function c511600023.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c511600023.cfilter,tp,LOCATION_GRAVE,0,nil)
-	if c:IsRelateToEffect(e) and g:GetCount()>0 and c:IsCanAddCounter(0x101,g:GetCount()) and c:AddCounter(0x101,g:GetCount()) then
+	if c:IsRelateToEffect(e) and g:GetCount()>0 and c:IsCanAddCounter(0x47,g:GetCount()) and c:AddCounter(0x47,g:GetCount()) then
 		if Duel.GetLocationCountFromEx(tp)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,c511600023.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
