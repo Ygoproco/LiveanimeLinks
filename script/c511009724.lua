@@ -1,5 +1,6 @@
 --ダイナマッスル
 --Dinomuscle
+--fixed by Larry126
 function c511009724.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -20,7 +21,7 @@ function c511009724.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_SZONE,0)
+	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(c511009724.target)
 	e3:SetValue(c511009724.indct)
 	c:RegisterEffect(e3)
