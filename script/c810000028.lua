@@ -16,7 +16,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0
+	Debug.Message(Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 and e:GetHandler():IsPreviousPosition(POS_ATTACK))
+	return Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 and e:GetHandler():IsPreviousPosition(POS_ATTACK)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
