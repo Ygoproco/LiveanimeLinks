@@ -1,5 +1,5 @@
---バーン・ハイドライブ
---Burn Hydradrive
+--グランド・ハイドライブ
+--Grand Hydradrive
 --fixed by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
@@ -39,7 +39,7 @@ function s.lnklimit(e,c)
 	return c:IsLink(1)
 end
 function s.spfilter(c)
-	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_FIRE)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.dacon(e)
 	return  Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_MZONE,1,nil)
