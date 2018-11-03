@@ -10,7 +10,4 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(300)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e2)
 end
