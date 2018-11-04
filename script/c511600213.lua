@@ -1,10 +1,7 @@
 --レジューム・メイス
 --Resume Mace
 --scripted by Larry126
-
---Substitue ID
 local s,id=GetID()
-
 function s.initial_effect(c)
 	--Equip
 	aux.AddEquipProcedure(c,nil,s.eqfilter)
@@ -67,16 +64,13 @@ function s.cfilter1(c)
 	return c:IsType(TYPE_EQUIP) and c:IsType(TYPE_SPELL) and c:IsAbleToRemove()
 end
 function s.cfilter2(c)
-	return c:IsType(TYPE_MONSTER) and c:GetTextAttack()>0 and c:IsAbleToRemove()
-end
-function s.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsAttackAbove(1)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_GRAVE,0,1,c)
 		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_GRAVE,0,1,c) and c:IsAbleToRemove()
-		and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil) end
+		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,c,3,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,nil,1,1-tp,0)
 end
@@ -85,8 +79,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.cfilter1,tp,LOCATION_GRAVE,0,c)
 	local mg=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_GRAVE,0,c)
 	if c:IsRelateToEffect(e) and c:IsAbleToRemove() and #sg>0 and #mg>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local rg=sg:Select(tp,1,1,nil)+mg:Select(tp,1,1,nil)+c
-		local tc=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
 		if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)==3 and tc then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
