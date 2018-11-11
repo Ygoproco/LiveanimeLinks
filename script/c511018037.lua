@@ -1,7 +1,8 @@
+--重力激変
 --Gravity Fluctuation
 local cid, id = GetID()
 function cid.initial_effect(c)
-	--
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -33,7 +34,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_DESTROY)
 			local g=Duel.SelectMatchingCard(1-tp,cid.dfilter,tp,0,LOCATION_MZONE,1,1,nil,atk)
 			if #g>0 then
-				Duel.Destroy(g,REASON_EFFECT)
+				Duel.Destroy(g,REASON_RULE)
 			end
 		end
 	end
