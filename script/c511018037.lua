@@ -1,7 +1,8 @@
+--重力激変
 --Gravity Fluctuation
 local cid, id = GetID()
 function cid.initial_effect(c)
-	--
+	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
