@@ -29,14 +29,11 @@ function s.initial_effect(c)
 	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
-	if not ClockLizardSubstitute then
-		ClockLizardSubstitute = {}
+	if not ClockLizardSubstituteGroup then
 		ClockLizardSubstituteGroup = Group.CreateGroup()
 		ClockLizardSubstituteGroup:KeepAlive()
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetCountLimit(1)
 		ge1:SetCode(EVENT_ADJUST)
 		ge1:SetOperation(s.subop)
 		Duel.RegisterEffect(ge1,0)
@@ -115,11 +112,14 @@ function s.initial_effect(c)
 	end
 end
 function s.subop(e,tp,eg,ep,ev,re,r,rp,chk)
-	for i=0,1 do
-		local sub=Duel.CreateToken(i,511610204)
-		ClockLizardSubstitute[i] = sub
-		ClockLizardSubstituteGroup:AddCard(sub)
-		Duel.SendtoDeck(sub,nil,1,REASON_RULE)
+	for p=0,1 do
+		if Duel.IsExistingMatchingCard(Card.IsCode,p,0xff,0,1,nil,alias)
+			and Duel.GetFieldGroupCount(p,LOCATION_EXTRA,0)==0
+			and not ClockLizardSubstituteGroup:IsExists(Card.IsControler,1,nil,p) then
+			local sub=Duel.CreateToken(p,alias)
+			ClockLizardSubstituteGroup:AddCard(sub)
+			Duel.Sendto(sub,LOCATION_EXTRA,REASON_RULE)
+		end
 	end
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -133,7 +133,8 @@ function s.tdfilter(c,e,tp,mg,f,mgc,mf)
 	if not c:IsType(TYPE_FUSION) or not c:IsAbleToExtra()
 		or not (c:CheckFusionMaterial(mg,nil,tp) and (not f or f(c))
 		or c:CheckFusionMaterial(mgc,nil,tp) and (not mf or mf(c))) then return false end
-	local fc=ClockLizardSubstitute[tp]
+	local fc=Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)>0 and Duel.GetFirstMatchingCard(Card.IsFacedown,tp,LOCATION_EXTRA,0,nil)
+		or ClockLizardSubstituteGroup:Filter(Card.IsControler,nil,tp):GetFirst()
 	if Duel.GetLocationCountFromEx(tp,tp,e:GetHandler(),fc)<=0 then return false end
 	fc:AssumeProperty(ASSUME_CODE,c:GetOriginalCodeRule())
 	fc:AssumeProperty(ASSUME_TYPE,c:GetOriginalType())
