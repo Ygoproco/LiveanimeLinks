@@ -1,6 +1,4 @@
 --嵐闘機艦バハムートボマー
---Stormrider Bahamut Bomber
---嵐闘機艦バハムートボマー
 --Stormridership Bahamut Bomber
 --Logical Nonsense
 
