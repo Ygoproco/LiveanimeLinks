@@ -1,8 +1,11 @@
---DDD超死偉王ホワイテスト・ヘル・アーマゲドン
+--DDD超死偉王ホワイテスト・ヘル・アーマゲドン (Anime)
+--D/D/D Super Doom King Bright Armageddon (Anime)
 function c511010514.initial_effect(c)
+	--synchro summon
 	c:EnableReviveLimit()
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xaf),1,1,aux.NonTuner(Card.IsSetCard,0xaf),1,99)
+	--pendulum
 	aux.EnablePendulumAttribute(c,false)
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xaf),1,1,aux.NonTuner(Card.IsSetCard,0x10af),1,99)
 	--synchro indes
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
