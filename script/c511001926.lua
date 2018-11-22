@@ -1,7 +1,7 @@
 --ファントム・オブ・カオス (Anime)
 --Phantom of Chaos (Anime)
 --fixed by Larry126
-local s,id.alias=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
 	alias = c:GetOriginalCodeRule()
 	--copy
