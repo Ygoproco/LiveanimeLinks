@@ -137,6 +137,11 @@ function s.tdfilter(c,e,tp,mg,mgc,mf)
 	local fc=Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)>0 and Duel.GetFirstMatchingCard(Card.IsFacedown,tp,LOCATION_EXTRA,0,nil)
 		or ClockLizardSubstituteGroup:Filter(Card.IsControler,nil,tp):GetFirst()
 	if Duel.GetLocationCountFromEx(tp,tp,e:GetHandler(),fc)<=0 then return false end
+	local fcspcon={}
+	for _,eff in ipairs({fc:GetCardEffect(EFFECT_SPSUMMON_CONDITION)}) do
+		table.insert(fcspcon,eff:Clone())
+		eff:Reset()
+	end
 	fc:AssumeProperty(ASSUME_CODE,c:GetOriginalCodeRule())
 	fc:AssumeProperty(ASSUME_TYPE,c:GetOriginalType())
 	fc:AssumeProperty(ASSUME_LEVEL,c:GetOriginalLevel())
@@ -147,13 +152,16 @@ function s.tdfilter(c,e,tp,mg,mgc,mf)
 	local fceffs={}
 	local sum=false
 	for _,eff in ipairs({c:GetCardEffect(EFFECT_SPSUMMON_CONDITION)}) do
-		local e=eff:Clone()
-		fc:RegisterEffect(e,true)
-		table.insert(fceffs,e)
+		local eClone=eff:Clone()
+		fc:RegisterEffect(eClone,true)
+		table.insert(fceffs,eClone)
 	end
 	if fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) then sum=true end
 	for _,eff in ipairs(fceffs) do
 		eff:Reset()
+	end
+	for _,eff in ipairs(fcspcon) do
+		fc:RegisterEffect(eff,true)
 	end
 	return sum
 end
