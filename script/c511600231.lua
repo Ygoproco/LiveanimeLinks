@@ -40,7 +40,7 @@ function s.cfilter(c,g)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,e:GetHandler():GetLinkedGroup())
-		and not Duel.IsExistingMatchingCard(s.sfilter,tp,LOCATION_SZONE,0,1,nil)
+		and not Duel.GetMatchingGroup(s.sfilter,tp,LOCATION_SZONE,0,nil):IsExists(aux.NOT(Card.IsStatus),1,nil,STATUS_LEAVE_CONFIRMED)
 end
 function s.sfilter(c)
 	return c:GetSequence()<5
@@ -60,12 +60,12 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
-	e1:SetValue(s.actlimit)
+	e1:SetTarget(s.actlimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_CANNOT_SSET)
-	e2:SetValue(aux.TRUE)
+	e2:SetTarget(aux.TRUE)
 	Duel.RegisterEffect(e2,tp)
 end
 function s.actlimit(e,te,tp)
