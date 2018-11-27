@@ -29,6 +29,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
+	--workaround
 	if not ClockLizardSubstituteGroup then
 		ClockLizardSubstituteGroup = Group.CreateGroup()
 		ClockLizardSubstituteGroup:KeepAlive()
@@ -129,13 +130,18 @@ end
 function s.mfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
-function s.tdfilter(c,e,tp,mg,f,mgc,mf)
+function s.tdfilter(c,e,tp,mg,mgc,mf)
 	if not c:IsType(TYPE_FUSION) or not c:IsAbleToExtra()
-		or not (c:CheckFusionMaterial(mg,nil,tp) and (not f or f(c))
-		or c:CheckFusionMaterial(mgc,nil,tp) and (not mf or mf(c))) then return false end
+		or not (c:CheckFusionMaterial(mg,nil)
+		or c:CheckFusionMaterial(mgc,nil) and (not mf or mf(c))) then return false end
 	local fc=Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)>0 and Duel.GetFirstMatchingCard(Card.IsFacedown,tp,LOCATION_EXTRA,0,nil)
 		or ClockLizardSubstituteGroup:Filter(Card.IsControler,nil,tp):GetFirst()
 	if Duel.GetLocationCountFromEx(tp,tp,e:GetHandler(),fc)<=0 then return false end
+	local fcspcon={}
+	for _,eff in ipairs({fc:GetCardEffect(EFFECT_SPSUMMON_CONDITION)}) do
+		table.insert(fcspcon,eff:Clone())
+		eff:Reset()
+	end
 	fc:AssumeProperty(ASSUME_CODE,c:GetOriginalCodeRule())
 	fc:AssumeProperty(ASSUME_TYPE,c:GetOriginalType())
 	fc:AssumeProperty(ASSUME_LEVEL,c:GetOriginalLevel())
@@ -146,17 +152,31 @@ function s.tdfilter(c,e,tp,mg,f,mgc,mf)
 	local fceffs={}
 	local sum=false
 	for _,eff in ipairs({c:GetCardEffect(EFFECT_SPSUMMON_CONDITION)}) do
-		local e=eff:Clone()
-		fc:RegisterEffect(e,true)
-		table.insert(fceffs,e)
+		local eClone=eff:Clone()
+		fc:RegisterEffect(eClone,true)
+		table.insert(fceffs,eClone)
 	end
 	if fc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) then sum=true end
 	for _,eff in ipairs(fceffs) do
 		eff:Reset()
 	end
+	for _,eff in ipairs(fcspcon) do
+		fc:RegisterEffect(eff,true)
+	end
 	return sum
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then
+		local mg=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_GRAVE+LOCATION_ONFIELD,0,nil)
+		local ce=Duel.GetChainMaterial(tp)
+		local mgc=Group.CreateGroup()
+		local mf=nil
+		if ce~=nil then
+			mgc=ce:GetTarget()(ce,e,tp)
+			mf=ce:GetValue()
+		end
+		return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.tdfilter(chkc,e,tp,mg,mgc,mf)
+	end
 	local mg=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_GRAVE+LOCATION_ONFIELD,0,nil)
 	local ce=Duel.GetChainMaterial(tp)
 	local mgc=Group.CreateGroup()
@@ -165,10 +185,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		mgc=ce:GetTarget()(ce,e,tp)
 		mf=ce:GetValue()
 	end
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.tdfilter(chkc,e,tp,mg,nil,mgc,mf) end
-	if chk==0 then return Duel.IsExistingTarget(s.tdfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,mg,nil,mgc,mf) end
+	if chk==0 then return Duel.IsExistingTarget(s.tdfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,mg,mgc,mf) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,s.tdfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg,nil,mgc,mf)
+	local g=Duel.SelectTarget(tp,s.tdfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg,mgc,mf)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	Duel.SetOperationInfo(0,CATEGORY_FUSION_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -183,7 +202,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		mgc=ce:GetTarget()(ce,e,tp)
 		mf=ce:GetValue()
 	end
-	if tc:IsRelateToEffect(e) and s.tdfilter(tc,e,tp,mg,nil,mgc,mf) and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)~=0 then
+	if tc:IsRelateToEffect(e) and s.tdfilter(tc,e,tp,mg,mgc,mf) and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)~=0 then
 		local nf=tc:CheckFusionMaterial(mg,nil,tp) and (not f or f(tc))
 		local cef=tc:CheckFusionMaterial(mgc,nil,tp) and (not mf or mf(tc))
 		if tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)

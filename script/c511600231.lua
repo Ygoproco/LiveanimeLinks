@@ -40,7 +40,7 @@ function s.cfilter(c,g)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,e:GetHandler():GetLinkedGroup())
-		and not Duel.IsExistingMatchingCard(s.sfilter,tp,LOCATION_SZONE,0,1,nil)
+		and not Duel.GetMatchingGroup(s.sfilter,tp,LOCATION_SZONE,0,nil):IsExists(aux.NOT(Card.IsStatus),1,nil,STATUS_LEAVE_CONFIRMED)
 end
 function s.sfilter(c)
 	return c:GetSequence()<5

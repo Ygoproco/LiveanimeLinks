@@ -35,6 +35,7 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_MUST_ATTACK)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetTargetRange(0,LOCATION_MZONE)
+	e4:SetCondition(s.atcon)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetCode(EFFECT_MUST_ATTACK_MONSTER)
@@ -44,6 +45,7 @@ function s.initial_effect(c)
 	e6:SetCode(EFFECT_MUST_BE_ATTACKED)
 	e6:SetTargetRange(LOCATION_MZONE,0)
 	e6:SetRange(LOCATION_FZONE)
+	e6:SetCondition(s.atcon)
 	e6:SetTarget(s.attg)
 	e6:SetValue(1)
 	c:RegisterEffect(e6)
@@ -71,6 +73,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	for tc in aux.Next(tg) do
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -81,6 +84,9 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(RESET_TURN_SET)
 		tc:RegisterEffect(e2)
 	end
+end
+function s.atcon(e)
+	return Duel.IsExistingMatchingCard(function(c) return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x580) and c:GetSequence()>4 end,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.attg(e,c)
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x580) and c:GetSequence()>4

@@ -39,7 +39,7 @@ function s.lnklimit(e,c)
 	return c:IsLink(1)
 end
 function s.spfilter(c)
-	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_EARTH)
 end
 function s.dacon(e)
 	return  Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_MZONE,1,nil)
