@@ -18,7 +18,7 @@ end
 function c511009004.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
-function c511009004.spfilter(c)
+function c511009004.spfilter(c,e,tp)
 	return c:IsType(TYPE_PENDULUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009004.destg(e,tp,eg,ep,ev,re,r,rp,chk)
