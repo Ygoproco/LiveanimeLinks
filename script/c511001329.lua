@@ -27,11 +27,12 @@ function c511001329.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511001329.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local lv=tc:GetLevel()
-	if not tc or not tc:IsRelateToEffect(e) or tc:IsFacedown() or Duel.GetLocationCount(tp,LOCATION_MZONE)<math.floor(lv/4) 
+	if not tc then return end
+	local ct=math.floor(tc:GetLevel()/4)
+	if not tc:IsRelateToEffect(e) or tc:IsFacedown() or Duel.GetLocationCount(tp,LOCATION_MZONE)<ct 
 		or (ct>1 and Duel.IsPlayerAffectedByEffect(tp,59822133))
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511001330,0,0x4011,0,0,1,RACE_WARRIOR,ATTRIBUTE_DARK) then return end
-	for i=1,math.floor(lv/4) do
+	for i=1,ct do
 		local token=Duel.CreateToken(tp,511001330)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 	end

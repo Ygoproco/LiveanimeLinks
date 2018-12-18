@@ -13,10 +13,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.spfilter(c,mg,lv)
-	for mc in aux.Next(mg) do
+	mg:ForEach(function(mc)
 		mc:AssumeProperty(ASSUME_TYPE,mc:GetOriginalType())
 		mc:AssumeProperty(ASSUME_LEVEL,lv)
-	end
+	end)
 	return c:IsXyzSummonable(mg,2,2)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)

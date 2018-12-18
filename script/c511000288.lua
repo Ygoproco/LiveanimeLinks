@@ -1,6 +1,7 @@
 --宝玉の砦
 --Crystal Fortress
 --re-scripted by Larry126
+--cleaned up by MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -23,11 +24,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
 	e1:SetTargetRange(0,LOCATION_MZONE)
-	e1:SetLabel(atk)
-	e1:SetTarget(s.target)
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsAttackBelow,atk))
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-end
-function s.target(e,c)
-	return c:IsAttackBelow(e:GetLabel())
 end

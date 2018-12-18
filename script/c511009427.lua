@@ -1,5 +1,6 @@
 --Ｇゴーレム・ロックハンマー
 --G Golem Rock Hammer
+--fixed by MLD
 function c511009427.initial_effect(c)
 	--token
 	local e1=Effect.CreateEffect(c)
@@ -12,7 +13,7 @@ function c511009427.initial_effect(c)
 	e1:SetOperation(c511009427.operation)
 	c:RegisterEffect(e1)
 end
-c511009427listed_names={511009428}
+c511009427.listed_names={511009428}
 function c511009427.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
@@ -23,11 +24,10 @@ function c511009427.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and ft>2
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009428,0,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,3,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,0,0)	
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,0)	
 end
 function c511009427.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>2
+	if not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>2
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009428,0,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) then
 		for i=1,3 do
 			local token=Duel.CreateToken(tp,511009428)

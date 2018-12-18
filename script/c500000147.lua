@@ -41,7 +41,7 @@ function c500000147.activate(e,tp,eg,ep,ev,re,r,rp)
 		local def=tc:GetDefense()
 		local p=tc:GetControler()
 		local pos=tc:GetPosition()
-		if Duel.Destroy(g,REASON_EFFECT)~=0 then
+		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			local token=Duel.CreateToken(tp,500000148)
 			if Duel.SpecialSummonStep(token,0,tp,p,false,false,pos) then
 				local e1=Effect.CreateEffect(e:GetHandler())

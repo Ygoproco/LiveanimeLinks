@@ -20,8 +20,7 @@ function c511000440.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=Duel.GetAttackTarget()
 	local ft=0
 	if e:GetHandler():IsLocation(LOCATION_HAND) then ft=1 end
-	if chk==0 then return d:IsFaceup() and d:IsSetCard(0x52)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>ft
+	if chk==0 then return d:IsFaceup() and d:IsSetCard(0x52) and Duel.GetLocationCount(tp,LOCATION_SZONE)>ft
 		and Duel.IsExistingMatchingCard(c511000440.filter,tp,LOCATION_MZONE,0,1,nil,tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.SetTargetCard(d)

@@ -37,12 +37,12 @@ function c511009701.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	c511009701[Duel.GetCurrentChain()]={ceg,cep,cev,cre,cr,crp}
 end
 function c511009701.operation(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
-	if not te then return end
-	if not te:GetHandler():IsRelateToEffect(e) then return end
+	if not te or not te:GetHandler():IsRelateToEffect(e) then return end
 	e:SetLabelObject(te:GetLabelObject())
 	local op=te:GetOperation()
-	if op then op(e,tp,eg,ep,ev,re,r,rp) end
+	if op then op(e,tp,table.unpack(c511009701[Duel.GetCurrentChain()],2)) end
 end

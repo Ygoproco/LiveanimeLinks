@@ -1,6 +1,7 @@
 --神科学ヘル・ゲート
 --Mystic Hell Gate
 --scripted by Larry126
+--fixed by MLD
 function c511009004.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
@@ -25,7 +26,7 @@ function c511009004.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_PZONE,0,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c511009004.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	local g=Duel.GetMatchingGroup(c511009004.spfilter,tp,LOCATION_PZONE,0,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,tp,LOCATION_PZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end

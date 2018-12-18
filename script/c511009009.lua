@@ -1,4 +1,5 @@
 --Mystic Factor Balthazar
+--fixed by MLD
 function c511009009.initial_effect(c)
 	--tohand
 	local e1=Effect.CreateEffect(c)
@@ -8,39 +9,43 @@ function c511009009.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_BE_MATERIAL)
 	e1:SetCountLimit(1)
+	e1:SetLabel(REASON_FUSION)
 	e1:SetCondition(c511009009.condition)
+	e1:SetCost(c511009009.cost)
 	e1:SetTarget(c511009009.target)
 	e1:SetOperation(c511009009.operation)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetLabel(REASON_SYNCHRO)
+	c:RegisterEffect(e2)
 end
 function c511009009.condition(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_FUSION or r==REASON_SYNCHRO
+	return r==e:GetLabel()&REASON_FUSION+REASON_SYNCHRO
+end
+function c511009009.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 function c511009009.mgfilter(c,e,tp,rc)
-	return c:IsLocation(LOCATION_GRAVE)
-		and (bit.band(c:GetReason(),0x80008)==0x80008 or bit.band(c:GetReason(),0x40008)==0x40008)
-		and c:GetReasonCard()==rc
+	return c:IsLocation(LOCATION_GRAVE) and c:GetReason()&e:GetLabel()==e:GetLabel() and c:GetReasonCard()==rc
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009009.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	local mg=tc:GetMaterial()
+	local mg=rc:GetMaterial()
 	local ct=mg:GetCount()
-	if chk==0 then return ct<=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133))
+	if chk==0 then return ct<=Duel.GetLocationCount(tp,LOCATION_MZONE) and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133))
 		and mg:FilterCount(c511009009.mgfilter,nil,e,tp,rc)==ct end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,mg:GetCount(),0,LOCATION_GRAVE)
 end
 function c511009009.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	local mg=tc:GetMaterial()
+	local mg=rc:GetMaterial()
 	local ct=mg:GetCount()
-	if ct>0 and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133))
-		and ct<=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		and mg:FilterCount(aux.NecroValleyFilter(c511009009.mgfilter),nil,e,tp,rc)==ct
-		then
-			Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
+	if ct>0 and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133)) and ct<=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		and mg:FilterCount(aux.NecroValleyFilter(c511009009.mgfilter),nil,e,tp,rc)==ct then
+		Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

@@ -554,9 +554,9 @@ c420.OCGHeavyIndustry={
 }
 function Card.IsHeavyIndustry(c,fbool)
 	if fbool then
-		return c:IsFusionSetCard(0x529) or c:IsFusionCode(table.unpack(c420.IsHeavyIndustry))
+		return c:IsFusionSetCard(0x529) or c:IsFusionCode(table.unpack(c420.OCGHeavyIndustry))
 	else
-		return c:IsSetCard(0x529) or c:IsCode(table.unpack(c420.IsHeavyIndustry))
+		return c:IsSetCard(0x529) or c:IsCode(table.unpack(c420.OCGHeavyIndustry))
 	end
 end
 
@@ -1103,12 +1103,14 @@ end
 -- Rose Spectre of dunn/Black Rose Moonlight Dragon/Black Rose Dragon/Splendid Rose
 -- Rose Bud/Mark of the rose/rose token/Aromaseraphy Rosemary
 -- Crystron Rosenix/Kozmoll Wickedwitch/HERO's Bond/Windrose the Elemental Lord
+-- White Rose Dragon/Red Rose Dragon
 c420.OCGRose={
 	49674183,96470883,31986288,41160533,51085303,41201555,75252099,
 	58569561,96385345,17720747,98884569,23087070,1557341,12469386,
 	2986553,51852507,44125452,61049315,79531196,89252157,32485271,
 	33698022,73580471,4290468,25090294,45247637,71645243,38148100,
-	55326322,93302695,94145683,76442616,85854214,53027855
+	55326322,93302695,94145683,76442616,85854214,53027855,12213463,
+	26118970
 }
 
 function Card.IsRose(c,fbool)

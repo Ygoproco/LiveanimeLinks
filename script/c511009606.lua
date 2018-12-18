@@ -1,6 +1,7 @@
 --剛鬼ザ・ダークマスク
 --Gouki Dark Mask
 --fixed by Larry126
+--cleaned up by MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsSetCard,0xfc))
@@ -27,9 +28,9 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(2,511009606)
 	e3:SetCode(EVENT_CHAIN_SOLVING)
-	e3:SetCondition(s.condition)
-	e3:SetTarget(s.target)
-	e3:SetOperation(s.operation)
+	e3:SetCondition(s.damcon)
+	e3:SetTarget(s.damtg)
+	e3:SetOperation(s.damop)
 	c:RegisterEffect(e3)
 	--disable spsummon
 	local e4=Effect.CreateEffect(c)
@@ -42,18 +43,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.valcon(e,re,r,rp)
-	return bit.band(r,REASON_BATTLE)~=0 or bit.band(r,REASON_EFFECT)~=0
+	return rREASON_BATTLE+REASON_EFFECT~=0
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.damcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler()==e:GetHandler():GetEquipTarget() and e:GetHandler():GetFlagEffect(1)>0
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(500)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,500)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
