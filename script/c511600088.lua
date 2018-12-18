@@ -77,9 +77,7 @@ function c511600088.activate(e,tp,eg,ep,ev,re,r,rp)
 	local cg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local ct=#cg
 	local sg=Duel.GetMatchingGroup(c511600088.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp,cg)
-	Debug.Message(sg:GetCount())
 	if Duel.GetLocationCountFromEx(tp)<ct or not aux.SelectUnselectGroup(sg,e,tp,ct,ct,c511600088.rescon2(cg),0) then return end
-	Debug.Message('huh?')
 	local spg=aux.SelectUnselectGroup(sg,e,tp,ct,ct,c511600088.rescon2(cg),1,tp,HINTMSG_SPSUMMON)
 	Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
 end
