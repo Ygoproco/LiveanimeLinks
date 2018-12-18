@@ -50,9 +50,11 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,LOCATION_SZONE)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local tg=Duel.SelectMatchingCard(tp,s.sfilter,tp,LOCATION_SZONE,LOCATION_SZONE,2,2,nil)
-	if #tg>1 then
+	local g=Duel.GetMatchingGroup(s.sfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+	if #g>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local tg=g:Select(tp,2,2,nil)
+		Duel.HintSelection(tg)
 		Duel.Destroy(tg,REASON_EFFECT)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -71,9 +73,9 @@ end
 function s.actlimit(e,te,tp)
 	return te:IsHasType(EFFECT_TYPE_ACTIVATE) and te:IsActiveType(TYPE_SPELL+TYPE_TRAP)
 end
-function s.filter(c,p)
+function s.filter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:GetLink()>2
-		and c:IsSummonType(SUMMON_TYPE_LINK) and not c:IsControler(p)
+		and c:IsSummonType(SUMMON_TYPE_LINK) and c:IsControler(1-tp)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.filter,1,nil,tp)
@@ -91,7 +93,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsSSetable() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsSSetable() then
 		Duel.SSet(tp,tc)
 		Duel.ConfirmCards(1-tp,tc)
 		local e1=Effect.CreateEffect(e:GetHandler())

@@ -1,9 +1,9 @@
 --ツイン・ハイドライブ・ナイト
 --Twin Hydradrive Knight
---fixed by Larry126
+--fixed by Larry126 and MLD
 function c511009716.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,c511009716.mfilter,2)
+	aux.AddLinkProcedure(c,c511009716.mfilter,2,2)
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +11,7 @@ function c511009716.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCondition(c511009716.attcon)
 	e1:SetTarget(c511009716.atttg)
 	e1:SetOperation(c511009716.attop)
@@ -50,9 +50,9 @@ function c511009716.attop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	local att=0
-	for tc in aux.Next(g) do
+	g:ForEach(function(tc)
 		att=att|tc:GetAttribute()
-	end
+	end)
 	if c:IsFaceup() and c:IsRelateToEffect(e) and att>0 and att~=c:GetAttribute() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTRIBUTE)
 		local e1=Effect.CreateEffect(c)

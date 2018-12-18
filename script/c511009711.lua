@@ -1,6 +1,6 @@
 --フロー・ハイドライブ
 --Flow Hydradrive
---fixed by Larry126
+--fixed by Larry126 and MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -42,20 +42,21 @@ function s.spfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.dacon(e)
-	return  Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.spfilter,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil)
 end
 function s.tkcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
+	return r&REASON_EFFECT+REASON_BATTLE~=0
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009710,0x577,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 end
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009710,0x577,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) then return end
-	local token=Duel.CreateToken(tp,511009710)
-	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009710,0x577,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE) then
+		local token=Duel.CreateToken(tp,511009710)
+		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
 end

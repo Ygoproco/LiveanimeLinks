@@ -1,7 +1,7 @@
 --ダイナレスラー・ギガ・スピノサバット
 --Dinowrestler Giga Spinosavate
 --scripted by pyrQ
---script based on limited information
+--cleaned up by MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -35,21 +35,20 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function s.repfilter(c,e)
-	return c:IsType(TYPE_MONSTER) and c:IsDestructable(e) 
-		and not c:IsStatus(STATUS_DESTROY_CONFIRMED)
+	return c:IsDestructable(e) and not c:IsStatus(STATUS_DESTROY_CONFIRMED)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsOnField() and c:IsFaceup()
-		and Duel.IsExistingMatchingCard(s.repfilter,tp,LOCATION_ONFIELD,0,1,c,e) end
+		and Duel.IsExistingMatchingCard(s.repfilter,tp,LOCATION_MZONE,0,1,c,e) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-		local g=Duel.SelectMatchingCard(tp,s.repfilter,tp,LOCATION_ONFIELD,0,1,1,c,e)
+		local g=Duel.SelectMatchingCard(tp,s.repfilter,tp,LOCATION_MZONE,0,1,1,c,e)
 		Duel.SetTargetCard(g)
 		g:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
 		return true

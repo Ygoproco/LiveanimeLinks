@@ -1,27 +1,24 @@
 --嵐闘機艦バハムートボマー
 --Stormridership Bahamut Bomber
 --Logical Nonsense
-
---Substitue ID
+--cleaned up by MLD
 local s,id=GetID()
-
 function s.initial_effect(c)
-	--Must be properly summoned in order to be revived
+	--link summon
 	c:EnableReviveLimit()
-	--Materials for link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsLinkSetCard,0x580),2)
-	--Destroy opponent's card optional trigger effect
+	--destroy card
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	e1:SetCondition(s.condition)
-	e1:SetTarget(s.target)
-	e1:SetOperation(s.operation)
+	e1:SetCondition(s.spdescon)
+	e1:SetTarget(s.spdestg)
+	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
-	--Destroy opponent's card in S/T zone quick-play effect
+	--Destroy S/T
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
@@ -34,41 +31,31 @@ function s.initial_effect(c)
 	e2:SetOperation(s.desop)
 	c:RegisterEffect(e2)
 end
-	--Defining what zones to look at
 function s.filter(c)
 	return c:GetSequence()<5
 end
-	--No cards in S/T zones
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
+function s.spdescon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_SZONE,0,1,nil)
 end
-	--Activation legality
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.spdestg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,500)
 end
-	--Performing the effect of destroying a card, and then inflicting damage
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		Duel.Damage(1-tp,500,REASON_EFFECT)
-	end
-end
-	--Activation legality
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and s.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_SZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_SZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,500)
 end
-	--Performing the effect of destroying a card in S/T zone, and then inflicting damage
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.Damage(1-tp,500,REASON_EFFECT)
 	end
 end

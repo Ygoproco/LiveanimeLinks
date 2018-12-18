@@ -1,9 +1,9 @@
 --テンタクラスター・ノーチラス
 --Tentacluster Nautilus
---scripted by Larry126
+--scripted by Larry126 and MLD
 function c511600032.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x570),2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x570),3,3)
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)

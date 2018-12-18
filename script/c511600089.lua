@@ -49,18 +49,18 @@ function c511600089.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SendtoGrave(cg,REASON_COST)
 	cg:KeepAlive()
 	e:SetLabelObject(cg)
-	c:RegisterFlagEffect(511600089,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	c:RegisterFlagEffect(511600089,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 end
 function c511600089.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not e:GetLabelObject():IsContains(c) and not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 	end
 end

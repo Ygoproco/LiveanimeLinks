@@ -33,8 +33,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 	e:SetLabelObject(g:GetFirst())
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,3,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -80,7 +80,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				e4:SetRange(LOCATION_MZONE)
 				e4:SetLabelObject(token)
 				e4:SetCondition(s.effcon)
-				e4:SetTarget(s.attg)
+				e4:SetTarget(aux.TargetBoolFunction(s.cfilter))
 				e4:SetValue(1)
 				e4:SetReset(RESET_EVENT+RESETS_STANDARD)
 				oc:RegisterEffect(e4)
@@ -96,7 +96,4 @@ function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.val(e,c)
 	return -Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil):GetSum(Card.GetDefense)
-end
-function s.attg(e,c)
-	return c:IsFaceup() and c:IsCode(511009428)
 end
