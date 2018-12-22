@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.valcon(e,re,r,rp)
-	return rREASON_BATTLE+REASON_EFFECT~=0
+	return r&REASON_BATTLE+REASON_EFFECT~=0
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler()==e:GetHandler():GetEquipTarget() and e:GetHandler():GetFlagEffect(1)>0
