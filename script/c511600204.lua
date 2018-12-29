@@ -21,12 +21,10 @@ function s.initial_effect(c)
 	--atk down
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(alias,1))
-	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetRange(LOCATION_REMOVED)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_REMOVE)
 	e2:SetCondition(s.atkcon)
-	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 	--workaround
@@ -77,12 +75,12 @@ function s.initial_effect(c)
 	local getmatchgc=Duel.GetMatchingGroupCount
 		Duel.GetMatchingGroupCount=function(f,tp,int_s,int_o,ex,...)
 		local arg={...}
-		return #Duel.GetMatchingGroup(f,tp,int_s,int_o,ex,arg)
+		return #Duel.GetMatchingGroup(f,tp,int_s,int_o,ex,table.unpack(arg))
 	end
 	local getfmatch=Duel.GetFirstMatchingCard
 		Duel.GetFirstMatchingCard=function(f,tp,int_s,int_o,ex,...)
 		local arg={...}
-		return Duel.GetMatchingGroup(f,tp,int_s,int_o,ex,arg):GetFirst()
+		return Duel.GetMatchingGroup(f,tp,int_s,int_o,ex,table.unpack(arg)):GetFirst()
 	end
 	local selmatchc=Duel.SelectMatchingCard
 		Duel.SelectMatchingCard=function(sp,f,tp,int_s,int_o,min,max,ex, ...)
@@ -96,7 +94,7 @@ function s.initial_effect(c)
 	local gettgc=Duel.GetTargetCount
 		Duel.GetTargetCount=function(f,tp,int_s,int_o,ex,...)
 		local arg={...}
-		return #Duel.GetTarget(f,tp,int_s,int_o,ex and ClockLizardSubstituteGroup+ex or ClockLizardSubstituteGroup,arg)
+		return gettgc(f,tp,int_s,int_o,ex and ClockLizardSubstituteGroup+ex or ClockLizardSubstituteGroup,table.unpack(arg))
 	end
 	local seltg=Duel.SelectTarget
 		Duel.SelectTarget=function(sp,f,tp,int_s,int_o,min,max,ex, ...)
@@ -223,29 +221,34 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.filter(c,p)
-	return c:IsControler(p) and c:IsFaceup()
-end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetTurnID()==Duel.GetTurnCount()
-end
-function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(s.filter,1,nil,1-tp) end
-	local g=eg:Filter(s.filter,nil,1-tp)
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,g,#g,1-tp,-Duel.GetMatchingGroupCount(Card.IsRace,e:GetOwnerPlayer(),LOCATION_GRAVE,0,nil,RACE_CYBERSE)*400)
+	return e:GetHandler():IsPreviousLocation(LOCATION_GRAVE)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	for tc in aux.Next(g) do
-		local e1=Effect.CreateEffect(e:GetHandler())
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTarget(s.con)
+	e1:SetOperation(s.op)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.filter(c,p)
+	return c:IsControler(p) and c:IsFaceup() and c:IsAttackAbove(1)
+end
+function s.con(e,tp,eg,ep,ev,re,r,rp,chk)
+	return eg:IsExists(s.filter,1,nil,1-tp)
+end
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+	Duel.Hint(HINT_CARD,1-tp,id)
+	local atk=Duel.GetMatchingGroupCount(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_CYBERSE)*400
+	for tc in aux.Next(eg:Filter(s.filter,nil,1-tp)) do
+		local e1=Effect.CreateEffect(e:GetOwner())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(s.val)
+		e1:SetValue(-atk)
 		e1:SetReset(RESET_PHASE+PHASE_END+RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
-end
-function s.val(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsRace,e:GetOwnerPlayer(),LOCATION_GRAVE,0,nil,RACE_CYBERSE)*-400
 end
