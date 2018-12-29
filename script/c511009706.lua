@@ -1,5 +1,6 @@
 -- ヴァレルガード・ドラゴン
 --Borrelguard Dragon (Anime)
+--fixed by MLD
 function c511009706.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_EFFECT),3)
@@ -16,7 +17,6 @@ function c511009706.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(511009706,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(c511009706.spcost)
@@ -47,43 +47,46 @@ function c511009706.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c511009706.spfilter(c,e,tp,tid)
-	return c:GetTurnID()==tid and bit.band(c:GetReason(),REASON_DESTROY)~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetTurnID()==tid and c:GetReason()&REASON_DESTROY~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c511009706.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009706.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tid=Duel.GetTurnCount()
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c511009706.spfilter(chkc,e,tp,tid) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c511009706.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp,tid) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c511009706.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp,tid)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+		and Duel.IsExistingMatchingCard(c511009706.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp,tid) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c511009706.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1,true)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e2,true)
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e3:SetRange(LOCATION_MZONE)
-		e3:SetCode(EVENT_PHASE+PHASE_END)
-		e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e3:SetCountLimit(1)
-		e3:SetCondition(c511009706.descon)
-		e3:SetOperation(c511009706.desop)
-		e3:SetLabelObject(tc)
-		Duel.RegisterEffect(e3,tp)
-		tc:RegisterFlagEffect(511009706,RESET_EVENT+0x1fe0000,0,1)
-		Duel.SpecialSummonComplete()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local tid=Duel.GetTurnCount()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511009706.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp,tid)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.HintSelection(g)
+		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			tc:RegisterEffect(e1,true)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_DISABLE_EFFECT)
+			e2:SetReset(RESET_EVENT+0x1fe0000)
+			tc:RegisterEffect(e2,true)
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e3:SetRange(LOCATION_MZONE)
+			e3:SetCode(EVENT_PHASE+PHASE_END)
+			e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			e3:SetCountLimit(1)
+			e3:SetCondition(c511009706.descon)
+			e3:SetOperation(c511009706.desop)
+			e3:SetLabelObject(tc)
+			Duel.RegisterEffect(e3,tp)
+			tc:RegisterFlagEffect(511009706,RESET_EVENT+0x1fe0000,0,1)
+			Duel.SpecialSummonComplete()
+		end
 	end
 end
 function c511009706.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -99,7 +102,7 @@ function c511009706.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(tc,REASON_EFFECT)
 end
 function c511009706.posfilter(c)
-	return c:IsFaceup() and c:IsCanChangePosition() and not c:IsPosition(POS_FACEUP_ATTACK)
+	return c:IsPosition(POS_FACEUP_DEFENSE) and c:IsCanChangePosition()
 end
 function c511009706.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009706.posfilter(chkc) end
@@ -114,7 +117,7 @@ function c511009706.chlimit(e,ep,tp)
 end
 function c511009706.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not tc:IsPosition(POS_FACEUP_ATTACK) then
+	if tc and tc:IsRelateToEffect(e) and not tc:IsAttackPos() then
 		Duel.ChangePosition(tc,POS_FACEUP_ATTACK)
 	end
 end

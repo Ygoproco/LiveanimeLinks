@@ -15,7 +15,7 @@ function c511010053.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e2:SetValue(c511010053.indes)
+	e2:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0x48)))
 	c:RegisterEffect(e2)
 	--equip
 	local e3=Effect.CreateEffect(c)
@@ -87,9 +87,6 @@ end
 c511010053.xyz_number=53
 function c511010053.efilter(e,re)
 	return e:GetHandlerPlayer()~=re:GetHandlerPlayer()
-end
-function c511010053.indes(e,c)
-	return not c:IsSetCard(0x48)
 end
 function c511010053.eqfilter(c)
 	return c:IsType(TYPE_MONSTER) and not c:IsForbidden()

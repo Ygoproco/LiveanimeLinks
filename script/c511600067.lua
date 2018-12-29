@@ -1,6 +1,7 @@
 --トリガー・ヴルム (Anime)
 --Triggering Wurm (Anime)
 --scripted by Larry126
+--cleaned up by MLD
 function c511600067.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -20,7 +21,7 @@ function c511600067.initial_effect(c)
 	e2:SetDescription(aux.Stringid(95504778,1))
 	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetCondition(c511600067.drcon)
 	e2:SetTarget(c511600067.drtg)
@@ -28,7 +29,7 @@ function c511600067.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511600067.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,0x41)==0x41 and re:GetHandler():IsType(TYPE_LINK)
+	return r&0x41==0x41 and re:GetHandler():IsType(TYPE_LINK)
 end
 function c511600067.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -47,7 +48,7 @@ function c511600067.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local zone=re:GetHandler():GetLinkedZone(tp)&0x1f
 	if chk==0 then return zone~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK,tp,zone) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c511600067.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

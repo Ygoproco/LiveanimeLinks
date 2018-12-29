@@ -28,10 +28,10 @@ function c100000532.operation(e,tp,eg,ep,ev,re,r,rp)
 		or g:FilterCount(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)~=ct then return end
 	local c=e:GetHandler()
 	local fid=c:GetFieldID()
-	for tc in aux.Next(g) do
+	g:ForEach(function(tc)
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 		tc:RegisterFlagEffect(100000532,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,fid)
-	end
+	end)
 	Duel.SpecialSummonComplete()
 	g:KeepAlive()
 	local e1=Effect.CreateEffect(c)

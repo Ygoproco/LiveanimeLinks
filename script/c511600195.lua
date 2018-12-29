@@ -1,6 +1,7 @@
 --ミラーコート・ユニット
 --Mirror Coat Unit
 --scripted by Larry126
+--fixed by MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	--equip
@@ -19,8 +20,8 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(s.condition)
-	e2:SetOperation(s.operation)
+	e2:SetCondition(s.ndcon)
+	e2:SetOperation(s.ndop)
 	c:RegisterEffect(e2)
 	--return
 	local e3=Effect.CreateEffect(c)
@@ -37,48 +38,47 @@ end
 function s.refcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetEquipTarget()
 	local bc=tc:GetBattleTarget()
-	return bc and bc:IsLevelBelow(4) and Duel.GetBattleDamage(tp)>0
+	return bc and bc:IsLevelBelow(4) and bc:IsControler(1-tp) and Duel.GetBattleDamage(tp)>0
 end
 function s.refop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(1-tp)+Duel.GetBattleDamage(tp),false)
 	Duel.ChangeBattleDamage(tp,0)
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	local bc=tc:GetBattleTarget()
+function s.ndcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
-	if not bc or Duel.GetBattleDamage(ec:GetControler())<=0 or not (tc==ec or bc==ec) then return false end
-	if ec:IsHasEffect(EFFECT_INDESTRUCTABLE_BATTLE) then
-		local ecind={ec:GetCardEffect(EFFECT_INDESTRUCTABLE_BATTLE)}
-		for i=1,#ecind do
-			local te=ecind[i]
-			local f=te:GetValue()
-			if type(f)=='function' then
-				if f(te,bc) then return false end
-			else return false end
-		end
+	local bc=ec:GetBattleTarget()
+	if not bc or Duel.GetBattleDamage(ec:GetControler())<=0 or not bc then return false end
+	local ecind={ec:GetCardEffect(EFFECT_INDESTRUCTABLE_BATTLE)}
+	for _,te in ipairs(ecind) do
+		local f=te:GetValue()
+		if type(f)=='function' then
+			if f(te,bc) then return false end
+		else return false end
 	end
-	local bd=Group.CreateGroup()
-	if tc:IsPosition(POS_FACEUP_DEFENSE) then
-		if not tc:IsHasEffect(EFFECT_DEFENSE_ATTACK) then return false end
-		if tc:IsHasEffect(75372290) then
-			bd:Merge(bc:IsAttackPos() and (tc:GetAttack()>0 or bc:GetAttack()>0)
-			and (tc:GetAttack()>bc:GetAttack() and Group.FromCards(bc)
-			or bc:GetAttack()>tc:GetAttack() and Group.FromCards(tc) or Group.FromCards(bc,tc))
-			or tc:GetAttack()>bc:GetDefense() and Group.FromCards(bc) or bd)
+	if bc:IsPosition(POS_FACEUP_DEFENSE) and bc==Duel.GetAttacker() then
+		if not bc:IsHasEffect(EFFECT_DEFENSE_ATTACK) then return false end
+		if bc:IsHasEffect(75372290) then
+			if ec:IsAttackPos() then
+				return bc:GetAttack()>0 and bc:GetAttack()>=ec:GetAttack()
+			else
+				return bc:GetAttack()>ec:GetDefense()
+			end
 		else
-			bd:Merge(bc:IsAttackPos() and (tc:GetDefense()>0 or bc:GetDefense()>0)
-			and tc:GetDefense()>=bc:GetAttack() and Group.FromCards(bc)
-			or tc:GetDefense()>bc:GetDefense() and Group.FromCards(bc) or bd)
+			if ec:IsAttackPos() then
+				return bc:GetDefense()>0 and bc:GetDefense()>=ec:GetAttack()
+			else
+				return bc:GetDefense()>ec:GetDefense()
+			end
 		end
 	else
-		bd:Merge(bc:IsAttackPos() and (tc:GetAttack()>0 or bc:GetAttack()>0) and (tc:GetAttack()>bc:GetAttack() and Group.FromCards(bc)
-		or bc:GetAttack()>tc:GetAttack() and Group.FromCards(tc) or Group.FromCards(bc,tc))
-		or tc:GetAttack()>bc:GetDefense() and Group.FromCards(bc) or bd)
+		if ec:IsAttackPos() then
+			return bc:GetAttack()>0 and bc:GetAttack()>=ec:GetAttack()
+		else
+			return bc:GetAttack()>ec:GetDefense()
+		end
 	end
-	return bd:IsContains(ec)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
+function s.ndop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not Duel.SelectEffectYesNo(tp,c) then return end
 	--no damage

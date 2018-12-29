@@ -1,7 +1,7 @@
 --Gouki The Blade Ogre
 function c511009017.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0xfc),2)
+	aux.AddLinkProcedure(c,c511009017.matfilter,2)
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
@@ -21,7 +21,9 @@ function c511009017.initial_effect(c)
 	e2:SetTarget(c511009017.atktg)
 	e2:SetOperation(c511009017.atkop)
 	c:RegisterEffect(e2)
-	
+end
+function c511009017.matfilter(c)
+	return c:IsLinkSetCard(0xfc)
 end
 function c511009017.atkval(e,c)
 	return c:GetLinkedGroupCount()*300
@@ -49,7 +51,7 @@ function c511009017.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_EXTRA_ATTACK)
 		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 	end
 end

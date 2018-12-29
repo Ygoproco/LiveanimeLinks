@@ -1,6 +1,7 @@
 --ドローン・バリケード
 --Drone Barricade
 --scripted by Larry126
+--cleaned up by MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	--activate
@@ -32,7 +33,7 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1,id)
 	e4:SetCondition(s.condition)
-	e4:SetCost(s.cost)
+	e4:SetCost(aux.bfgcost)
 	e4:SetTarget(s.target)
 	e4:SetOperation(s.operation)
 	c:RegisterEffect(e4)
@@ -50,10 +51,6 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	if rp==tp or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	return tg:IsContains(e:GetHandler()) and e:GetHandler():IsFaceup()
-end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>-1

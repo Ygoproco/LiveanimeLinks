@@ -1,6 +1,6 @@
 --転生炎獣の聖域
 --Salamangreat Sanctuary
---fixed by Larry126
+--fixed by Larry126 and MLD
 local s,id,alias=GetID()
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
@@ -33,6 +33,7 @@ function s.initial_effect(c)
 	e4:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_RECOVER)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1,alias)
 	e4:SetCondition(s.condition)
@@ -78,7 +79,8 @@ function s.mattg(e,c)
 	return c:IsSetCard(0x119) and c:IsType(TYPE_LINK)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetBattleDamage(tp)>0 and (Duel.GetAttacker():IsSetCard(0x119) or Duel.GetAttackTarget():IsSetCard(0x119))
+	local d=Duel.GetAttackTarget()
+	return Duel.GetBattleDamage(tp)>0 and (Duel.GetAttacker():IsSetCard(0x119) or (d and d:IsSetCard(0x119)))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
@@ -92,14 +94,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local tg=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,tg:GetFirst(),1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,tg:GetFirst():GetAttack())
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and aux.nzatk(tc) and tc:IsRelateToEffect(e) then
-		local atk=tc:GetAttack()
+	if c:IsRelateToEffect(e) and aux.nzatk(tc) and tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -107,7 +107,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 		if not tc:IsImmuneToEffect(e1) and tc:GetAttack()==0 then
-			Duel.Recover(tp,atk,REASON_EFFECT)
+			Duel.Recover(tp,tc:GetBaseAttack(),REASON_EFFECT)
 		end
 	end
 end

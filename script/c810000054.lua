@@ -2,6 +2,7 @@
 -- Black Wing
 -- scripted by: UnknownGuest
 -- rescripted by Larry126
+--updated by MLD
 function c810000054.initial_effect(c)
 	-- Activate
 	local e1=Effect.CreateEffect(c)
@@ -79,15 +80,18 @@ function c810000054.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
 function c810000054.desop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingMatchingCard(c810000054.desfilter,tp,LOCATION_MZONE,0,1,nil) then
+	local g1=Duel.GetMatchingGroup(c810000054.desfilter,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	if g1:GetCount()>0 and g2:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
-		local g=Duel.SelectMatchingCard(tp,c810000054.desfilter,tp,LOCATION_MZONE,0,1,1,nil)
+		local sg1=g1:Select(tp,1,1,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
-		local tc=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
+		local sg2=g2:Select(tp,1,1,nil)
+		local tc=sg2:GetFirst()
 		local dam=tc:GetAttack()
+		sg1:Merge(sg2)
 		if dam<0 or tc:IsFacedown() then dam=0 end
-		if Duel.Destroy(g+tc,REASON_EFFECT)>0 and Duel.GetOperatedGroup():IsContains(tc) then
+		if Duel.Destroy(sg1,REASON_EFFECT)>0 and Duel.GetOperatedGroup():IsContains(tc) then
 			Duel.Damage(1-tp,dam,REASON_EFFECT)
 		end
 	end

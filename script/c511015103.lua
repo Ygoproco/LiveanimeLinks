@@ -25,9 +25,10 @@ function c511015103.xyzfilter(c,sg,e)
 		e1:SetCode(511002116)
 		e1:SetReset(RESET_CHAIN)
 		mc:RegisterEffect(e1)
+		sg:AddCard(mc)
 	end
 	local res=c:IsXyzSummonable(sg,ct,ct)
-	if e1 then e1:Reset() end
+	if e1 then e1:Reset() sg:RemoveCard(mc) end
 	return res
 end
 function c511015103.rescon(mft,exft,ft)
@@ -79,6 +80,7 @@ function c511015103.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(511002116)
 			e1:SetReset(RESET_CHAIN)
 			c:RegisterEffect(e1)
+			g:AddCard(c)
 		end
 		Duel.XyzSummon(tp,xyz,g)
 	end
@@ -87,7 +89,7 @@ function c511015103.disop(e,tp,eg,ep,ev,re,r,rp,tc)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_DISABLE)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	tc:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_DISABLE_EFFECT)

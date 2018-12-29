@@ -38,11 +38,9 @@ function c511000700.cfilter(c)
 end
 function c511000700.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c511000700.cfilter,nil)
-	local tc=g:GetFirst()
-	while tc do
+	g:ForEach(function(tc)
 		c511000700[tc:GetPreviousControler()]=true
-		tc=g:GetNext()
-	end
+	end)
 end
 function c511000700.clear(e,tp,eg,ep,ev,re,r,rp)
 	c511000700[0]=false
@@ -58,7 +56,7 @@ function c511000700.spfilter(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:GetLevel()>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511000700.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local g=Duel.GetMatchingGroup(c511000700.spfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(c511000700.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_EXTRA) and c511000700.filter(chkc,e,tp,ft,g,pg) end
@@ -77,21 +75,20 @@ function c511000700.activate(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then if ct>1 then return end ct2=math.min(ct2,1) end
 		if ft<ct then return end
 		if ft<ct2 then ct2=ft end
-		local g=Duel.GetMatchingGroup(c511000700.spfilter,tp,LOCATION_GRAVE,0,nil)
+		local g=Duel.GetMatchingGroup(c511000700.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
 		local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
 		local sg=aux.SelectUnselectGroup(g,e,tp,ct,ct2,aux.FilterBoolFunction(Group.Includes,pg),1,tp,HINTMSG_SPSUMMON)
 		if sg:GetCount()<=0 then return end
-		local sc=sg:GetFirst()
-		while sc do
+		sg:ForEach(function(sc)
 			Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CHANGE_LEVEL)
 			e1:SetValue(tc:GetRank())
-			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			sc:RegisterEffect(e1)
 			sc=sg:GetNext()
-		end
+		end)
 		Duel.SpecialSummonComplete()
 		Duel.BreakEffect()
 		tc:SetMaterial(sg)

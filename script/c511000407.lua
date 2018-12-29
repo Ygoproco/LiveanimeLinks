@@ -22,7 +22,7 @@ function c511000407.activate(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		if not re then return end
 		local tpe=c:GetType()
-		if bit.band(tpe,TYPE_FIELD)~=0 then
+		if tpe&TYPE_FIELD~=0 then
 			local fc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
 			if Duel.IsDuelType(DUEL_OBSOLETE_RULING) then
 				if fc then Duel.Destroy(fc,REASON_RULE) end
@@ -62,7 +62,7 @@ function c511000407.activate(e,tp,eg,ep,ev,re,r,rp)
 				return
 			end
 		end
-		if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 then
+		if tpe&TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD==0 then
 			c:CancelToGrave(false)
 		else
 			c:CancelToGrave(true)

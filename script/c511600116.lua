@@ -26,7 +26,7 @@ function c511600116.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511600116.thfilter(c)
-	return (c:GetType()&TYPE_EQUIP+TYPE_SPELL==TYPE_EQUIP+TYPE_SPELL) and c:IsAbleToHand()
+	return c:GetType()&TYPE_EQUIP+TYPE_SPELL==TYPE_EQUIP+TYPE_SPELL and c:IsAbleToHand()
 end
 function c511600116.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511600116.thfilter,tp,LOCATION_DECK,0,1,nil) end

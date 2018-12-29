@@ -1,6 +1,7 @@
 --リンク・プロテクション (Anime)
 --Link Protection (Anime)
 --scripted by Larry126
+--fixed by MLD
 function c511600066.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -13,7 +14,7 @@ function c511600066.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_ATTACK)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(c511600066.atktg)
+	e2:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsType,TYPE_LINK)))
 	c:RegisterEffect(e2)
 	--atk
 	local e3=Effect.CreateEffect(c)
@@ -32,11 +33,9 @@ function c511600066.initial_effect(c)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCost(c511600066.rmcost)
+	e4:SetTarget(c511600066.rmtg)
 	e4:SetOperation(c511600066.rmop)
 	c:RegisterEffect(e4)
-end
-function c511600066.atktg(e,c)
-	return not c:IsType(TYPE_LINK)
 end
 function c511600066.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_LINK)
@@ -50,36 +49,36 @@ end
 function c511600066.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
 		tc:RegisterEffect(e2)
-		--destroy
-		local e3=Effect.CreateEffect(c)
-		e3:SetCategory(CATEGORY_DESTROY)
-		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-		e3:SetCode(EVENT_BATTLED)
-		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e3:SetTarget(c511600066.destg)
-		e3:SetOperation(c511600066.desop)
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_NO_BATTLE_DAMAGE)
 		tc:RegisterEffect(e3)
+		local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e4:SetCode(EVENT_BATTLED)
+		e4:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e4:SetCondition(c511600066.descon)
+		e4:SetOperation(c511600066.desop)
+		tc:RegisterEffect(e4)
 	end
 end
-function c511600066.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511600066.descon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
-	if chk==0 then return e:GetHandler()==Duel.GetAttacker() and tc and tc:IsType(TYPE_LINK) and tc:IsDestructable() end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
-	e:SetLabelObject(tc)
+	return e:GetHandler()==Duel.GetAttacker() and tc and tc:IsControler(1-tp) and tc:IsType(TYPE_LINK)
 end
 function c511600066.desop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() then
+	local tc=Duel.GetAttackTarget()
+	Duel.Hint(HINT_CARD,0,511600066)
+	if tc and tc:IsRelateToBattle() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
@@ -93,19 +92,27 @@ function c511600066.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 		and not Duel.IsPlayerAffectedByEffect(tp,69832741) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local tc=eg:FilterSelect(tp,c511600066.cfilter,1,1,nil,tp):GetFirst()
-	e:SetLabelObject(tc)
 	Duel.Remove(Group.FromCards(c,tc),POS_FACEUP,REASON_COST)
+	e:SetLabel(tc:GetLink())
+end
+function c511600066.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetParam(e:GetLabel())
 end
 function c511600066.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local link=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	local player=tp<<4
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
 	e1:SetTargetRange(0,LOCATION_MZONE)
-	e1:SetLabel(e:GetLabelObject():GetLink())
+	e1:SetLabel(link+player)
 	e1:SetCondition(c511600066.atkcon)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
-function c511600066.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(c511600066.filter,tp,0,LOCATION_MZONE,nil)<e:GetLabel()
+function c511600066.atkcon(e)
+	local link=e:GetLabel()&0xf
+	local p=e:GetLabel()>>4
+	return Duel.GetMatchingGroupCount(c511600066.filter,p,0,LOCATION_MZONE,nil)<link
 end

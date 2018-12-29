@@ -1,10 +1,11 @@
 --バトルドローン・ジェネラル
 --Battledrone General
 --fixed by Larry126
+--cleaned up by MLD
 local s,id=GetID()
 function s.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,s.mfilter,2)
+	aux.AddLinkProcedure(c,function(c) return c:IsDrone() end,2)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(1118)
@@ -19,15 +20,15 @@ function s.initial_effect(c)
 	-- Damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(1122)
-	e2:SetCategory(CATEGORY_RECOVER)
+	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	e2:SetCondition(s.damcon)
 	e2:SetCost(s.damcost)
-	e2:SetTarget(s.dmtg)
-	e2:SetOperation(s.dmgop)
+	e2:SetTarget(s.damtg)
+	e2:SetOperation(s.damop)
 	c:RegisterEffect(e2)
 	--direct atk
 	local e3=Effect.CreateEffect(c)
@@ -40,9 +41,6 @@ function s.initial_effect(c)
 	e3:SetOperation(s.operation)
 	c:RegisterEffect(e3)
 	aux.CallToken(420)
-end
-function s.mfilter(c,lc,sumtype,tp)
-	return c:IsDrone()
 end
 function s.spfilter(c,e,tp,zone)
 	return c:IsDrone() and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
@@ -59,7 +57,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local zone=c:GetLinkedZone(tp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and zone~=0 then
+	if tc and tc:IsRelateToEffect(e) and zone~=0 then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
@@ -75,14 +73,13 @@ function s.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(rc:GetAttack())
 	Duel.Release(rc,REASON_COST)
 end
-function s.dmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(e:GetLabel())
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ev)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,ev)
 end
-function s.dmgop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
@@ -97,7 +94,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DIRECT_ATTACK)

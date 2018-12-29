@@ -42,24 +42,21 @@ function c511310013.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,2,2,nil)
 end
 function c511310013.atkop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsFaceup,nil)
 	if g:GetCount()<=1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(30494314,0))
 	local tc1=g:Select(tp,1,1,nil):GetFirst()
 	local tc2=g:Filter(aux.TRUE,tc1):GetFirst()
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(500)
-	tc1:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	e2:SetValue(-500)
-	tc2:RegisterEffect(e2)
+	if tc1:UpdateAttack(500,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,c)==500 then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_UPDATE_ATTACK)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e2:SetValue(-500)
+		tc2:RegisterEffect(e2)
+	end
 end
 function c511310013.hspcon(e,c)
 	if c==nil then return true end
@@ -93,18 +90,13 @@ function c511310013.atkop2(e,tp,eg,ep,ev,re,r,rp)
 	if not tc1 or tc1:GetFlagEffect(511310013)==0 then return end
 	if tc1:IsControler(tp) and tc1:IsFaceup() then
 		local atk=c:GetAttack()
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(atk)
-		tc1:RegisterEffect(e1)
-		if not tc1:IsImmuneToEffect(e1) and tc2 and tc2:IsControler(1-tp) and tc2:IsFaceup() then
+		if tc1:UpdateAttack(atk,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,c)==atk and tc2 
+			and tc2:IsControler(1-tp) and tc2:IsFaceup() then
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_UPDATE_ATTACK)
 			e2:SetValue(-atk)
-			e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc2:RegisterEffect(e2)
 		end
 	end

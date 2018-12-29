@@ -71,7 +71,7 @@ function c511600000.penop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(pc*500)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 	end
 end
@@ -94,15 +94,9 @@ function c511600000.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c511600000.spfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	local sc=g:GetFirst()
 	local tc=Duel.GetFirstTarget()
-	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local c=e:GetHandler()
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(sc:GetAttack())
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
-		if not tc:IsImmuneToEffect(e1) and c:IsRelateToEffect(e) then
+		if tc:UpdateAttack(sc:GetAttack(),nil,c)==sc:GetAttack() and c:IsRelateToEffect(e) then
 			Duel.BreakEffect()
 			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end

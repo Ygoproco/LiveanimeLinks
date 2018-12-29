@@ -1,8 +1,9 @@
 --RUM－レイド・フォース
+--fixed by MLD
 function c511010505.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(511018511,0))
+	e1:SetDescription(aux.Stringid(58988903,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -12,7 +13,7 @@ function c511010505.initial_effect(c)
 	c:RegisterEffect(e1)
 	--salvage
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(511018511,1))
+	e2:SetDescription(aux.Stringid(45950291,0))
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -58,9 +59,6 @@ function c511010505.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
 	end
-end
-function c511010505.cfilter(c)
-	return c:IsSetCard(0xba) and c:IsAbleToRemoveAsCost()
 end
 function c511010505.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
