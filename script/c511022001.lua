@@ -20,11 +20,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:GetMinGroup(Card.GetLink)
 	local dinlk=sg:GetFirst():GetLink()
 	return
-	not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-	and rp~=tp
-	and re:IsActiveType(TYPE_MONSTER)
-	and re:GetHandler():IsType(TYPE_LINK)
-	and re:GetHandler():GetLink()>=dinlk
+	not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and rp~=tp and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsType(TYPE_LINK) and re:GetHandler():GetLink()>=dinlk
 	and Duel.IsExistingMatchingCard(aux.disfilter1,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
