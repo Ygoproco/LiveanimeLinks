@@ -41,7 +41,7 @@ function s.sumsuc(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.repfilter(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x578) and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) 
-		and not c:IsReason(REASON_REPLACE) and c~=e:GetHandler()
+		and not c:IsReason(REASON_REPLACE+REASON_BATTLE) and c~=e:GetHandler()
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(s.repfilter,1,nil,e,tp) end
