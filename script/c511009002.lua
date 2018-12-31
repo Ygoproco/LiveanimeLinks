@@ -30,7 +30,6 @@ function c511009002.initial_effect(c)
 	e2:SetOperation(c511009002.btop)
 	c:RegisterEffect(e2,false,1)
 end
-c511009002.xyz_number="XX"
 function c511009002.filter(c)
 	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and aux.nzatk(c)
 end
