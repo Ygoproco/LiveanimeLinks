@@ -21,7 +21,7 @@ end
 function c511001611.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local pg=aux.GetMustBeMaterialGroup(tp,Group.CreateGroup(),tp,nil,nil,REASON_XYZ)
-		local mg=Duel.GetMatchingGroup(function(c) return c.xyz_number end,tp,LOCATION_EXTRA,0,nil)
+		local mg=Duel.GetMatchingGroup(function(c) return type(c.xyz_number)=="number" end,tp,LOCATION_EXTRA,0,nil)
 		if #(pg-mg)>0 then return false end
 		return Duel.IsExistingMatchingCard(c511001611.filter,tp,LOCATION_EXTRA,0,1,nil,mg)
 	end
@@ -29,7 +29,7 @@ function c511001611.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001611.checkvalid(c,mg,sg,mg0,cc)
 	Duel.SetSelectedCard((sg+cc)-mg0)
-	return (mg-c):CheckWithSumEqual(function(c)return type(c.xyz_number)=="number" end,c.xyz_number,0,99999)
+	return (mg-c):CheckWithSumEqual(function(c)return c.xyz_number end,c.xyz_number,0,99999)
 end
 function c511001611.activate(e,tp,eg,ep,ev,re,r,rp)
 	local pg=aux.GetMustBeMaterialGroup(tp,Group.CreateGroup(),tp,nil,nil,REASON_XYZ)
