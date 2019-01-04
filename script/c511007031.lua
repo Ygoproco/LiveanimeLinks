@@ -45,9 +45,6 @@ function c511007031.atkval(e,c)
 	end)
 	return 400*atkct
 end
--- function c511007031.ftarget(e,c)
-	-- return c~=e:GetHandler():GetEquipTarget()
--- end
 function c511007031.condition1(e,tp)
 	return Duel.GetTurnPlayer()==tp and Duel.GetAttacker()==e:GetHandler():GetEquipTarget()
 end
