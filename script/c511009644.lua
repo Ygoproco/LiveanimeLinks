@@ -1,94 +1,87 @@
+--ミラーイマジン・カタディオプトリッカー７
 --Mirror Imagine Catadioptricker 7
-function c511009644.initial_effect(c)
+--fixed by Larry126
+local s,id=GetID()
+function s.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
 	--salvage
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(3987233,0))
+	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.operation)
+	c:RegisterEffect(e1)
+	--atk
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(32485518,0))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetDescription(HINTMSG_TARGET)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCost(c511009644.cost)
-	e2:SetTarget(c511009644.target)
-	e2:SetOperation(c511009644.operation)
+	e2:SetCountLimit(1)
+	e2:SetTarget(s.target2)
+	e2:SetOperation(s.operation2)
 	c:RegisterEffect(e2)
-	--atk
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(79185500,0))
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
-	e3:SetTarget(c511009644.target)
-	e3:SetOperation(c511009644.operation)
-	c:RegisterEffect(e3)
 	--atk up
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(20366274,1))
-	e4:SetCategory(CATEGORY_DESTROY)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCode(EVENT_BATTLE_START)
-	e4:SetCondition(c511009644.atkcon)
-	e4:SetOperation(c511009644.atkop)
-	c:RegisterEffect(e4)
-	
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(900787,0))
+	e3:SetCategory(CATEGORY_ATKCHANGE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCode(EVENT_BATTLE_START)
+	e3:SetCondition(s.atkcon)
+	e3:SetOperation(s.atkop)
+	c:RegisterEffect(e3)
 end
-
-function c511009644.spcfilter1(c,tp)
-	return c:IsType(TYPE_SPELL) and Duel.IsExistingMatchingCard(c511009644.spcfilter2,tp,LOCATION_GRAVE,0,2,c,c:GetCode()) and c:IsAbleToHand()
+function s.cfilter(c,tp)
+	return c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
-function c511009644.spcfilter2(c,code)
-	return c:IsType(TYPE_SPELL) and c:IsCode(code) and c:IsAbleToHand()
+function s.sgfilter(sg,e,tp,mg)
+	return sg:GetClassCount(Card.GetCode)==1
 end
-function c511009644.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511009644.spcfilter1(chkc,tp) end
-	if chk==0 then return Duel.IsExistingMatchingCard(c511009644.spcfilter1,tp,LOCATION_GRAVE,0,1,c,tp) end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local mg=Duel.GetMatchingGroup(s.cilfter,tp,LOCATION_GRAVE,0,nil)
+	if chk==0 then return aux.SelectUnselectGroup(mg,e,tp,3,3,s.sgfilter,0) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,3,tp,LOCATION_GRAVE)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local mg=Duel.GetMatchingGroup(s.cilfter,tp,LOCATION_GRAVE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c511009644.spcfilter1,tp,LOCATION_GRAVE,0,1,1,c,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g2=Duel.SelectMatchingCard(tp,c511009644.spcfilter2,tp,LOCATION_GRAVE,0,2,2,g:GetFirst(),g:GetFirst():GetCode())
-	g:Merge(g2)
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
-end
-function c511009644.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if sg:GetCount()>0 then
+	local sg=aux.SelectUnselectGroup(mg,e,tp,3,3,s.sgfilter,1,tp,HINTMSG_ATOHAND)
+	if #sg>0 then
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,sg)
 	end
 end
-
-function c511009644.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+function s.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 end
-function c511009644.operation(e,tp,eg,ep,ev,re,r,rp)
+function s.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		c:SetCardTarget(tc)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,e:GetHandler():GetFieldID())
 	end
 end
-
-
-function c511009644.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return bc and c:GetCardTarget():IsContains(bc)
+	return bc and bc:GetFlagEffectLabel(id)==c:GetFieldID()
 end
-
-function c511009644.atkop(e,tp,eg,ep,ev,re,r,rp)
+function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	if c:IsFaceup() and c:IsRelateToBattle() and bc:IsFaceup() and bc:IsRelateToBattle() then
+	if c:IsFaceup() and c:IsRelateToBattle() and bc and bc:IsFaceup() and bc:IsRelateToBattle()
+		and bc:GetFlagEffectLabel(id)==c:GetFieldID() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(bc:GetAttack())
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 		c:RegisterEffect(e1)
 	end
 end

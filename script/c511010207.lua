@@ -1,21 +1,26 @@
---Number C107: Neo Galaxy-Eyes Tachyon Dragon (Anime)
 --CNo.107 超銀河眼の時空龍 (Anime)
+--Number C107: Neo Galaxy-Eyes Tachyon Dragon (Anime)
 --Scripted By TheOnePharaoh
---fixed by MLD
+--fixed by MLD & Larry126
 function c511010207.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,9,3)
 	c:EnableReviveLimit()
 	--Rank Up Check
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_MATERIAL_CHECK)
+	e0:SetValue(c511010207.valcheck)
+	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCondition(c511010207.rankupregcon)
+	e1:SetLabelObject(e0)
 	e1:SetOperation(c511010207.rankupregop)
 	c:RegisterEffect(e1)
 	--negate
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(799183,0))
+	e2:SetDescription(aux.Stringid(68396121,0))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
@@ -35,6 +40,17 @@ function c511010207.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCode(3682106)
 	c:RegisterEffect(e5)
+	--triple attacks
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(68396121,1))
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCondition(c511010207.atkcon)
+	e6:SetCost(c511010207.atkcost)
+	e6:SetTarget(c511010207.atktg)
+	e6:SetOperation(c511010207.atkop)
+	e6:SetLabelObject(e1)
+	c:RegisterEffect(e6)
 	aux.CallToken(68396121)
 	if not c511010207.global_check then
 		c511010207.global_check=true
@@ -49,10 +65,10 @@ function c511010207.initial_effect(c)
 		ge2:SetCountLimit(1)
 		ge2:SetOperation(c511010207.startop)
 		Duel.RegisterEffect(ge2,0)
-		local ge3=Effect.CreateEffect(c)
 	end
 end
 c511010207.xyz_number=107
+c511010207.listed_names={88177324}
 function c511010207.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if rc then
@@ -61,20 +77,17 @@ function c511010207.checkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511010207.startop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0x7f,0x7f,nil)
-	if g:GetCount()>0 then
-		local tc=g:GetFirst()
-		while tc do
-			tc:RegisterFlagEffect(511010208,RESET_PHASE+PHASE_END,0,1,tc:GetLocation())
-			tc:RegisterFlagEffect(511010209,RESET_PHASE+PHASE_END,0,1,tc:GetControler())
-			tc:RegisterFlagEffect(511010210,RESET_PHASE+PHASE_END,0,1,tc:GetPosition())
-			tc:RegisterFlagEffect(511010211,RESET_PHASE+PHASE_END,0,1,tc:GetSequence())
-			tc=g:GetNext()
-		end
+	for tc in aux.Next(g) do
+		tc:RegisterFlagEffect(511010208,RESET_PHASE+PHASE_END,0,1,tc:GetLocation())
+		tc:RegisterFlagEffect(511010209,RESET_PHASE+PHASE_END,0,1,tc:GetControler())
+		tc:RegisterFlagEffect(511010210,RESET_PHASE+PHASE_END,0,1,tc:GetPosition())
+		tc:RegisterFlagEffect(511010211,RESET_PHASE+PHASE_END,0,1,tc:GetSequence())
 	end
 end
 function c511010207.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	local c=e:GetHandler()
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	c:RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c511010207.filter(c)
 	return c:IsFaceup() and (c:IsLocation(LOCATION_SZONE) or c:IsType(TYPE_EFFECT)) and not c:IsDisabled()
@@ -85,9 +98,8 @@ end
 function c511010207.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local dg=Duel.GetMatchingGroup(aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c)
-	local tc=dg:GetFirst()
 	local nochk=false
-	while tc do
+	for tc in aux.Next(dg) do
 		if not nochk then nochk=true end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -106,11 +118,9 @@ function c511010207.negop(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e3)
 		end
-		tc=dg:GetNext()
 	end
 	local rg=Duel.GetMatchingGroup(c511010207.retfilter,tp,0x7e,0x7e,e:GetHandler())
-	local rc=rg:GetFirst()
-	while rc do
+	for rc in aux.Next(rg) do
 		if not nochk then nochk=true end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -138,48 +148,46 @@ function c511010207.negop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.MoveSequence(rc,rc:GetFlagEffectLabel(511010211))
 			end
 		end
-		rc=rg:GetNext()
 	end
 	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	if sg:GetCount()>0 and (not nochk or Duel.SelectYesNo(tp,551)) then 
+	if sg:GetCount()>0 and (not nochk or Duel.SelectYesNo(tp,aux.Stringid(402568,0))) then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(402568,0))
 		local ssg=sg:Select(tp,1,63,nil)
 		Duel.HintSelection(ssg)
-		local sc=ssg:GetFirst()
-		while sc do
+		for sc in aux.Next(ssg) do
 			local e3=Effect.CreateEffect(c)
 			e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 			e3:SetType(EFFECT_TYPE_SINGLE)
 			e3:SetCode(EFFECT_CANNOT_TRIGGER)
 			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			sc:RegisterEffect(e3)
-			sc=ssg:GetNext()
 		end
 	end
 end
 function c511010207.rumfilter(c)
 	return c:IsCode(88177324) and not c:IsPreviousLocation(LOCATION_OVERLAY)
 end
-function c511010207.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
-	if not re then return false end
-	local rc=re:GetHandler()
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():GetMaterial():IsExists(c511010207.rumfilter,1,nil)
-		and (rc:IsSetCard(0x95) or rc:IsCode(100000581,111011002,511000580,511002068,511002164,93238626))
+function c511010207.valcheck(e,c)
+	local mg=c:GetMaterial()
+	if mg:IsExists(c511010207.rumfilter,1,nil) then
+		e:SetLabel(1)
+	else
+		e:SetLabel(0)
+	end
 end
 function c511010207.rankupregop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(24696097,0))
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(c511010207.atkcon)
-	e1:SetCost(c511010207.atkcost)
-	e1:SetTarget(c511010207.atktg)
-	e1:SetOperation(c511010207.atkop)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e1)
+	local rc=re:GetHandler()
+	if e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95)
+		or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580)
+		or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626))
+		and e:GetLabelObject():GetLabel()==1 then
+		e:SetLabel(1)
+	else
+		e:SetLabel(0)
+	end
 end
 function c511010207.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsAbleToEnterBP()
+	return Duel.IsAbleToEnterBP() and e:GetLabelObject():GetLabel()==1
 end
 function c511010207.rfilter(c)
 	return c:GetAttackAnnouncedCount()<=0

@@ -554,9 +554,9 @@ c420.OCGHeavyIndustry={
 }
 function Card.IsHeavyIndustry(c,fbool)
 	if fbool then
-		return c:IsFusionSetCard(0x529) or c:IsFusionCode(table.unpack(c420.IsHeavyIndustry))
+		return c:IsFusionSetCard(0x529) or c:IsFusionCode(table.unpack(c420.OCGHeavyIndustry))
 	else
-		return c:IsSetCard(0x529) or c:IsCode(table.unpack(c420.IsHeavyIndustry))
+		return c:IsSetCard(0x529) or c:IsCode(table.unpack(c420.OCGHeavyIndustry))
 	end
 end
 
@@ -821,7 +821,7 @@ end
 -- F.A. Circuit Grand Prix/Ancient Lamp/Mystic Lamp
 -- Lord of the Lamp/ La Jinn the Mystical Genie of the Lamp
 c420.OCGLamp={
-	54912977,97590747,98049915,	39838559,99510761,91584698,
+	54912977,97590747,98049915, 39838559,99510761,91584698,
 	42002073,63545455
 }
 function Card.IsLamp(c,fbool)
@@ -1103,12 +1103,14 @@ end
 -- Rose Spectre of dunn/Black Rose Moonlight Dragon/Black Rose Dragon/Splendid Rose
 -- Rose Bud/Mark of the rose/rose token/Aromaseraphy Rosemary
 -- Crystron Rosenix/Kozmoll Wickedwitch/HERO's Bond/Windrose the Elemental Lord
+-- White Rose Dragon/Red Rose Dragon
 c420.OCGRose={
 	49674183,96470883,31986288,41160533,51085303,41201555,75252099,
 	58569561,96385345,17720747,98884569,23087070,1557341,12469386,
 	2986553,51852507,44125452,61049315,79531196,89252157,32485271,
 	33698022,73580471,4290468,25090294,45247637,71645243,38148100,
-	55326322,93302695,94145683,76442616,85854214,53027855
+	55326322,93302695,94145683,76442616,85854214,53027855,12213463,
+	26118970
 }
 
 function Card.IsRose(c,fbool)
@@ -1288,9 +1290,9 @@ end
 --- Blue-Eyes Spirit Dragon
 function Card.IsSpirit(c,fbool)
 	if fbool then
- 		return (c:IsFusionSetCard(0x54e) or c:IsFusionCode(59822133))
+		return (c:IsFusionSetCard(0x54e) or c:IsFusionCode(59822133))
 	else
-	 	return (c:IsSetCard(0x54e) or c:IsCode(59822133))
+		return (c:IsSetCard(0x54e) or c:IsCode(59822133))
 	end
 end
 
@@ -1424,10 +1426,10 @@ end
 --W
 -- Arcana Force XXI - The World/VW-Tiger Catapult/VWXYZ-Dragon Catapult Cannon
 -- Malefic Claw Stream/Malefic World/Earthbound Immortal Wiraqocha Rasca/
--- W Nebula Meteorite
+-- W Nebula Meteorite/Ride of the Valkyries
 c420.OCGW={
 	23846921,41181774,27564031,90075978,96300057,58859575,
-	84243274
+	84243274,65687442
 	--Windwitch/ ZW
 }
 
@@ -1531,7 +1533,7 @@ end
 -- Yubel (archetype) ユベル
 c420.OCGYubel={
 	-- Yubel, Yubel terror, Yubel nighmare
-	78371393,4779091,78371393
+	78371393,4779091,31764700
 }
 function Card.IsYubel(c,fbool)
 	if fbool then
@@ -1610,9 +1612,9 @@ c420.OCGMonarch={
 04591250,62188962,40473581,56907389
 }
 function Card.IsMonarch(c,fbool)
-    if fbool then
-        return c:IsFusionSetCard(0x571) or c:IsFusionSetCard(0xbe) or c:IsFusionCode(table.unpack(c420.OCGMonarch))
-    else
-        return c:IsSetCard(0x571) or c:IsSetCard(0xbe) or c:IsCode(table.unpack(c420.OCGMonarch))
-    end
+	if fbool then
+		return c:IsFusionSetCard(0x571) or c:IsFusionSetCard(0xbe) or c:IsFusionCode(table.unpack(c420.OCGMonarch))
+	else
+		return c:IsSetCard(0x571) or c:IsSetCard(0xbe) or c:IsCode(table.unpack(c420.OCGMonarch))
+	end
 end

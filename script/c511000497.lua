@@ -39,28 +39,12 @@ function c511000497.initial_effect(c)
 	e5:SetTarget(c511000497.target)
 	e5:SetOperation(c511000497.operation)
 	c:RegisterEffect(e5)
-	if not c511000497.global_check then
-		c511000497.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511000497.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	aux.CallToken(420)
 end
 c511000497.listed_names={89943723,78371393}
 c511000497.material_setcode={0x8,0x3008,0x9,0x561}
-function c511000497.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
-end
 function c511000497.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
+	return st&SUMMON_TYPE_FUSION==SUMMON_TYPE_FUSION
 end
 function c511000497.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local bc=e:GetHandler():GetBattleTarget()

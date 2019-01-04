@@ -1,4 +1,5 @@
 --Ｓｐ－悪魔への貢物
+--Speed Spell - Faustian Bargain
 function c100100026.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -6,17 +7,17 @@ function c100100026.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCondition(c100100026.con)
+	e1:SetCondition(c100100026.condition)
 	e1:SetTarget(c100100026.target)
 	e1:SetOperation(c100100026.activate)
 	c:RegisterEffect(e1)
 end
-function c100100026.con(e,tp,eg,ep,ev,re,r,rp)
+function c100100026.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 	return tc and tc:GetCounter(0x91)>1
 end
 function c100100026.filter(c,ft,tp)
-	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5))
+	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and (ft>0 or (c:GetSequence()<5 and c:IsControler(tp)))
 end
 function c100100026.spfilter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -33,14 +34,12 @@ function c100100026.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c100100026.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.SendtoGrave(tc,REASON_EFFECT)
-		if tc:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,c100100026.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-			if g:GetCount()>0 then
-				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-			end
+	if tc and tc:IsRelateToEffect(e) and Duel.SendtoGrave(tc,REASON_EFFECT)>0 
+		and tc:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,c100100026.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+		if g:GetCount()>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end

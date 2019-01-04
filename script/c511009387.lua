@@ -28,6 +28,7 @@ function c511009387.initial_effect(c)
 	e7:SetOperation(c511009387.penop)
 	c:RegisterEffect(e7)
 end
+c511009387.pendulum_level=7
 function c511009387.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) end

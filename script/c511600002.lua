@@ -24,6 +24,9 @@ function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		return Duel.Win(1-tp,0x60)
 	end
 	if Duel.GetFlagEffect(tp,511600002)==0 and Duel.GetFlagEffect(1-tp,511600002)==0 then
+		if c:IsLocation(LOCATION_DECK+LOCATION_EXTRA+LOCATION_REMOVED) and c:IsFacedown() then
+			Duel.ConfirmCards(tp,c)
+		end
 		Duel.ConfirmCards(1-tp,c)
 		Duel.RegisterFlagEffect(tp,511600002,0,0,0)
 	--limit summon
@@ -108,6 +111,7 @@ function c511600002.ntcon(e,c,minc)
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 ------------------------------------------------------------------------
+--spirit charge
 function c511600002.sptfilter(c)
 	return c:IsType(TYPE_MONSTER+TYPE_TRAPMONSTER+TYPE_TOKEN) and c:IsOnField()
 end
@@ -176,7 +180,7 @@ function c511600002.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam2=0
 	if g:GetCount()<1 then return end
 	local tc=g:GetFirst()
-	while tc do 
+	while tc do
 		local def=tc:GetPreviousDefenseOnField()
 		local atk=tc:GetPreviousAttackOnField()
 		local ctl=tc:GetControler()

@@ -1,5 +1,6 @@
 --Jam Breeding Machine 
 --scripted by GameMaster (GM)
+--fixed by MLD
 function c511002461.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -19,11 +20,12 @@ function c511002461.initial_effect(c)
 	e2:SetOperation(c511002461.spop)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
 	e3:SetCondition(c511002461.descon)
+	e3:SetTarget(c511002461.destg)
 	e3:SetOperation(c511002461.desop)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
@@ -49,12 +51,19 @@ function c511002461.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
 end
-function c511002461.filter1(c,tp)
-	return c:IsFaceup() and c:GetSummonPlayer()==tp and not c:IsSlime()
+function c511002461.filter(c,tp)
+	return c:GetSummonPlayer()==tp and (c:IsFacedown() or not c:IsSlime())
 end
 function c511002461.descon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511002461.filter1,1,nil,tp)
+	return eg:IsExists(c511002461.filter,1,nil,tp)
+end
+function c511002461.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c511002461.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(e:GetHandler(),REASON_RULE)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.Destroy(c,REASON_EFFECT)
+	end
 end

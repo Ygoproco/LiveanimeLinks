@@ -56,6 +56,7 @@ function c100000186.operation(e,tp,eg,ep,ev,re,r,rp)
 			xyz:RegisterEffect(e1)
 			Duel.Overlay(xyz,mg1)
 			Duel.SpecialSummonComplete()	
+			xyz:CompleteProcedure()
 		end
 	end
 end

@@ -132,8 +132,8 @@ end
 --summon without tribute effect
 function c511002621.ntcon(e,c)
 if c==nil then return true end
-if c:IsLevelBelow(5) then return false end
-if c:IsLevelAbove(4) then return true end
+if c:IsLevelBelow(4) then return false end
+if c:IsLevelAbove(5) then return true end
 return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 
 end
 

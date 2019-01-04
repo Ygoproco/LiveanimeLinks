@@ -1,4 +1,6 @@
+--沈黙の魔術師 ＬＶ０
 --Silent Magician LV0
+--fixed by Larry126
 function c511001141.initial_effect(c)
 	--LV/Attack
 	local e1=Effect.CreateEffect(c)

@@ -2,6 +2,7 @@
 --Nirvana High Paladin (Anime)
 --scripted by Larry126
 function c511600082.initial_effect(c)
+	aux.EnablePendulumAttribute(c,false)
 	--synchro summon
 	aux.AddSynchroProcedure(c,nil,1,1,aux.NonTuner(nil),1,99)
 	c:EnableReviveLimit()

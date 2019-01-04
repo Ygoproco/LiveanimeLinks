@@ -1,5 +1,6 @@
 --混沌幻魔アーミタイル (Anime)
 --Armityle the Chaos Phantom (Anime)
+--fixed by Larry126
 function c511000253.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,6007213,32491822,69890967)
@@ -8,6 +9,7 @@ function c511000253.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetValue(function(e,se,sp,st) return se:GetHandler():IsCode(100000365) end)
 	c:RegisterEffect(e1)
 	--Cannot be Destroyed by Battle
 	local e2=Effect.CreateEffect(c)
@@ -17,6 +19,7 @@ function c511000253.initial_effect(c)
 	c:RegisterEffect(e2)
 	--attack
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(6142213,0))
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetCountLimit(1)
@@ -33,6 +36,14 @@ function c511000253.initial_effect(c)
 	e4:SetTarget(c511000253.cttg)
 	e4:SetOperation(c511000253.ctop)
 	c:RegisterEffect(e4)
+	--Dimension Fusion Destruction Special Summon Success
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DAMAGE_STEP)
+	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e5:SetCondition(c511000253.sscon)
+	e5:SetOperation(c511000253.ssop)
+	c:RegisterEffect(e5)
 end
 function c511000253.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -61,7 +72,10 @@ function c511000253.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000253.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.GetControl(c,1-tp) then
+	if not c:IsRelateToEffect(e) or not c:IsControler(tp) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
+	local zone=Duel.SelectDisableField(tp,1,0,LOCATION_MZONE,0)>>16
+	if Duel.GetControl(c,1-tp,0,0,zone) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetCategory(CATEGORY_REMOVE)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -70,7 +84,7 @@ function c511000253.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCountLimit(1)
 		e1:SetTarget(c511000253.furytg)
 		e1:SetOperation(c511000253.furyop)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -87,11 +101,11 @@ function c511000253.ctop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000253.furytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,0,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end
 function c511000253.furyop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,0,e:GetHandler())
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end
 function c511000253.retcon(e,tp,eg,ep,ev,re,r,rp)
@@ -104,8 +118,13 @@ function c511000253.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local p=e:GetLabel()
 	if c:IsControler(p) then
-		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOZONE)
-		local zone=Duel.SelectDisableField(p,1,0,LOCATION_MZONE,0)>>16
-		Duel.GetControl(tc,1-p,0,0,zone)
+		Duel.GetControl(c,1-p,0,0)
+		e:Reset()
 	end
+end
+function c511000253.sscon(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:GetHandler():IsCode(100000365)
+end
+function c511000253.ssop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():CompleteProcedure()
 end
