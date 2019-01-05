@@ -10,12 +10,16 @@ function c511007031.initial_effect(c)
 	c:RegisterEffect(e2)
 	--All your monsters cannot attack, except the equipped monster.
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCode(EFFECT_CANNOT_ATTACK)
-	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(c511007031.ftarget)
+	e3:SetType(EFFECT_TYPE_EQUIP)
+	e3:SetCode(EFFECT_FIRST_ATTACK)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_BATTLE_START)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCondition(c511007031.condition1)
+	e4:SetOperation(c511007031.haltop)
+	c:RegisterEffect(e4)
 end
 function c511007031.atkfilter(c)
 	return c:IsRace(RACE_MACHINE) and (c:IsAttackPos() or (c:IsHasEffect(EFFECT_DEFENSE_ATTACK) and not c:IsDisabled()))
@@ -36,11 +40,21 @@ function c511007031.atkval(e,c)
 			end
 			ex={tc:GetCardEffect(EFFECT_EXTRA_ATTACK_MONSTER)}
 		end
-		if not c:IsAttackable() then atkctad=-1 end
+		if not tc:IsAttackable() then atkctad=-1 end
 		atkct=atkct+atkctad
 	end)
 	return 400*atkct
 end
-function c511007031.ftarget(e,c)
-	return c~=e:GetHandler():GetEquipTarget()
+function c511007031.condition1(e,tp)
+	return Duel.GetTurnPlayer()==tp and Duel.GetAttacker()==e:GetHandler():GetEquipTarget()
+end
+function c511007031.haltop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_DAMAGE_STEP_END)
+	e1:SetOperation(function(e,tp) 
+	Duel.SkipPhase(tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+	end)
+	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	Duel.RegisterEffect(e1,tp)
 end
