@@ -59,6 +59,7 @@ function c511009706.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tid=Duel.GetTurnCount()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local c=e:GetHandler()
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511009706.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp,tid)
 	local tc=g:GetFirst()
 	if tc then
