@@ -1103,14 +1103,14 @@ end
 -- Rose Spectre of dunn/Black Rose Moonlight Dragon/Black Rose Dragon/Splendid Rose
 -- Rose Bud/Mark of the rose/rose token/Aromaseraphy Rosemary
 -- Crystron Rosenix/Kozmoll Wickedwitch/HERO's Bond/Windrose the Elemental Lord
--- White Rose Dragon/Red Rose Dragon
+-- White Rose Dragon/Red Rose Dragon/Rose Bell of Revelation
 c420.OCGRose={
 	49674183,96470883,31986288,41160533,51085303,41201555,75252099,
 	58569561,96385345,17720747,98884569,23087070,1557341,12469386,
 	2986553,51852507,44125452,61049315,79531196,89252157,32485271,
 	33698022,73580471,4290468,25090294,45247637,71645243,38148100,
 	55326322,93302695,94145683,76442616,85854214,53027855,12213463,
-	26118970
+	26118970,80196387
 }
 
 function Card.IsRose(c,fbool)
@@ -1229,14 +1229,14 @@ end
 -- Noble Arms of Destiny/Card of Sanctity/Celestial Wolf Lord, Blue Sirius
 -- Number 9: Dyson Sphere/Number 44: Sky Pegasus/Blustering Winds
 -- Blackwing - Jetstream the Blue Sky/Blackwing - Hillen the Tengu-wind/
--- Ancient Brain/World of Prophecy/Reborn Tengu
+-- Ancient Brain/World of Prophecy/Reborn Tengu/Rose Bell of Revelation
 
 -- Nordic Ascendant/Skyscraper
 c420.OCGSky={
 	49771608,42431843,67443336,32360466,50323155,3072808,87390067,22346472,42664989,54977057,62966332,77998771,
 	77235086,3629090,49010598,54407825,95457011,96570609,92223641,4149689,1637760,39238953,38411870,7452945,
 	97795930,10028593,86327225,27813661,11458071,48453776,74841885,10000020,41589166,90122655,95352218,23587624,
-	29146185,37910722,32995007,75326861,58601383,1992816,80764541,23085002,32559361,2519690,12171659
+	29146185,37910722,32995007,75326861,58601383,1992816,80764541,23085002,32559361,2519690,12171659,80196387
 }
 function Card.IsSky(c,fbool)
 	if c:IsCelestial(fbool) or c:IsAngel(fbool) then return true end
