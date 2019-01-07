@@ -26,6 +26,6 @@ function c511000182.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(g2,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g2)
 			Duel.ShuffleHand(tp)
-		else Duel.SendtoGrave(g,REASON_EFFECT) end
+		else Duel.SendtoGrave(g,REASON_EFFECT+REASON_REVEAL) end
 	end
 end
