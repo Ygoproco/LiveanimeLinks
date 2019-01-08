@@ -19,7 +19,7 @@ function s.filter1(c,e,tp)
 	return (c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
 		or (c:IsLocation(LOCATION_GRAVE|LOCATION_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 		and ((c:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE) > 0)
-		or (c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp) > 0)))
+		or (c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c) > 0)))
 end
 function s.filter2(c,e,tp,mc,rk)
 	return (c:IsSetCard(0x1048) or c:IsSetCard(0x1073) or c:IsCode(511000296)) and mc:IsCanBeXyzMaterial(c) and c:IsRank(rk)
