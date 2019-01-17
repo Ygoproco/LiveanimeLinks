@@ -36,7 +36,7 @@ function c511009675.initial_effect(c)
     --destroy
     local e4=Effect.CreateEffect(c)
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e4:SetRange(LOCATION_MZONE)
+    e4:SetRange(LOCATION_SZONE)
     e4:SetCode(EVENT_LEAVE_FIELD)
     e4:SetCondition(c511009675.sdescon)
     e4:SetOperation(c511009675.sdesop)
