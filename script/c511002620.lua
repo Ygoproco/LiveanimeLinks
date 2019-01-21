@@ -1,4 +1,4 @@
---Underworld Resonance - Synchro Fusion
+--Harmonic Synchro Fusion
 function c511002620.initial_effect(c)
 	--synchro effect
 	local e1=Effect.CreateEffect(c)
@@ -39,7 +39,7 @@ function c511002620.rescon(fc,sc,fe)
 					t[tc]=e1
 					tc=sg:GetNext()
 				end
-				local res=fc:CheckFusionMaterial(sg,sg) and sc:IsSynchroSummonable(nil,sg) and Duel.GetLocationCountFromEx(tp,tp,sg)>1
+				local res=fc:CheckFusionMaterial(sg,nil,sg) and sc:IsSynchroSummonable(nil,sg) and Duel.GetLocationCountFromEx(tp,tp,sg)>1
 				tc=sg:GetFirst()
 				while tc do
 					t[tc]:Reset()
