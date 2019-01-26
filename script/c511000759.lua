@@ -1,3 +1,4 @@
+--インスタント・チューン
 --Instant Tune
 function c511000759.initial_effect(c)
 	--Activate
@@ -28,7 +29,7 @@ function c511000759.initial_effect(c)
 end
 function c511000759.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(Card.IsControler,1,nil,1-tp) then
-		c511000759[tc:GetControler()]=true
+		c511000759[eg:GetFirst():GetControler()]=true
 	end
 end
 function c511000759.clear(e,tp,eg,ep,ev,re,r,rp)
@@ -43,6 +44,7 @@ function c511000759.filter(c,e,tp)
 		and Duel.IsExistingMatchingCard(c511000759.matfilter,tp,LOCATION_MZONE,0,1,nil,e:GetHandler(),c)
 end
 function c511000759.matfilter(c,mc,sc)
+	if not c:IsFaceup() then return end
 	local g=Group.FromCards(c,mc)
 	local e1=Effect.CreateEffect(mc)
 	e1:SetType(EFFECT_TYPE_SINGLE)

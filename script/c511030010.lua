@@ -1,64 +1,52 @@
---ダイナレスラー・キメラ・Ｔレッスル
---Dinowrestler Chimera T Wrextle
+--天装騎兵スクトゥム
+--Armatos Legio Scutum
 --scripted by pyrQ
---script based on limited information
 local s,id=GetID()
 function s.initial_effect(c)
-	--fusion material
-	c:EnableReviveLimit()
-	aux.AddFusionProcMixN(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x11a),2)
-	--piercing
+	--battle protection
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_PIERCE)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(s.indtg)
+	e1:SetValue(s.indval1)
 	c:RegisterEffect(e1)
-	--atk up
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_BATTLE_DESTROYING)
-	e2:SetCondition(s.atkcon)
-	e2:SetOperation(s.atkop)
+	--effect protection
+	local e2=e1:Clone()
+	e2:SetValue(s.indval2)
 	c:RegisterEffect(e2)
-	--destroy
+	--cannot select attack, except linked
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCondition(s.descon)
-	e3:SetTarget(s.destg)
-	e3:SetOperation(s.desop)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	e3:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e3:SetCondition(s.atkcon)
+	e3:SetValue(s.atklimit)
 	c:RegisterEffect(e3)
 end
-s.material_setcode=0x11a
-function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsFaceup() and e:GetHandler():IsRelateToBattle()
+function s.indtg(e,c)
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0x578) and c:IsFaceup() and c:IsControler(tp)
+		and (e:GetHandler():GetLinkedGroup():IsContains(c) or c:GetLinkedGroup():IsContains(e:GetHandler()))
 end
-function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToBattle() then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(500)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
-		c:RegisterEffect(e1)
-	end
+function s.indval1(e,re,r,rp)
+	if r&REASON_BATTLE~=0 then
+		return 1
+	else return 0 end
 end
-function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetReason()&REASON_DESTROY+REASON_EFFECT==REASON_DESTROY+REASON_EFFECT
+function s.indval2(e,re,r,rp)
+	if r&REASON_EFFECT~=0 then
+		return 1
+	else return 0 end
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(Card.IsAttackPos,tp,0,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+function s.atkfilter(c,e)
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0x578) and c:IsFaceup() and c:IsControler(tp)
+		and (e:GetHandler():GetLinkedGroup():IsContains(c) or c:GetLinkedGroup():IsContains(e:GetHandler()))
 end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsAttackPos,tp,0,LOCATION_MZONE,nil)
-	if g:GetCount()>0 then
-		Duel.Destroy(g,REASON_EFFECT)
-	end
+function s.atkcon(e)
+	return Duel.IsExistingMatchingCard(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil,e)
+end
+function s.atklimit(e,c)
+	return not s.atkfilter(c,e)
 end
