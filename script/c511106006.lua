@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--change pos
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -51,7 +51,7 @@ function s.poscon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.posfilter(c)
-	return c:IsType(TYPE_MONSTER) and not c:IsPosition(POS_FACEUP_DEFENSE)
+	return c:IsType(TYPE_MONSTER) and c:GetSequence()<=4 and not c:IsPosition(POS_FACEUP_DEFENSE)
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.posfilter(chkc) end
@@ -67,13 +67,14 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,3)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetCondition(s.relcon)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetRange(LOCATION_MZONE)
 		e2:SetCode(EFFECT_CHANGE_RACE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e2:SetValue(RACE_INSECT)
 		tc:RegisterEffect(e2)
 		local e3=Effect.CreateEffect(e:GetHandler())
@@ -84,7 +85,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 		local e4=e3:Clone()
 		e4:SetCode(EFFECT_DISABLE_EFFECT)
 		tc:RegisterEffect(e4)
-		tc	:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000,0,1)
+		tc:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000,0,1)
 		end
 	end
 end
@@ -111,25 +112,34 @@ function s.costfilter(c)
 	return c:IsRace(RACE_INSECT) 
 end
 function s.cos(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,s.costfilter,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,s.costfilter,1,1,nil)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.costfilter,1,false,false,nil) end
+	local g=Duel.SelectReleaseGroupCost(tp,s.costfilter,1,1,false,false,nil)
 	Duel.Release(g,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>1
+	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) end
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	local tk=2
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then tk=1 end
+		Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,tk,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,tk,0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	if Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<2 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) then return end
-	local tk=0
-	while tk<2 do
+	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
+	if ft<=0
+		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp)
+		then return end
+	Duel.BreakEffect()
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft~=1 then
+		local ct = {}
+		for i=1,math.min(ft,2) do
+			ct[#ct+1]=i
+		end
+		ft=Duel.AnnounceNumber(tp,table.unpack(ct))
+	end
+	for i=1,ft do
 		local token=Duel.CreateToken(tp,511009659)
 		Duel.SpecialSummon(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
-		tk=tk+1
 	end
 end
