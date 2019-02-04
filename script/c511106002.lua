@@ -17,7 +17,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c,e,tp)
-	return c:IsSetCard(0x577) and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x577) and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetCode())
+end
+function s.thfilter(c,e,tp,code)
+	return c:IsCode(code) and c:IsAbleToHand()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
@@ -30,16 +33,18 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local code=tc:GetCode()
-	if tc and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and 	Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_DECK,0,1,nil,code) then
+	if tc and tc:IsRelateToEffect(e) then 
+	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and 	Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,tc:GetCode()) then
 	 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOHAND)
-	 	local tg=Duel.SelectMatchingCard(tp,Card.IsCode,tp,LOCATION_DECK,0,1,1,nil,code)
+	 	local tg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,tc:GetCode())
 	 	if tg:GetCount()>0 then
 	 	Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tg)
 		end
 	end
+end
 end
