@@ -42,6 +42,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.CheckReleaseGroup(tp,s.tfilter,1,nil) then
 	local tr=Duel.SelectReleaseGroup(tp,s.tfilter,1,1,nil)
 	if Duel.Release(tr,REASON_EFFECT)~=0 then 
+	if tc:IsRelateToEffect(e) then
 	if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then 
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -61,6 +62,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetCountLimit(1)
 			tc:RegisterEffect(e2,true)
 			Duel.SpecialSummonComplete()
+			end
 			end
 		end
 	end
