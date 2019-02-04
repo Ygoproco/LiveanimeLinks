@@ -126,10 +126,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
-	if ft<=0
-		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp)
-		then return end
-	Duel.BreakEffect()
+	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) then return end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if ft~=1 then
 		local ct = {}
