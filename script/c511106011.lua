@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c,e,tp)
-	return  c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (c:IsCode(27660735,16725505) or c:IsSetCard(0x514))
+	return c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsDice()
 end
 function s.cfilter(c)
 	return c:IsType(TYPE_SYNCHRO)
