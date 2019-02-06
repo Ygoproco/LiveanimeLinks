@@ -47,10 +47,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.exfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		if Duel.SendtoDeck(g,tp,0,REASON_EFFECT)~=0 then
-			if Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-				if g:GetCount()==1 then
-					local dr=g:GetFirst():GetLink()
-						if Duel.IsPlayerCanDraw(tp,dr) then
+			if g:GetCount()==1 then
+				local dr=g:GetFirst():GetLink()
+				if Duel.IsPlayerCanDraw(tp,dr) then
+					if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 						Duel.BreakEffect()
 						Duel.Draw(tp,dr,REASON_EFFECT)
 					end
@@ -58,23 +58,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 			if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) and 
 			Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and 
-			Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 				if sg:GetCount()>0 then
 					Duel.BreakEffect()
 					if Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)~=0 then
 						local sp=sg:GetFirst()
-						while sp do
-							local e1=Effect.CreateEffect(e:GetHandler())
-							e1:SetType(EFFECT_TYPE_SINGLE)
-							e1:SetCode(EFFECT_SET_ATTACK)
-							e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-							e1:SetValue(0)
-							e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-							sp:RegisterEffect(e1,true)
-							sp=sg:GetNext()
-						end
+						local e1=Effect.CreateEffect(e:GetHandler())
+						e1:SetType(EFFECT_TYPE_SINGLE)
+						e1:SetCode(EFFECT_SET_ATTACK)
+						e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+						e1:SetValue(0)
+						e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+						sp:RegisterEffect(e1,true)
 					end
 				end
 			end
