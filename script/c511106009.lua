@@ -23,6 +23,9 @@ end
 function s.filter3(c)
 	return c:IsCanBeFusionMaterial()
 end
+function s.condition(e,tp,eg,ep,ev,re,r,rp,chk)
+	return Duel.GetTurnPlayer()==1-tp
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
