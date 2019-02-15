@@ -86,7 +86,7 @@ function s.tkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,400) end
 	Duel.PayLPCost(tp,400)
 	Duel.Hint(HINT_SELECTMSG,tp,563)
-	local aat=Duel.AnnounceAttribute(tp,1,0xff)
+	local aat=Duel.AnnounceAttribute(tp,1,0xf)
 	e:SetLabel(aat)
 end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk)
