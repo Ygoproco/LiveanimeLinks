@@ -1,6 +1,7 @@
 --Destiny HERO - Dreamguy
 --fixed by MLD
-function c511004407.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
@@ -8,33 +9,33 @@ function c511004407.initial_effect(c)
 	e1:SetCode(EVENT_BATTLE_START)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCountLimit(1)
-	e1:SetCondition(c511004407.con)
-	e1:SetTarget(c511004407.tg)
-	e1:SetOperation(c511004407.op)
+	e1:SetCondition(s.con)
+	e1:SetTarget(s.tg)
+	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 end
-function c511004407.con(e,tp,eg,ev,ep,re,r,rp)
+function s.con(e,tp,eg,ev,ep,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if not d then return false end
 	if d and d:IsControler(1-tp) then
 		a,d=d,a
 	end
-	e:SetLabelObject(d)
+	e:SetLabelObject(a)
 	return a:IsControler(1-tp) and d:IsSetCard(0xc008) and d:IsControler(tp)
 end
-function c511004407.tg(e,tp,eg,ev,ep,re,r,rp,chk)
+function s.tg(e,tp,eg,ev,ep,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-		and c:IsCanBeSpecialSummoned(e,tp,0,tp,false,false) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	local tc=e:GetLabelObject()
 	Duel.SetTargetCard(tc)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c511004407.op(e,tp,eg,ev,ep,re,r,rp)
+function s.op(e,tp,eg,ev,ep,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local bc:GetBattleTarget()
-	if not tc or not bc or not bc:IsRelateToBattle() or not bc:IsSetCard(0xc008) then return end
+	local bc=tc:GetBattleTarget()
+	if not bc or not bc:IsRelateToBattle() or not bc:IsSetCard(0xc008) then return end
 	local c=e:GetHandler()
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
@@ -52,15 +53,14 @@ function c511004407.op(e,tp,eg,ev,ep,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
 	bc:RegisterEffect(e2)
-	if not bc:IsImmuneToEffect(e1) and not bc:IsImmuneToEffect(e2) and c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-		and c:IsCanBeSpecialSummoned(e,tp,0,tp,false,false) then
+	if not bc:IsImmuneToEffect(e1) and not bc:IsImmuneToEffect(e2) and c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0  then
 		Duel.BreakEffect()
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK)>0 then
 			local e4=Effect.CreateEffect(c)
 			e4:SetType(EFFECT_TYPE_SINGLE)
 			e4:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 			e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e4:SetReset(RESET_EVENT+0x47e0000)
+			e4:SetReset(RESET_EVENT+RESETS_REDIRECT)
 			e4:SetValue(LOCATION_REMOVED)
 			c:RegisterEffect(e4,true)
 		end
