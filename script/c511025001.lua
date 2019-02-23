@@ -6,6 +6,7 @@ function c511025001.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCost(c511025001.actcost)
 	e1:SetTarget(c511025001.acttg)
 	e1:SetOperation(c511025001.actop)
 	c:RegisterEffect(e1)
@@ -21,6 +22,10 @@ function c511025001.initial_effect(c)
 	e2:SetTarget(c511025001.atktg)
 	e2:SetOperation(c511025001.atkop)
 	c:RegisterEffect(e2)
+end
+function c511025001.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp, 1000) end
+	Duel.PayLPCost(tp, 1000)
 end
 function c511025001.actfilter(c,tp)
 	return c:IsType(TYPE_TRAP) and c:GetActivateEffect():IsActivatable(1-tp)
@@ -38,7 +43,7 @@ function c511025001.actop(e,tp,eg,ep,ev,re,r,rp)
 		local te=tc:GetActivateEffect()
 		local opt=0
 		if te then
-    	    local con=te:GetCondition()
+			local con=te:GetCondition()
 			local co=te:GetCost()
 			local tg=te:GetTarget()
 			local op=te:GetOperation()
