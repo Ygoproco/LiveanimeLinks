@@ -151,7 +151,7 @@ function c511004014.op(e,tp,eg,ep,ev,re,r,rp)
 		local e11a=e11:Clone()
 		e11a:SetCode(EVENT_BE_MATERIAL)
 		Duel.RegisterEffect(e11a,tp)
-		if Duel.SelectYesNo(tp,aux.Stringid(4013,14)) and Duel.SelectYesNo(tp,aux.Stringid(4013,14)) then
+		if Duel.SelectYesNo(tp,aux.Stringid(4013,14)) and Duel.SelectYesNo(1-tp,aux.Stringid(4013,14)) then
 			Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(4013,15))
 			Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(4013,15))
 			--manga rules
