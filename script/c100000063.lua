@@ -32,7 +32,6 @@ function s.piercecon(e,tp,eg,ep,ev,re,r,rp)
 	return d and a:IsControler(tp) and d:IsDefensePos() and a:IsSetCard(0x3013) and a:IsChainAttackable()
 end
 function s.piercetg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
 	local tc=Duel.GetAttacker()
 	if tc and tc:IsFaceup() and tc:IsRelateToBattle() and tc:IsChainAttackable() then
 		Duel.ChainAttack()
