@@ -77,7 +77,7 @@ function card.spop(e, tp, eg, ep, ev, re, r, rp)
         local ct = Duel.SpecialSummonComplete()
         if ct ~= 0 then
             Duel.BreakEffect()
-            Duel.Draw(ct, REASON_EFFECT)
+            Duel.Draw(tp, ct, REASON_EFFECT)
         end
     end
 end
