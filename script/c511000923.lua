@@ -1,4 +1,5 @@
---Magic Gate of Miracles
+--奇跡のマジック・ゲート (Anime)
+--Magic Gate of Miracles (Anime)
 --updated by Larry126
 function c511000923.initial_effect(c)
 	--Activate
