@@ -1,28 +1,35 @@
+-- オフサイド・トラップ
 -- Offside Trap
 -- scripted by: UnknownGuest
 --fixed by MLD
-function c810000058.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
 	-- Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e1:SetCondition(c810000058.condition)
-	e1:SetTarget(c810000058.target)
-	e1:SetOperation(c810000058.activate)
+	e1:SetCondition(s.condition)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function c810000058.cfilter(c)
+function s.cfilter(c)
 	return c:GetSequence()<5
 end
-function c810000058.condition(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsExistingMatchingCard(c810000058.cfilter,tp,0,LOCATION_SZONE,1,e:GetHandler()) then return false end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_SZONE,0,1,e:GetHandler()) then return false end
 	local tc=Duel.GetAttacker()
 	local bc=tc:GetBattleTarget()
 	if tc:IsControler(1-tp) then
 		tc,bc=bc,tc
 	end
-	if not tc or not bc or tc:IsControler(1-tp) or tc:IsHasEffect(EFFECT_TO_GRAVE_REDIRECT) then return false end
+	if not tc or not bc or tc:IsControler(1-tp)
+		or tc:IsHasEffect(EFFECT_LEAVE_FIELD_REDIRECT) 
+		or tc:IsHasEffect(EFFECT_TO_GRAVE_REDIRECT) 
+		or tc:IsHasEffect(EFFECT_TO_GRAVE_REDIRECT_CB)
+		or bc:IsHasEffect(EFFECT_BATTLE_DESTROY_REDIRECT) 
+		or tc:IsType(TYPE_PENDULUM) then return false end
 	local tcsp={tc:GetCardEffect(EFFECT_SPSUMMON_CONDITION)}
 	for _,te in ipairs(tcsp) do
 		local f=te:GetValue()
@@ -69,13 +76,13 @@ function c810000058.condition(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c810000058.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local tc=e:GetLabelObject()
 	Duel.SetTargetCard(tc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
 end
-function c810000058.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		local e2=Effect.CreateEffect(e:GetHandler())
@@ -83,7 +90,7 @@ function c810000058.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EVENT_DAMAGE_STEP_END)
 		e2:SetReset(RESET_PHASE+PHASE_DAMAGE)
 		e2:SetLabelObject(tc)
-		e2:SetOperation(c810000058.spop)
+		e2:SetOperation(s.spop)
 		Duel.RegisterEffect(e2,tp)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -95,7 +102,7 @@ function c810000058.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(1)
 	Duel.RegisterEffect(e1,tp)
 end
-function c810000058.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tc=e:GetLabelObject()
 	if tc:IsLocation(LOCATION_GRAVE) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
