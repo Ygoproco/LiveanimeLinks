@@ -1,11 +1,12 @@
 --ダイナレスラー・エスクリマメンチ
 --Dinowrestler Eskrimamenchi
 --scripted by pyrQ
-local s,id=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
+	alias = c:GetOriginalCodeRule()
 	--summon with no tribute
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetDescription(aux.Stringid(alias,0))
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SUMMON_PROC)
@@ -13,13 +14,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--ss from grave
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(alias,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,alias)
 	e2:SetCondition(s.condition)
 	e2:SetCost(s.cost)
 	e2:SetTarget(s.target)
