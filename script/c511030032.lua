@@ -22,14 +22,14 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.cfilter(c,e,tp)
 	if c:IsHasEffect(EFFECT_SPSUMMON_CONDITION) then
-        local sc = c:IsHasEffect(EFFECT_SPSUMMON_CONDITION)
-        local v = sc:GetValue()
-        if type(v) == 'function' and not v(sc,e,tp,SUMMON_TYPE_SPECIAL) then
-            return false
-        elseif v == 0 then
-            return false
-        end
-    end
+		local sc = c:IsHasEffect(EFFECT_SPSUMMON_CONDITION)
+		local v = sc:GetValue()
+		if type(v) == 'function' and not v(sc,e,tp,SUMMON_TYPE_SPECIAL) then
+			return false
+		elseif v == 0 then
+			return false
+		end
+	end
 	return c:GetSequence()>=5 and c:IsType(TYPE_LINK) and c:IsAbleToRemove()
 		and Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>0
 		and (not c:IsHasEffect(EFFECT_REVIVE_LIMIT) or c:IsStatus(STATUS_PROC_COMPLETE))
