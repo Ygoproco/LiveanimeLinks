@@ -1,5 +1,5 @@
 --キュービック・ハイドライブ・ロード
---Cubic Hydradrive Lord
+--Cubed Hydradrive Lord
 --scripted by Hatter
 local s,id=GetID()
 function s.initial_effect(c)
@@ -45,7 +45,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.spcheck(g,lc,tp)
-	return g:GetClassCount(Card.GetAttribute,lc,SUMMON_TYPE_LINK,tp)==1
+	return g:CheckSameProperty(Card.GetRace,lc,SUMMON_TYPE_LINK,tp)
 end
 function s.attcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
