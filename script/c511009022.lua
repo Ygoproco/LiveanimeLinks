@@ -48,7 +48,7 @@ function c511009022.econ(e)
 	return e:GetHandler():IsDefensePos()
 end
 function c511009022.efilter(e,c)
-	return c:IsSetCode(0x99)
+	return c:IsSetCard(0x99)
 end
 function c511009022.scfilter(c,tc)
 	return Duel.GetLocationCountFromEx(tp,tp,tc,c)>0 and c:IsSynchroSummonable(tc)
