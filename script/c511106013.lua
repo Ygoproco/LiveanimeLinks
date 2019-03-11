@@ -1,5 +1,5 @@
 --キュービック・ハイドライブ・ロード
---Cubic Hydradrive Lord
+--Cubed Hydradrive Lord
 --scripted by Hatter
 local s,id=GetID()
 function s.initial_effect(c)
@@ -29,12 +29,23 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_BATTLE_DESTROYING)
+	e3:SetCountLimit(1)
 	e3:SetCondition(s.atcon)
 	e3:SetOperation(s.atop)
 	c:RegisterEffect(e3)
+	--draw
+	local e4=Effect.CreateEffect(c)
+	e4:SetCategory(CATEGORY_DRAW)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_BE_MATERIAL)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetCondition(s.drcon)
+	e4:SetTarget(s.drtg)
+	e4:SetOperation(s.drop)
+	c:RegisterEffect(e4)
 end
 function s.spcheck(g,lc,tp)
-	return g:GetClassCount(Card.GetAttribute,lc,SUMMON_TYPE_LINK,tp)==1
+	return g:CheckSameProperty(Card.GetRace,lc,SUMMON_TYPE_LINK,tp)
 end
 function s.attcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
@@ -68,4 +79,17 @@ function s.atcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChainAttack()
+end
+function s.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_LINK
+end
+function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function s.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

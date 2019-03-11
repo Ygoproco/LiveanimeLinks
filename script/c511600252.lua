@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,s.matfilter,1,1)
 	c:EnableReviveLimit()
-	--draw
+	--recycle
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(30194529,0))
 	e1:SetCategory(CATEGORY_TOHAND)
@@ -17,6 +17,39 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
+	if not s.global_check then
+		s.global_check=true
+		--splimit
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
+		ge1:SetCondition(s.sumcon)
+		ge1:SetOperation(s.sumlimit)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function s.spfilter(c)
+	return c:IsCode(id) and c:IsSummonType(SUMMON_TYPE_LINK)
+end
+function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.spfilter,1,nil)
+end
+function s.sumlimit(e,tp,eg,ep,ev,re,r,rp)
+	local sg=eg:Filter(s.spfilter,nil)
+	local c=e:GetHandler()
+	for sc in aux.Next(sg) do
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(s.splimit)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,sc:GetSummonPlayer())
+	end
+end
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsCode(id) and sumtype&SUMMON_TYPE_LINK==SUMMON_TYPE_LINK
 end
 function s.matfilter(c,lc,sumtype,tp)
 	return c:IsLevelBelow(4) and c:IsSetCard(0x582,lc,sumtype,tp)
@@ -25,7 +58,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x582) and c:IsAbleToHand()
+	return c:IsSetCard(0x582) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end

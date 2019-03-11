@@ -58,11 +58,12 @@ function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetTargetCard(e:GetLabelObject())
+	e:GetLabelObject():CreateEffectRelation(e)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
+	local tc=e:GetLabelObject()
 	if tc and tc:IsRelateToEffect(e) and tc:IsRelateToBattle() then
+		tc:ReleaseEffectRelation(e)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)

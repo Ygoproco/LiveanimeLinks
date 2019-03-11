@@ -25,8 +25,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=Duel.GetAttackTarget() and Duel.GetAttackTarget():IsControler(tp) or Duel.GetAttacker()
-	return c and c:IsSetCard(0x582) and c:IsRelateToBattle() and not c:GetBattleTarget():IsControler(tp)
+	local c=Duel.GetAttackTarget()
+	if not c then return false end
+	if not Duel.GetAttackTarget():IsControler(tp) then c=Duel.GetAttacker() end
+	return c:IsSetCard(0x582) and c:IsRelateToBattle() and not c:GetBattleTarget():IsControler(tp)
 end
 function s.cfilter(c)
 	return c:IsSetCard(0x582) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
