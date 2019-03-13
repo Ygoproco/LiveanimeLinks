@@ -112,6 +112,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:CreateEffectRelation(e3)
 	end
 end
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(tp,0)
+end
 function s.speqcon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabelObject() and e:GetLabelObject():IsRelateToEffect(e) then return true
 	else e:Reset() return false end
