@@ -2,6 +2,7 @@
 --Marincess Mandarin
 --scripted by Larry126
 local s,id=GetID()
+local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -16,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x582) and c:IsType(TYPE_LINK) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK) and c:IsType(TYPE_MONSTER)
 end
 function s.spzone(tp,g)
 	local zone=0

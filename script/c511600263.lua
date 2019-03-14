@@ -1,7 +1,8 @@
 --海晶乙女 クラウンテイル
---Marincess Crowntail
+--Marincess Crown Tail
 --scripted by Larry126
 local s,id=GetID()
+local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -28,10 +29,10 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=Duel.GetAttackTarget()
 	if not c then return false end
 	if not Duel.GetAttackTarget():IsControler(tp) then c=Duel.GetAttacker() end
-	return c:IsSetCard(0x582) and c:IsRelateToBattle() and not c:GetBattleTarget():IsControler(tp)
+	return c:IsSetCard(SET_MARINCESS) and c:IsRelateToBattle() and not c:GetBattleTarget():IsControler(tp)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x582) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -74,7 +75,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.filter(c)
-	return c:IsSetCard(0x582) and c:IsType(TYPE_LINK) and c:IsType(TYPE_MONSTER) and c:GetLink()>0
+	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK) and c:IsType(TYPE_MONSTER) and c:GetLink()>0
 end
 function s.damval(e,re,val,r,rp,rc)
 	if r&REASON_BATTLE~=REASON_BATTLE then return val end

@@ -2,6 +2,7 @@
 --Marincess Cascade
 --scripted by Larry126
 local s,id=GetID()
+local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -22,7 +23,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0x582)
+	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(SET_MARINCESS)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
@@ -68,7 +69,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return c:IsSetCard(0x582) and not c:IsType(TYPE_LINK)
+	return c:IsSetCard(SET_MARINCESS) and not c:IsType(TYPE_LINK)
 end
 function s.handcon(e)
 	return Duel.IsExistingMatchingCard(s.filter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
