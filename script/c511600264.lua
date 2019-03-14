@@ -15,12 +15,12 @@ function s.initial_effect(c)
 end
 function s.filter(c,e,tp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
-		and c:IsPreviousSetCard(0x582) and c:GetPreviousTypeOnField()&TYPE_LINK==TYPE_LINK
+		and c:IsPreviousSetCard(0x22b) and c:GetPreviousTypeOnField()&TYPE_LINK==TYPE_LINK
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsCanBeEffectTarget(e) and c:GetLink()
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetLink()) 
 end
 function s.spfilter(c,e,tp,lk)
-	return c:IsSetCard(0x582) and c:IsType(TYPE_LINK) and c:IsLinkBelow(lk)
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_LINK) and c:IsLinkBelow(lk)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

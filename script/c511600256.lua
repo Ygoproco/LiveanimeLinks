@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x582) and c:IsType(TYPE_LINK)
+	return c:IsFaceup() and c:IsSetCard(0x22b) and c:IsType(TYPE_LINK)
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return s.cfilter(eg:GetFirst())
@@ -41,7 +41,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.actfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x582) and c:IsType(TYPE_LINK) and c:IsLinkAbove(3)
+	return c:IsFaceup() and c:IsSetCard(0x22b) and c:IsType(TYPE_LINK) and c:IsLinkAbove(3)
 end
 function s.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.actfilter,tp,LOCATION_MZONE,0,1,nil)

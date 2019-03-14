@@ -1,7 +1,9 @@
 --テッセラクト・ハイドライブ・モナーク
 --Tesseract Hydradrive Monarch
 --scripted by Hatter
+--fixed by Larry126
 local s,id=GetID()
+local cannotAttackEffect=nil
 function s.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
@@ -22,28 +24,51 @@ function s.initial_effect(c)
 	e2:SetTargetRange(0,LOCATION_MZONE)
 	e2:SetTarget(s.distarget)
 	c:RegisterEffect(e2)
-	--to grave
+	--to grave & chain attack
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_TOGRAVE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
 	e3:SetCondition(s.gycon)
 	e3:SetTarget(s.gytg)
 	e3:SetOperation(s.gyop)
 	c:RegisterEffect(e3)
-	--special summon
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,2))
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCost(s.cost)
-	e4:SetTarget(s.target)
-	e4:SetOperation(s.operation)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_DAMAGE_STEP_END)
+	e4:SetOperation(s.atop)
 	c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e5:SetOperation(function() if cannotAttackEffect then cannotAttackEffect:Reset() cannotAttackEffect=nil end end)
+	c:RegisterEffect(e5)
+	--special summon
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(id,2))
+	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetRange(LOCATION_GRAVE)
+	e6:SetCost(s.cost)
+	e6:SetTarget(s.target)
+	e6:SetOperation(s.operation)
+	c:RegisterEffect(e6)
+end
+function s.atop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetAttacker()==c and c:IsRelateToBattle() and c:IsChainAttackable(99,true) then
+		Duel.ChainAttack()
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CANNOT_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCondition(function(e) return not (e:GetHandler():IsHasEffect(EFFECT_EXTRA_ATTACK_MONSTER) or e:GetHandler():IsHasEffect(EFFECT_EXTRA_ATTACK)) end)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+PHASE_BATTLE)
+		c:RegisterEffect(e1)
+		cannotAttackEffect=e1
+	end
 end
 function s.spcheck(g,lc,tp)
 	return g:CheckSameProperty(Card.GetAttribute,lc,SUMMON_TYPE_LINK,tp)
@@ -65,41 +90,26 @@ function s.distarget(e,c)
 	return c:IsAttribute(e:GetHandler():GetAttribute()) and c:IsType(TYPE_EFFECT)
 end
 function s.gycon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE_STEP and Duel.GetCurrentChain()==0
-		and e:GetHandler():GetBattledGroupCount()>0
+	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE_STEP
+		and e:GetHandler():GetBattledGroupCount()>0 and cannotAttackEffect~=nil and cannotAttackEffect:GetCondition()(e)
 end
-function s.gyfilter(c,e)
-	return c:IsAttribute(e:GetHandler():GetAttribute()) and c:IsAbleToGrave()
+function s.gyfilter(c,ec)
+	local ag,da=ec:GetAttackableTarget()
+	return c:IsAttribute(ec:GetAttribute()) and #(ec:GetAttackableTarget()-c)>0
 end
 function s.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.gyfilter,tp,0,LOCATION_MZONE,1,nil,e) end
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(id)==0
+		and Duel.IsExistingMatchingCard(s.gyfilter,tp,0,LOCATION_MZONE,1,nil,c) end
+	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,1-tp,LOCATION_MZONE)
 end
 function s.gyop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(1-tp,s.gyfilter,1-tp,LOCATION_MZONE,0,1,1,nil,e)
-	if g:GetCount()>0 then
-		local tc=g:GetFirst()
-		if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 then
-			--chain attack
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-			e1:SetCode(EVENT_DAMAGE_STEP_END)
-			e1:SetCondition(s.atcon)
-			e1:SetOperation(s.atop)
-			c:RegisterEffect(e1)
-		end
-	end
-end
-function s.atcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return Duel.GetAttacker()==c and c:IsChainAttackable(0,true)
-end
-function s.atop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToBattle() then
-		Duel.ChainAttack()
+	local g=Duel.SelectMatchingCard(1-tp,s.gyfilter,1-tp,LOCATION_MZONE,0,1,1,nil,e:GetHandler())
+	if #g>0 and Duel.SendtoGrave(g,REASON_RULE)~=0 then
+		cannotAttackEffect:Reset()
+		cannotAttackEffect=nil
 	end
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)

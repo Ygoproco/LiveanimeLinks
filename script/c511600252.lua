@@ -1,14 +1,15 @@
 --海晶乙女 ブルースラッグ
 --Marincess Blue Slug
 --scripted by Larry126
-local s,id=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
+	alias=c:GetOriginalCodeRule()
 	--link summon
 	aux.AddLinkProcedure(c,s.matfilter,1,1)
 	c:EnableReviveLimit()
 	--recycle
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(30194529,0))
+	e1:SetDescription(aux.Stringid(alias,0))
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -29,7 +30,7 @@ function s.initial_effect(c)
 	end
 end
 function s.spfilter(c)
-	return c:IsCode(id) and c:IsSummonType(SUMMON_TYPE_LINK)
+	return c:IsCode(alias) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spfilter,1,nil)
@@ -49,16 +50,16 @@ function s.sumlimit(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsCode(id) and sumtype&SUMMON_TYPE_LINK==SUMMON_TYPE_LINK
+	return c:IsCode(alias) and sumtype&SUMMON_TYPE_LINK==SUMMON_TYPE_LINK
 end
 function s.matfilter(c,lc,sumtype,tp)
-	return c:IsLevelBelow(4) and c:IsSetCard(0x582,lc,sumtype,tp)
+	return c:IsLevelBelow(4) and c:IsSetCard(0x22b,lc,sumtype,tp)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x582) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end

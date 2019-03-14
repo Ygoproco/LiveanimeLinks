@@ -11,9 +11,15 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
+end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	if not re then return false end
+	local rc=re:GetHandler()
+	return re:IsActiveType(TYPE_MONSTER) and rc and rc:IsSetCard(0x581)
 end
 function s.filter(c,e,tp)
 	return c:IsDrone() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
