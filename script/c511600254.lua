@@ -2,7 +2,6 @@
 --Marincess Marbled Rock
 --scripted by Larry126
 local s,id,alias=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
 	--link summon
@@ -31,7 +30,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)   
 end
 function s.thfilter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsAbleToHand()
+	return c:IsSetCard(0x22b) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end
@@ -50,7 +49,7 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.GetAttacker():IsControler(tp)
 end
 function s.cfilter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -74,7 +73,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e2,tp)
 end
 function s.tgtg(e,c)
-	return c:IsFaceup() and c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x22b) and c:IsType(TYPE_MONSTER)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(tp,0)

@@ -2,7 +2,6 @@
 --Marincess Blue Slug
 --scripted by Larry126
 local s,id,alias=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
 	--link summon
@@ -54,13 +53,13 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsCode(alias) and sumtype&SUMMON_TYPE_LINK==SUMMON_TYPE_LINK
 end
 function s.matfilter(c,lc,sumtype,tp)
-	return c:IsLevelBelow(4) and c:IsSetCard(SET_MARINCESS,lc,sumtype,tp)
+	return c:IsLevelBelow(4) and c:IsSetCard(0x22b,lc,sumtype,tp)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.thfilter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end

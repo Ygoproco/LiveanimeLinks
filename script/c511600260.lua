@@ -2,7 +2,6 @@
 --Marincess Crystal Heart
 --scripted by Larry126
 local s,id=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_WATER),2,2)
@@ -48,10 +47,10 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	e:SetLabelObject(tc)
 	return tc:IsFaceup() and tc:IsLocation(LOCATION_MZONE)
-		and (tc==e:GetHandler() or tc:IsSetCard(SET_MARINCESS) and tc:IsType(TYPE_LINK) and e:GetHandler():GetLinkedGroup():IsContains(tc))
+		and (tc==e:GetHandler() or tc:IsSetCard(0x22b) and tc:IsType(TYPE_LINK) and e:GetHandler():GetLinkedGroup():IsContains(tc))
 end
 function s.cfilter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) end

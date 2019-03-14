@@ -2,7 +2,6 @@
 --Marincess Sea Horse
 --scripted by Larry126
 local s,id,alias=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
 	--special summon
@@ -30,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK)
+	return c:IsFaceup() and c:IsSetCard(0x22b) and c:IsType(TYPE_LINK)
 end
 function s.spzone(tp)
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)

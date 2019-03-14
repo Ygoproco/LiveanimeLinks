@@ -2,7 +2,6 @@
 --Marincess Battle Ocean
 --scripted by Larry126
 local s,id=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -15,7 +14,7 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,SET_MARINCESS))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x22b))
 	e2:SetValue(200)
 	c:RegisterEffect(e2)
 	--atk2
@@ -65,7 +64,7 @@ function s.matchk(e,c)
 	end
 end
 function s.atkfilter(c)
-	return c:GetOriginalType()&(TYPE_LINK+TYPE_MONSTER)==(TYPE_LINK+TYPE_MONSTER) and c:IsSetCard(SET_MARINCESS)
+	return c:GetOriginalType()&(TYPE_LINK+TYPE_MONSTER)==(TYPE_LINK+TYPE_MONSTER) and c:IsSetCard(0x22b)
 end
 function s.atktg(e,c)
 	return c:GetEquipGroup():IsExists(s.atkfilter,1,nil)
@@ -74,19 +73,19 @@ function s.atkval(e,c)
 	return c:GetEquipGroup():Filter(s.atkfilter,nil):GetSum(Card.GetLink)*300
 end
 function s.etarget(e,c)
-	return c:IsFaceup() and c:GetFlagEffect(id)~=0 and c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK) and c:IsSummonType(SUMMON_TYPE_LINK)
+	return c:IsFaceup() and c:GetFlagEffect(id)~=0 and c:IsSetCard(0x22b) and c:IsType(TYPE_LINK) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK) and c:GetSequence()>4
+	return c:IsFaceup() and c:IsSetCard(0x22b) and c:IsType(TYPE_LINK) and c:GetSequence()>4
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
 end
 function s.eqfilter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK) and not c:IsForbidden()
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_LINK) and not c:IsForbidden()
 end
 function s.eqcon(sg,e,tp,mg)
 	return sg:GetClassCount(Card.GetLink)==#sg

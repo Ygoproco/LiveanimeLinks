@@ -2,7 +2,6 @@
 --Marincess Bubble Blast
 --scripted by Larry126
 local s,id=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	aux.AddPersistentProcedure(c,0,s.filter,nil,nil,nil,nil,s.condition,s.cost)
@@ -30,7 +29,7 @@ function s.descon(e)
 	return Duel.GetLP(1-e:GetHandlerPlayer())<=Duel.GetLP(e:GetHandlerPlayer()) or Duel.GetCurrentPhase()==PHASE_END
 end
 function s.filter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsType(TYPE_LINK) and c:IsLinkBelow(2)
+	return c:IsSetCard(0x22b) and c:IsType(TYPE_LINK) and c:IsLinkBelow(2)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsLinkAbove(3)
@@ -49,7 +48,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.sfilter(c,g)
-	return c:IsFaceup() and c:IsSetCard(SET_MARINCESS) and g:IsContains(c)
+	return c:IsFaceup() and c:IsSetCard(0x22b) and g:IsContains(c)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

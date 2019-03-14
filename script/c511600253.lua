@@ -2,7 +2,6 @@
 --Marincess Coral Anemone
 --scripted by Larry126
 local s,id,alias=GetID()
-local SET_MARINCESS=0x22b
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
 	--link summon
@@ -49,7 +48,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return c:IsSetCard(SET_MARINCESS) and c:IsAbleToHand()
+	return c:IsSetCard(0x22b) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end
