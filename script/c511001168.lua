@@ -26,7 +26,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e3,tp)  
 end
 function s.filter(c)
-	return c:IsAttribute(ATTRIBUTE_WATER) and not c:IsType(TYPE_XYZ)
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsLevelBelow(2147483647)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.filter,nil)
