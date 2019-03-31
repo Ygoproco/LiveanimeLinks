@@ -1,14 +1,16 @@
 --強欲な壺
-function c512000125.initial_effect(c)
+--Pot
+local s,id=GetID()
+function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetTarget(c512000125.target)
-	e1:SetOperation(c512000125.activate)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function c512000125.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local num=Duel.GetRandomNumber(1,20)
 	if num==1 then
@@ -67,7 +69,7 @@ function c512000125.target(e,tp,eg,ep,ev,re,r,rp,chk)
 			s,o=LOCATION_MZONE,LOCATION_SZONE
 		end
 		local sg=Duel.GetMatchingGroup(aux.TRUE,tp,s,o,nil)
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 	elseif num==13 then
 		e:SetCategory(CATEGORY_DRAW)
 		e:SetProperty(0)
@@ -89,7 +91,7 @@ function c512000125.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tc=Duel.GetFieldCard(1-tp,LOCATION_DECK,1)
 		g:AddCard(tc)
 		Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,1-tp,1)
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,g:GetCount(),0,0)
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,#g,0,0)
 	elseif num==16 then
 		e:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
 		e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -112,14 +114,14 @@ function c512000125.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(num)
 end
-function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local num=e:GetLabel()
 	if num==1 or num==4 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Draw(p,d,REASON_EFFECT)
 	elseif num==2 then
-		if Duel.IsPlayerAffectedByEffect(tp,59822133) or Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<3 
-			or not Duel.IsPlayerCanSpecialSummonMonster(tp,29843092,0xf,0x4011,0,1000,2,RACE_BEAST,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE) then return end
+		if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<3 
+			or not Duel.IsPlayerCanSpecialSummonMonster(tp,29843092,0xf,TYPES_TOKEN,0,1000,2,RACE_BEAST,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE) then return end
 		for i=1,3 do
 			local token=Duel.CreateToken(tp,29843091+i)
 			if Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE) then
@@ -127,13 +129,13 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_UNRELEASABLE_SUM)
 				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e1:SetReset(RESET_EVENT+0x1fe0000)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 				e1:SetValue(1)
 				token:RegisterEffect(e1,true)
 				local e2=Effect.CreateEffect(e:GetHandler())
 				e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 				e2:SetCode(EVENT_LEAVE_FIELD)
-				e2:SetOperation(c512000125.damop)
+				e2:SetOperation(s.damop)
 				token:RegisterEffect(e2,true)
 			end
 		end
@@ -153,14 +155,14 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif num==6 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		local g=Duel.GetFieldGroup(p,LOCATION_HAND,0)
-		if g:GetCount()>0 then
+		if #g>0 then
 			local sg=g:RandomSelect(p,d)
 			Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
 		end
 	elseif num==7 then
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		local g=Duel.GetFieldGroup(p,LOCATION_HAND,0)
-		if g:GetCount()>0 then
+		if #g>0 then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_DISCARD)
 			local sg=g:Select(p,1,1,nil)
 			Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
@@ -192,7 +194,7 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif num==16 then
 		local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 		local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,p,LOCATION_HAND,0,nil)
-		if g:GetCount()>=2 then
+		if #g>=2 then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
 			local sg=g:Select(p,2,2,nil)
 			Duel.ConfirmCards(1-p,sg)
@@ -211,7 +213,7 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif num==17 then
 		local g1=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 		local g2=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-		if g1:GetCount()>0 and g2:GetCount()>0 then
+		if #g1>0 and #g2>0 then
 			Duel.ConfirmCards(tp,g2)
 			Duel.ConfirmCards(1-tp,g1)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -228,21 +230,21 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Damage(p,d,REASON_EFFECT)
 	elseif num==20 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-			and Duel.IsPlayerCanSpecialSummonMonster(tp,24874631,0,0x4011,0,0,1,RACE_FIEND,ATTRIBUTE_DARK) then
+			and Duel.IsPlayerCanSpecialSummonMonster(tp,24874631,0,TYPES_TOKEN,0,0,1,RACE_FIEND,ATTRIBUTE_DARK) then
 			local token=Duel.CreateToken(tp,24874631)
 			Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CANNOT_ATTACK)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			token:RegisterEffect(e1,true)
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 			e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e2:SetOperation(c512000125.damop2)
-			e2:SetReset(RESET_EVENT+0x1fe0000)
+			e2:SetOperation(s.damop2)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 			token:RegisterEffect(e2,true)
 			local e3=Effect.CreateEffect(e:GetHandler())
 			e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -250,9 +252,9 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetRange(LOCATION_MZONE)
 			e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 			e3:SetCountLimit(1)
-			e3:SetCondition(c512000125.descon)
-			e3:SetOperation(c512000125.desop)
-			e3:SetReset(RESET_EVENT+0x1fe0000)
+			e3:SetCondition(s.descon)
+			e3:SetOperation(s.desop)
+			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 			token:RegisterEffect(e3,true)
 		end
 	else
@@ -263,7 +265,8 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 	
 	--
 	local c=e:GetHandler()
-	local res=Duel.GetRandomNumber(1,5)
+	local maxran=Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0 and 5 or 4
+	local res=Duel.GetRandomNumber(1,maxran)
 	c:CancelToGrave(true)
 	if res==1 then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
@@ -280,24 +283,24 @@ function c512000125.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RaiseEvent(c,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)
 	end
 end
-function c512000125.damop(e,tp,eg,ep,ev,re,r,rp)
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsReason(REASON_DESTROY) then
 		Duel.Damage(c:GetPreviousControler(),300,REASON_EFFECT)
 	end
 	e:Reset()
 end
-function c512000125.descon(e,tp,eg,ep,ev,re,r,rp)
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
-function c512000125.desop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.CheckLPCost(tp,1000) and Duel.SelectYesNo(tp,aux.Stringid(24874630,0)) then
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.CheckLPCost(tp,1000) and Duel.SelectYesNo(tp,aux.Stringid(1040,7)) then
 		Duel.PayLPCost(tp,1000)
 	else
 		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
 end
-function c512000125.damop2(e,tp,eg,ep,ev,re,r,rp)
+function s.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local dam=Duel.GetBattleDamage(tp)
 	if dam>0 then
 		Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(1-tp)+dam,false)
