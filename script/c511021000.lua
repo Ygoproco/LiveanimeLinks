@@ -26,7 +26,7 @@ function c511021000.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(511021000,1))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetCode(EVENT_LEAVE_FIELD)
 	e4:SetCondition(c511021000.spcon)
@@ -58,8 +58,7 @@ function c511021000.spfilter(c,e,tp)
 	return c:IsSetCard(0x31) and c:IsCanBeSpecialSummoned(e,0x8,tp,false,false)
 end
 function c511021000.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c511021000.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c511021000.spop(e,tp,eg,ep,ev,re,r,rp)
