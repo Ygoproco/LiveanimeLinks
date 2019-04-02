@@ -1,6 +1,5 @@
---Ｓｐ－オーバー・チューン
---Speed Spell - Overtune
---fixed by Larry126
+--Ｓｐ－オーバー・チューン (Anime)
+--Speed Spell - Overtune (Anime)
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
