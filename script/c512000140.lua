@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	--Cannot leave the field due to effects.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetTargetRange(LOCATION_FZONE,0)
+	e2:SetTargetRange(LOCATION_FZONE,LOCATION_FZONE)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCode(EFFECT_IMMUNE_EFFECT)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
