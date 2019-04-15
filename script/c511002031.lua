@@ -1,20 +1,22 @@
 --E・HERO ネオス・ナイト (Anime)
 --Elemental HERO Neos Knight (Anime)
-function c511002031.initial_effect(c)
+--fixed by Larry126
+local s,id=GetID()
+function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,89943723,aux.FilterBoolFunctionEx(Card.IsRace,RACE_WARRIOR))
+	aux.AddFusionProcMix(c,true,true,CARD_NEOS,aux.FilterBoolFunctionEx(Card.IsRace,RACE_WARRIOR))
 	--atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_MATERIAL_CHECK)
-	e2:SetValue(c511002031.valcheck)
+	e2:SetValue(s.valcheck)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetCondition(c511002031.atkcon)
-	e3:SetOperation(c511002031.atkop)
+	e3:SetCondition(s.atkcon)
+	e3:SetOperation(s.atkop)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
 	--multiatk
@@ -24,22 +26,22 @@ function c511002031.initial_effect(c)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
 end
-c511002031.listed_names={89943723,24094653}
-c511002031.material_setcode={0x8,0x3008,0x9}
-function c511002031.valcheck(e,c)
+s.listed_names={CARD_NEOS}
+s.material_setcode={0x8,0x3008,0x9}
+function s.valcheck(e,c)
 	local g=c:GetMaterial()
-	local atk=-1
+	local atk=0
 	local tc=g:GetFirst()
-	if tc:IsCode(89943723) or tc:IsHasEffect(EFFECT_FUSION_SUBSTITUTE) then tc=g:GetNext() end
-	if not tc:IsCode(89943723) then
+	if tc:IsCode(CARD_NEOS) or tc:IsHasEffect(EFFECT_FUSION_SUBSTITUTE) then tc=g:GetNext() end
+	if not tc:IsCode(CARD_NEOS) then
 		atk=tc:GetTextAttack()/2
 	end
 	e:SetLabel(atk)
 end
-function c511002031.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
-function c511002031.atkop(e,tp,eg,ep,ev,re,r,rp)
+function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local atk=e:GetLabelObject():GetLabel()
 	if atk>0 then
@@ -47,7 +49,7 @@ function c511002031.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(atk)
-		e1:SetReset(RESET_EVENT+0x1ff0000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 		c:RegisterEffect(e1)
 	end
 end
