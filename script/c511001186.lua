@@ -39,10 +39,10 @@ function s.cfop(e,tp,eg,ep,ev,re,r,rp)
 	local cg=eg:Filter(s.filter,nil)
 	Debug.Message(ep)
 	if ep == tp then
-		Duel.ConfirmCards(tp,cg)
+		Duel.ConfirmCards(1-tp,cg)
 		Duel.ShuffleHand(tp)
 	elseif ep == (1-tp) then
- 		Duel.ConfirmCards(1-tp,cg)
+ 		Duel.ConfirmCards(tp,cg)
 		Duel.ShuffleHand(1-tp)
 	end
 	local tc=cg:GetFirst()
