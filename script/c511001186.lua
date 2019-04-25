@@ -37,7 +37,6 @@ function s.filter(c)
 end
 function s.cfop(e,tp,eg,ep,ev,re,r,rp)
 	local cg=eg:Filter(s.filter,nil)
-	Debug.Message(ep)
 	if ep == tp then
 		Duel.ConfirmCards(1-tp,cg)
 		Duel.ShuffleHand(tp)
@@ -46,7 +45,6 @@ function s.cfop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ShuffleHand(1-tp)
 	end
 	local tc=cg:GetFirst()
-	Debug.Message(tc:GetControler())
 	while tc do
 		if tc:IsType(TYPE_SPELL) then
 			local e1=Effect.CreateEffect(e:GetHandler())
