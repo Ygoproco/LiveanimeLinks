@@ -1,7 +1,8 @@
 --エクシーズ・ウイング
 --XYZ Wings
 --scripted by Larry126
-function c511600191.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
 	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsType,TYPE_XYZ))
 	--twice per turn
 	local e1=Effect.CreateEffect(c)
@@ -9,7 +10,7 @@ function c511600191.initial_effect(c)
 	e1:SetCode(EVENT_ADJUST)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return e:GetHandler():GetEquipTarget():GetFlagEffect(511600191)>0 end)
-	e1:SetOperation(c511600191.tptop)
+	e1:SetOperation(s.tptop)
 	c:RegisterEffect(e1)
 	--damage
 	local e2=Effect.CreateEffect(c)
@@ -19,35 +20,35 @@ function c511600191.initial_effect(c)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(c511600191.filter,1,nil,e:GetHandler():GetEquipTarget()) end)
-	e2:SetTarget(c511600191.damtg)
-	e2:SetOperation(c511600191.damop)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(s.filter,1,nil,e:GetHandler():GetEquipTarget()) end)
+	e2:SetTarget(s.damtg)
+	e2:SetOperation(s.damop)
 	c:RegisterEffect(e2)
 	--Halve Battle Damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetOperation(c511600191.bdop)
+	e3:SetOperation(s.bdop)
 	c:RegisterEffect(e3)
-	if not c511600191.global_check then
-		c511600191.global_check=true
+	if not s.global_check then
+		s.global_check=true
 		OPTEffs={}
 		AffectedEffs={}
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_CHAINING)
-		ge1:SetOperation(c511600191.checkop)
+		ge1:SetOperation(s.checkop)
 		Duel.RegisterEffect(ge1,0)
 		local ge2=Effect.CreateEffect(c)
 		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge2:SetCode(EVENT_ADJUST)
 		ge2:SetCountLimit(1)
-		ge2:SetOperation(c511600191.clear)
+		ge2:SetOperation(s.clear)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
-function c511600191.checkop(e,tp,eg,ep,ev,re,r,rp)
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if not rc:IsHasEffect(511002571) or re:IsHasProperty(EFFECT_FLAG_NO_TURN_RESET) then return end
 	local effs={rc:GetCardEffect(511002571)}
@@ -85,7 +86,7 @@ function c511600191.checkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c511600191.clear(e,tp,eg,ep,ev,re,r,rp)
+function s.clear(e,tp,eg,ep,ev,re,r,rp)
 	OPTEffs={}
 	for _,c in pairs(AffectedEffs) do
 		for _,te in ipairs(c) do
@@ -97,7 +98,7 @@ function c511600191.clear(e,tp,eg,ep,ev,re,r,rp)
 	end
 	AffectedEffs={}
 end
-function c511600191.tptop(e,tp,eg,ep,ev,re,r,rp)
+function s.tptop(e,tp,eg,ep,ev,re,r,rp)
 	local eqc=e:GetHandler():GetEquipTarget()
 	for _,te in ipairs(OPTEffs[eqc]) do
 		local chk=true
@@ -115,31 +116,32 @@ function c511600191.tptop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c511600191.filter(c,eqc)
+function s.filter(c,eqc)
 	return c:GetPreviousTypeOnField()&TYPE_MONSTER==TYPE_MONSTER
 		and (c:GetReasonCard()==eqc or c:GetReasonEffect() and c:GetReasonEffect():GetHandler()==eqc)
 end
-function c511600191.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(500)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,500)
 end
-function c511600191.damop(e,tp,eg,ep,ev,re,r,rp)
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-function c511600191.bdop(e,tp,eg,ep,ev,re,r,rp)
+function s.bdop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetDescription(aux.Stringid(4016,10))
 	e1:SetCode(EFFECT_CHANGE_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
 	e1:SetTargetRange(1,0)
-	e1:SetValue(c511600191.val)
+	e1:SetValue(s.val)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
-function c511600191.val(e,re,dam,r,rp,rc)
+function s.val(e,re,dam,r,rp,rc)
 	if bit.band(r,REASON_BATTLE)~=0 then
 		return math.floor(dam/2)
 	else return dam end
