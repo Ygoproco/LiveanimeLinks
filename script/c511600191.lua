@@ -17,10 +17,9 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(1918087,0))
 	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EVENT_BATTLE_DESTROYING)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(s.filter,1,nil,e:GetHandler():GetEquipTarget()) end)
+	e2:SetCondition(s.damcon)
 	e2:SetTarget(s.damtg)
 	e2:SetOperation(s.damop)
 	c:RegisterEffect(e2)
@@ -119,6 +118,10 @@ end
 function s.filter(c,eqc)
 	return c:GetPreviousTypeOnField()&TYPE_MONSTER==TYPE_MONSTER
 		and (c:GetReasonCard()==eqc or c:GetReasonEffect() and c:GetReasonEffect():GetHandler()==eqc)
+end
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetHandler():GetEquipTarget()
+	return ec and eg:IsContains(ec)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
