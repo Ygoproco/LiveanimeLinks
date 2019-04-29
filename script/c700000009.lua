@@ -1,6 +1,5 @@
 --Scripted by Eerie Code
 --Performapal Odd-Eyes Light Phoenix
---Needs a fix for strings
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
