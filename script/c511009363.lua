@@ -1,6 +1,7 @@
 --Spirit Reactor
 --fixed by MLD
-function c511009363.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
 	--atk
@@ -9,7 +10,7 @@ function c511009363.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(c511009363.val)
+	e1:SetValue(s.val)
 	c:RegisterEffect(e1)
 	--indes
 	local e2=Effect.CreateEffect(c)
@@ -17,68 +18,68 @@ function c511009363.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e2:SetRange(LOCATION_PZONE)
-	e2:SetCondition(c511009363.indcon)
+	e2:SetCondition(s.indcon)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetValue(c511009363.indct)
+	e2:SetValue(s.indct)
 	c:RegisterEffect(e2)
 	-- copy scale
-	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(aux.Stringid(94585852,0))
-	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e8:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e8:SetCode(511002005)
-	e8:SetRange(LOCATION_PZONE)
-	e8:SetTarget(c511009363.sctg)
-	e8:SetOperation(c511009363.scop)
-	c:RegisterEffect(e8)
-	if not c511009363.global_check then
-		c511009363.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetOperation(c511009363.checkop)
-		Duel.RegisterEffect(ge2,0)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(94585852,0))
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_CUSTOM+id)
+	e3:SetRange(LOCATION_PZONE)
+	e3:SetTarget(s.sctg)
+	e3:SetOperation(s.scop)
+	c:RegisterEffect(e3)
+	if not s.global_check then
+		s.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetOperation(s.checkop)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
-function c511009363.val(e,c)
-	return Duel.GetMatchingGroupCount(c511009363.filter,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)*500
+function s.val(e,c)
+	return Duel.GetMatchingGroupCount(s.filter,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)*500
 end
-function c511009363.filter(c)
+function s.filter(c)
 	return c:IsAttribute(ATTRIBUTE_EARTH+ATTRIBUTE_WATER+ATTRIBUTE_FIRE+ATTRIBUTE_WIND) and c:IsFaceup()
 end
-function c511009363.indcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511009363.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+function s.indcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
-function c511009363.indct(e,re,r,rp)
+function s.indct(e,re,r,rp)
 	if r&REASON_BATTLE+REASON_EFFECT~=0 then
 		return 1
 	else return 0 end
 end
-function c511009363.cfilter(c)
+function s.cfilter(c)
 	local seq=c:GetSequence()
-	return c:GetFlagEffect(511002005+seq)==0 and (not c:IsPreviousLocation(LOCATION_PZONE) or c:GetPreviousSequence()~=seq)
+	return c:GetFlagEffect(id+seq)==0 and (not c:IsPreviousLocation(LOCATION_PZONE) or c:GetPreviousSequence()~=seq)
 end
-function c511009363.checkop(e,tp,eg,ep,ev,re,r,rp)
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tot=Duel.GetMasterRule()>=4 and 4 or 13
-	local g=Duel.GetMatchingGroup(c511009363.cfilter,tp,LOCATION_PZONE,LOCATION_PZONE,nil)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_PZONE,LOCATION_PZONE,nil)
 	local tc=g:GetFirst()
 	while tc do
-		tc:ResetFlagEffect(511002005+tot-tc:GetSequence())
-		Duel.RaiseSingleEvent(tc,511002005,e,0,tp,tp,0)
-		tc:RegisterFlagEffect(511002005+tc:GetSequence(),RESET_EVENT+0x1fe0000,0,1)
+		tc:ResetFlagEffect(id+tot-tc:GetSequence())
+		Duel.RaiseSingleEvent(tc,EVENT_CUSTOM+id,e,0,tp,tp,0)
+		tc:RegisterFlagEffect(id+tc:GetSequence(),RESET_EVENT+0x1fe0000,0,1)
 		tc=g:GetNext()
 	end
 end
-function c511009363.scfilter(c)
+function s.scfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
 end
-function c511009363.sctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc~=e:GetHandler() and chkc:IsOnField() and c511009363.scfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511009363.scfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc~=e:GetHandler() and chkc:IsOnField() and s.scfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.scfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c511009363.scfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	Duel.SelectTarget(tp,s.scfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 end
-function c511009363.scop(e,tp,eg,ep,ev,re,r,rp)
+function s.scop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
