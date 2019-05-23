@@ -15,10 +15,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.tfilter(c,lv,e,tp)
-	return c:IsSetCard(0x22d) and c:GetLevel()==lv-1 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x12e) and c:GetLevel()==lv-1 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x22d)
+	return c:IsFaceup() and c:IsSetCard(0x12e)
 		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,c:GetLevel(),e,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
