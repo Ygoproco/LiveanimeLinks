@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.filter(c)
-	return c:IsSetCard(0x22c) and c:IsFaceup()
+	return c:IsSetCard(0x12f) and c:IsFaceup()
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
