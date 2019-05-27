@@ -92,7 +92,7 @@ end
 function c511005710.dcondition(e,tp,eg,ep,ev,re,r,rp)
 	local lv1=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil):GetSum(Card.GetLevel)
 	local lv2=Duel.GetMatchingGroup(Card.IsFaceup,1-tp,LOCATION_MZONE,0,nil):GetSum(Card.GetLevel)
-	return lv1<=lv2
+	return lv1<=lv2 and Duel.GetTurnPlayer()==tp
 end
 function c511005710.dtarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
