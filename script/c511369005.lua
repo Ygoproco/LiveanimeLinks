@@ -30,7 +30,7 @@ function s.cfilter(c)
 end
 function s.spcon(e,tp)
 	return not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) 
-		and not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_SZONE,0,1,nil)
+		and not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 function s.setfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
