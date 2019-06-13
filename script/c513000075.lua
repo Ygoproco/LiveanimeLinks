@@ -1,6 +1,6 @@
 --Ｓｉｎ スターダスト・ドラゴン (Anime)
 --Malefic Stardust Dragon (Anime)
---updated by ClaireSttanfield
+--updated by ClaireStanfield
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
