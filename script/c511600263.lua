@@ -1,11 +1,12 @@
 --海晶乙女 クラウンテイル
 --Marincess Crown Tail
 --scripted by Larry126
-local s,id=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
+	alias=c:GetOriginalCodeRule()
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(65100616,0))
+	e1:SetDescription(aux.Stringid(alias,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
@@ -17,7 +18,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--prevent damage
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(23857661,1))
+	e2:SetDescription(aux.Stringid(alias,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCost(aux.bfgcost)

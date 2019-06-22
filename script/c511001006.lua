@@ -15,10 +15,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--sp summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(511001006,0))
+	e2:SetDescription(aux.Stringid(8310162,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
@@ -28,13 +29,11 @@ end
 function s.filter(c,e,tp,tid)
 	return c:GetTurnID()==tid and (c:GetReason()&REASON_DESTROY)~=0 and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-
 function s.filter2(c,e,tp)
 	return c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    local tid=Duel.GetTurnCount()
+	local tid=Duel.GetTurnCount()
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc,e,tp,tid) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,tid) end
@@ -57,12 +56,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(s.eqlimit)
 		c:RegisterEffect(e1)
 	end
 end
-
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD,nil)
