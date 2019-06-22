@@ -65,5 +65,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 		local e3=e2:Clone()
 		e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-		tc:RegisterEffect(e3))
+		tc:RegisterEffect(e3)
+	end)
 end
