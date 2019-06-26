@@ -26,7 +26,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.cfilter(c,tp)
-	return c:GetPreviousControler()==tp and tc:IsPreviousPosition(POS_FACEUP)
+	return c:GetPreviousControler()==tp and c:IsPreviousPosition(POS_FACEUP)
 		and c:IsType(TYPE_SYNCHRO) and c:IsRace(RACE_DRAGON)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp,chk)
