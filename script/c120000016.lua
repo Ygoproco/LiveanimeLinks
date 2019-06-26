@@ -1,22 +1,25 @@
 --邪龍復活の儀式
-function c120000016.initial_effect(c)
+--Dragon Revival Ritual
+--updated by ClaireStanfield
+local s,id=GetID()
+function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetTarget(c120000016.target)
-	e1:SetOperation(c120000016.activate)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-c120000016.fit_monster={99267150}
-function c120000016.spfilter(c,e,tp)
+s.fit_monster={99267150}
+function s.spfilter(c,e,tp)
 	return c:IsCode(99267150) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
-function c120000016.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 end
-function c120000016.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sg=Group.CreateGroup()
 	sg:KeepAlive()
@@ -27,8 +30,8 @@ function c120000016.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetRange(0xff)
 	e1:SetLabel(0x2f)
 	e1:SetLabelObject(sg)
-	e1:SetCondition(c120000016.spcon)
-	e1:SetOperation(c120000016.spop)
+	e1:SetCondition(s.spcon)
+	e1:SetOperation(s.spop)
 	e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,5)
 	e1:SetValue(SUMMON_TYPE_RITUAL)
 	c:RegisterEffect(e1)
@@ -41,18 +44,18 @@ function c120000016.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
 		e2:SetRange(0xff)
 		e2:SetLabelObject(e1)
-		e2:SetCondition(c120000016.spcon2)
-		e2:SetOperation(c120000016.spop2)
+		e2:SetCondition(s.spcon2)
+		e2:SetOperation(s.spop2)
 		e2:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,5)
 		e2:SetValue(SUMMON_TYPE_RITUAL)
 		tc:RegisterEffect(e2)
 		tc=g:GetNext()
 	end
 end
-function c120000016.filter(c,e,tp)
-	return c:IsCode(99267150) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,true)
+function s.filter(c,e,tp)
+	return c:IsCode(99267150) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)
 end
-function c120000016.spcon(e,c,og)
+function s.spcon(e,c,og)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
 	local label=e:GetLabel()
@@ -64,9 +67,9 @@ function c120000016.spcon(e,c,og)
 		i=i*2
 	end
 	if not Duel.GetRitualMaterial(tp):IsExists(Card.IsAttribute,1,nil,label) then return false end
-	return spchk>1 or Duel.IsExistingMatchingCard(c120000016.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp)
+	return spchk>1 or Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil,e,tp)
 end
-function c120000016.spop(e,tp,eg,ep,ev,re,r,rp,c,og)
+function s.spop(e,tp,eg,ep,ev,re,r,rp,c,og)
 	Duel.Hint(HINT_CARD,0,120000016)
 	local label=e:GetLabel()
 	local g=e:GetLabelObject()
@@ -94,17 +97,17 @@ function c120000016.spop(e,tp,eg,ep,ev,re,r,rp,c,og)
 		attchk=attchk-att
 		spchk=spchk-1
 	until not mg:IsExists(Card.IsAttribute,1,nil,attchk) or attchk==0 or spchk==0 
-		or (spchk==1 and not Duel.IsExistingMatchingCard(c120000016.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp))
+		or (spchk==1 and not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil,e,tp))
 		or not Duel.SelectYesNo(tp,93)
 	if spchk==0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=Duel.SelectMatchingCard(tp,c120000016.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp)
+		local tg=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 		tg:GetFirst():SetMaterial(g)
 		og:Merge(tg)
 		g:DeleteGroup()
 	end
 end
-function c120000016.spcon2(e,c,og)
+function s.spcon2(e,c,og)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
 	local label=e:GetLabelObject():GetLabel()
@@ -116,9 +119,9 @@ function c120000016.spcon2(e,c,og)
 		i=i*2
 	end
 	if not Duel.GetRitualMaterial(tp):IsExists(Card.IsAttribute,1,nil,label) then return false end
-	return spchk>1 or Duel.IsExistingMatchingCard(c120000016.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp)
+	return spchk>1 or Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil,e,tp)
 end
-function c120000016.spop2(e,tp,eg,ep,ev,re,r,rp,c,og)
+function s.spop2(e,tp,eg,ep,ev,re,r,rp,c,og)
 	Duel.Hint(HINT_CARD,0,120000016)
 	local label=e:GetLabelObject():GetLabel()
 	local g=e:GetLabelObject():GetLabelObject()
@@ -146,11 +149,11 @@ function c120000016.spop2(e,tp,eg,ep,ev,re,r,rp,c,og)
 		attchk=attchk-att
 		spchk=spchk-1
 	until not mg:IsExists(Card.IsAttribute,1,nil,attchk) or attchk==0 or spchk==0 
-		or (spchk==1 and not Duel.IsExistingMatchingCard(c120000016.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp))
+		or (spchk==1 and not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil,e,tp))
 		or not Duel.SelectYesNo(tp,93)
 	if spchk==0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=Duel.SelectMatchingCard(tp,c120000016.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp)
+		local tg=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 		tg:GetFirst():SetMaterial(g)
 		og:Merge(tg)
 		g:DeleteGroup()
