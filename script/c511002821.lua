@@ -4,7 +4,7 @@
 local s,id,alias=GetID()
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
-	aux.AddUnionProcedure(c,s.filter)
+	aux.AddUnionProcedure(c,s.filter,true)
 	--destroy
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(alias,2))
