@@ -45,6 +45,13 @@ end
 function s.eqlimit(e,c)
 	return e:GetOwner()==c
 end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler():GetFirstCardTarget()
+	return tc and eg:IsContains(tc)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
@@ -59,6 +66,16 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(s.eqlimit)
 		c:RegisterEffect(e1)
+		--destroy
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		e2:SetRange(LOCATION_SZONE)
+		e2:SetCode(EVENT_LEAVE_FIELD)	
+		e2:SetCondition(s.descon)
+		e2:SetOperation(s.desop)	
+		e2:SetLabelObject(tc)			
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e2)
 	end
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
