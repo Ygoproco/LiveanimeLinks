@@ -33,23 +33,30 @@ function s.filter2(c,e,tp)
 	return c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local tid=Duel.GetTurnCount()
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc,e,tp,tid) end
+    local tid=Duel.GetTurnCount()
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc,e,tp,tid) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,tid) end
+		and Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp,tid) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,tid)
+	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp,tid)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function s.eqlimit(e,c)
 	return e:GetOwner()==c
 end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler():GetFirstCardTarget()
+	return tc and eg:IsContains(tc)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+	if not c:IsRelateToEffect(e) then return end
+    local tc=Duel.GetFirstTarget()
+		if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		Duel.Equip(tp,c,tc)
 		--Add Equip limit
 		local e1=Effect.CreateEffect(tc)
@@ -59,6 +66,16 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(s.eqlimit)
 		c:RegisterEffect(e1)
+		--destroy
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		e2:SetRange(LOCATION_SZONE)
+		e2:SetCode(EVENT_LEAVE_FIELD)	
+		e2:SetCondition(s.descon)
+		e2:SetOperation(s.desop)	
+		e2:SetLabelObject(tc)			
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e2)
 	end
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
