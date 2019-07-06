@@ -1,53 +1,48 @@
---エクスカリバー
 --Excalibur
---updated by ClaireStanfield
-local s,id=GetID()
-function s.initial_effect(c)
+function c511000694.initial_effect(c)
 	aux.AddEquipProcedure(c)
 	--double original atk
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_ADJUST)
-	e1:SetRange(LOCATION_SZONE)
-	e1:SetOperation(s.atkop)
-	e1:SetLabel(0)
-	c:RegisterEffect(e1)
-	--Destroy on Draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_DRAW)
+	e2:SetCode(EVENT_ADJUST)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetOperation(s.ctop)
+	e2:SetOperation(c511000694.atkop)
+	e2:SetLabel(0)
 	c:RegisterEffect(e2)
-	--Skip Draw Phase
+	--Destroy on Draw
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(511000694,0))
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetCode(EVENT_DRAW)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(1,0)
-	e3:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-	e3:SetOperation(s.dpop)
+	e3:SetOperation(c511000694.ctop)
 	c:RegisterEffect(e3)
+	--Skip Draw Phase
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetTargetRange(1,0)
+	e5:SetCode(EFFECT_SKIP_DP)
+	c:RegisterEffect(e5)
 	--check for doubling
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(511000694)
-	c:RegisterEffect(e4)
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_SINGLE)
+	e6:SetCode(511000694)
+	c:RegisterEffect(e6)
 end
-function s.ctop(e,tp,eg,ep,ev,re,r,rp)
+function c511000694.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if ep~=c:GetControler() then return end
 	Duel.Destroy(c,REASON_EFFECT)
 end
-function s.chkfilter(c,eq)
+function c511000694.chkfilter(c,eq)
 	local ec=c:GetEquipTarget()
 	return c:IsHasEffect(511000694) and ec and ec==eq and not c:IsDisabled()
 end
-function s.atkop(e,tp,eg,ep,ev,re,r,rp)
+function c511000694.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local eq=c:GetEquipTarget()
-	local g=Duel.GetMatchingGroup(s.chkfilter,tp,LOCATION_SZONE,LOCATION_SZONE,c,eq)
+	local g=Duel.GetMatchingGroup(c511000694.chkfilter,tp,LOCATION_SZONE,LOCATION_SZONE,c,eq)
 	if eq and c:GetFlagEffect(511000695)==0 and e:GetLabel()~=g:GetCount()+1 then
 		c:ResetEffect(RESET_DISABLE,RESET_EVENT)
 		local tc=g:GetFirst()
@@ -67,9 +62,4 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 		e:SetLabel(g:GetCount()+1)
 	end
-end
-
-function s.dpop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.SelectYesNo(tp,aux.Stringid(511000694,0)) then
-		Duel.SkipPhase(tp,PHASE_DRAW,RESET_PHASE+PHASE_DRAW,1)
 end
