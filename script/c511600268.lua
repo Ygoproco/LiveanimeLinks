@@ -109,7 +109,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	local tc=Duel.GetFirstTarget()
 	if ft<1 or not tc or not tc:IsRelateToEffect(e) or not tc:IsFaceup() then return end
-	local g=aux.SelectUnselectGroup(Duel.GetMatchingGroup(s.eqfilter,tp,LOCATION_GRAVE,0,nil),e,tp,1,math.min(ft,3),s.eqcon,1,tp,HINTMSG_EQUIP)
+	local g=aux.SelectUnselectGroup(Duel.GetMatchingGroup(aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,nil),e,tp,1,math.min(ft,3),s.eqcon,1,tp,HINTMSG_EQUIP)
 	for eqc in aux.Next(g) do
 		Duel.Equip(tp,eqc,tc,true,true)
 		--Equip limit
