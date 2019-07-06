@@ -13,9 +13,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.fit_monster={99267150}
-function s.spfilter(c,e,tp)
-	return c:IsCode(99267150) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
-end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 end
