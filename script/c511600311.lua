@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c)
-	return c:IsSetCard(0x582) and c:IsType(TYPE_LINK) and c:IsFaceup() and c:GetSequence()>4
+	return c:IsType(TYPE_LINK) and c:IsFaceup() and c:GetSequence()>4
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
