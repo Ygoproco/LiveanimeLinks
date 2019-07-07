@@ -42,7 +42,7 @@ function s.atkfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0xfc)
 end
 function s.atkval(e,c)
-	local g=Duel.GetMatchingGroup(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,0,e:GetHandler())
+	local g=Duel.GetMatchingGroup(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,0,c)
 	return g:GetSum(Card.GetLink)*200
 end
 
