@@ -29,13 +29,16 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
 end
+function s.cfilter(c,tp)
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0x582)
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return Duel.CheckReleaseGroupCost(tp,nil,1,false,nil,nil)
+		return Duel.CheckReleaseGroupCost(tp,s.cfilter,1,false,nil,nil)
 	end
-	local tc=Duel.SelectReleaseGroupCost(tp,nil,1,1,false,nil,nil):GetFirst()
+	local tc=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,false,nil,nil):GetFirst()
 	local atk=tc:GetBaseAttack()
 	Duel.Release(tc,REASON_COST)
 	Duel.SetTargetPlayer(tp)
