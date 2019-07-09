@@ -40,7 +40,6 @@ function s.dmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 	--atk change
 	local a=Duel.GetAttacker()
-	Debug.Message(a:GetAttack())
 	if a:IsRelateToBattle() and not a:IsImmuneToEffect(e) then
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
