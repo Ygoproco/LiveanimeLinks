@@ -57,8 +57,6 @@ function s.extraval(chk,summon_type,e,...)
 		end
 	end
 end
-
-
 function s.cfilter(c,tp)
 	return c:IsSetCard(0x103) and c:IsType(TYPE_LINK) and c:IsControler(tp) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
