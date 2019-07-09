@@ -31,7 +31,6 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer()
 end
 function s.dmop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
 	--no damage
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -41,9 +40,9 @@ function s.dmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 	--atk change
 	local a=Duel.GetAttacker()
-	local b=a:GetBattleTarget()
+	Debug.Message(a:GetAttack())
 	if a:IsRelateToBattle() and not a:IsImmuneToEffect(e) then
-			local e2=Effect.CreateEffect(c)
+			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e2:SetCode(EVENT_BATTLED)
@@ -62,8 +61,8 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if a:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetValue(b:GetBaseAttack()-600)
+		e1:SetCode(EFFECT_SET_BASE_ATTACK)
+		e1:SetValue(a:GetBaseAttack()-600)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		a:RegisterEffect(e1)
 		Duel.ChainAttack()
