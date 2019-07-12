@@ -83,7 +83,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 end
 function s.eqfilter(c)
-	return c:GetFlagEffect(alias)~=0 
+	return c:GetFlagEffect(id)~=0 
 end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetEquipGroup():Filter(s.eqfilter,nil)
