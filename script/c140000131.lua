@@ -87,15 +87,30 @@ function s.act(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==10 then
 		local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
 		Duel.Remove(g,nil,REASON_EFFECT+REASON_TEMPORARY)
+		local maxct=0
 		for tc in aux.Next(g) do
-			if tc:GetFlagEffect(id)>0 then c:SetCardTarget(tc) end
+			if tc:GetFlagEffect(id)>0 then
+				c:SetCardTarget(tc)
+				local ct=tc:GetFlagEffectLabel()
+				maxct=math.max(ct,maxct)
+			end
 		end
-		e:SetLabel(6)
+		if maxct==7 then
+			c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+			e:SetLabel(7)
+		else
+			e:SetLabel(6)
+		end
 	elseif e:GetLabel()>0 then
-		c:SetTurnCounter(7-e:GetLabel())
-		local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil,c,7-e:GetLabel())
-		local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
+		if tc:GetFlagEffect(id)>0 then 
+			c:SetTurnCounter(8-e:GetLabel())
+			g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil,c,8-e:GetLabel())
+		else
+			c:SetTurnCounter(7-e:GetLabel())
+			g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil,c,7-e:GetLabel())
+		end
 		if #g>0 then
+			local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
 			if #g>=ft then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 				local sg=g:Select(1-tp,ft,ft,nil)
