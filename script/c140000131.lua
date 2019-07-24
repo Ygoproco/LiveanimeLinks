@@ -102,7 +102,7 @@ function s.act(e,tp,eg,ep,ev,re,r,rp)
 			e:SetLabel(6)
 		end
 	elseif e:GetLabel()>0 then
-		if tc:GetFlagEffect(id)>0 then 
+		if c:GetFlagEffect(id)>0 then 
 			c:SetTurnCounter(8-e:GetLabel())
 			g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil,c,8-e:GetLabel())
 		else
