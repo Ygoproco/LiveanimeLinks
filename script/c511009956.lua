@@ -40,6 +40,7 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
 	if tc:IsRelateToBattle() and tc:IsFaceup() and tc:IsControler(tp) then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -57,7 +58,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 		e2:SetValue(s.efilter)
 		e2:SetOwnerPlayer(tp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		sc:RegisterEffect(e2,true)
+		tc:RegisterEffect(e2,true)
 	end
 end
 function s.efilter(e,re)
