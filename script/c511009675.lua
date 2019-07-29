@@ -37,7 +37,7 @@ function c511009675.initial_effect(c)
     local e4=Effect.CreateEffect(c)
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e4:SetRange(LOCATION_SZONE)
-    e4:SetCode(EVENT_LEAVE_FIELD)
+    e4:SetCode(EVENT_DESTROYED)
     e4:SetCondition(c511009675.sdescon)
     e4:SetOperation(c511009675.sdesop)
     c:RegisterEffect(e4)
@@ -122,8 +122,7 @@ function c511009675.atlimit(e,c)
 end
 --------------------------------------
 function c511009675.sfilter(c)
-    return c:IsReason(REASON_DESTROY) and c:IsPreviousPosition(POS_FACEUP)
-        and c:IsSetCard(0x574) and c:IsPreviousLocation(LOCATION_ONFIELD)
+    return c:IsSetCard(0x574) and c:IsType(TYPE_LINK)
 end
 function c511009675.sdescon(e,tp,eg,ep,ev,re,r,rp)
     return eg:IsExists(c511009675.sfilter,1,nil)
