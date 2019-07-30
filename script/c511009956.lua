@@ -42,7 +42,8 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetLabelObject()
 	if tc:IsRelateToBattle() and tc:IsFaceup() and tc:IsControler(tp) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+		local c=e:GetHandler()
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(500)
@@ -57,7 +58,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp,chk)
 		e2:SetValue(s.efilter)
 		e2:SetOwnerPlayer(tp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		sc:RegisterEffect(e2,true)
+		tc:RegisterEffect(e2,true)
 	end
 end
 function s.efilter(e,re)
