@@ -26,8 +26,10 @@ function s.initial_effect(c)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
 end
+s.listed_series={0x234}
+s.listed_names{511600306}
 function s.filter(c)
-	return c:IsSetCard(0x582) and c:IsFaceup() and c:GetSequence()<5
+	return c:IsSetCard(0x234) and c:IsFaceup() and c:GetSequence()<5
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
@@ -42,7 +44,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 end
 function s.tdfilter(c)
-	return c:IsSetCard(0x582) and c:IsType(TYPE_LINK) and c:IsAbleToExtra()
+	return c:IsSetCard(0x234) and c:IsType(TYPE_LINK) and c:IsAbleToExtra()
 end
 function s.thfilter(c)
 	return c:IsCode(511600306) and c:IsAbleToHand()

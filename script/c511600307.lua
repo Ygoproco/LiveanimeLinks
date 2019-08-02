@@ -13,13 +13,14 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
+s.listed_series={0x234}
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local bc=Duel.GetAttackTarget()
 	if not bc then return false end
 	local tc=Duel.GetAttacker()
 	if not tc:IsControler(tp) then tc,bc=bc,tc end
 	e:SetLabelObject(tc)
-	return tc:IsControler(tp) and tc:IsSetCard(0x582) and not bc:IsControler(tp)
+	return tc:IsControler(tp) and tc:IsSetCard(0x234) and not bc:IsControler(tp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
