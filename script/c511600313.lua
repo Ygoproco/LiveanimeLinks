@@ -29,8 +29,8 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_SET_ATTACK)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(0,LOCATION_MZONE)
-	e3:SetTarget(c.target)
-	e3:SetValue(c.value)
+	e3:SetTarget(s.target)
+	e3:SetValue(s.value)
 	c:RegisterEffect(e3)
 end
 s.listed_series={0x234}
@@ -75,9 +75,9 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c.target(e,c)
+function s.target(e,c)
 	return c==e:GetHandler():GetBattleTarget()
 end
-function c.value(e,c)
+function s.value(e,c)
 	return c:GetAttack()/2
 end

@@ -1,5 +1,5 @@
 --－Ａｉ－サツ
---HAi
+--HA.I.
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

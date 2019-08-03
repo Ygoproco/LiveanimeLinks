@@ -1,5 +1,5 @@
 --Ａｉの儀式
---Ai's Ritual
+--A.I.'s Ritual
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

@@ -1,5 +1,5 @@
 --イグニスターＡｉランド
---Ignister AiLand
+--Ignister A.I.Land
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

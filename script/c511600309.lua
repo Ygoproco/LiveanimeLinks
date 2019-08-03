@@ -1,5 +1,5 @@
 --Ａｉの賛歌
---Ai's Hymn
+--A.I.'s Hymn
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
