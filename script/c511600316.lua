@@ -1,5 +1,5 @@
 --必殺の間－Ａｉ－
---TAimed Technique
+--TA.I.med Technique
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

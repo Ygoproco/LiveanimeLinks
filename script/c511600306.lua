@@ -1,5 +1,5 @@
 --Ａｉラブ融合
---Ai Love Yousion
+--A.I. Love Yousion
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

@@ -1,5 +1,5 @@
 --Ａｉドリング・ボーン
---Aidle Reborn
+--A.I.dle Reborn
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

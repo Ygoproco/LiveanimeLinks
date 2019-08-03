@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x234}
-s.listed_names{511600306}
+s.listed_names={511600306}
 function s.filter(c)
 	return c:IsSetCard(0x234) and c:IsFaceup() and c:GetSequence()<5
 end

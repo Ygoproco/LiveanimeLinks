@@ -1,5 +1,5 @@
 --Ａｉ打ち
---TAi Strike
+--TA.I. Strike
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
