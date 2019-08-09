@@ -26,15 +26,19 @@ end
 function c511000970.atop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	if Duel.IsAttackCostPaid()~=2 and tc:IsLocation(LOCATION_MZONE) then
-		local minc=Duel.GetFlagEffect(tp,511000970)==0 and 0 or 1
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-		local g=Duel.SelectReleaseGroup(tp,Card.IsRace,minc,1,tc,tc:GetRace())
-		if g and g:GetCount()>0 then
-			Duel.Release(g,REASON_COST)
+		if tc:IsRace(RACE_MACHINE+RACE_ZOMBIE) then
 			Duel.AttackCostPaid()
-			Duel.RegisterFlagEffect(tp,511000970,RESET_PHASE+PHASE_DAMAGE,0,1)
 		else
-			Duel.AttackCostPaid(2)
+			local minc=Duel.GetFlagEffect(tp,511000970)==0 and 0 or 1
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+			local g=Duel.SelectReleaseGroup(tp,Card.IsRace,minc,1,tc,tc:GetRace())
+			if g and g:GetCount()>0 then
+				Duel.Release(g,REASON_COST)
+				Duel.AttackCostPaid()
+				Duel.RegisterFlagEffect(tp,511000970,RESET_PHASE+PHASE_DAMAGE,0,1)
+			else
+				Duel.AttackCostPaid(2)
+			end
 		end
 	end
 end
