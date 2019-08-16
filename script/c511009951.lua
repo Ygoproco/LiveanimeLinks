@@ -47,6 +47,7 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
+s.listed_series={0x234}
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	if not e:GetHandler():IsLocation(LOCATION_GRAVE) then return end
@@ -62,7 +63,7 @@ function s.clear(e,tp,eg,ep,ev,re,r,rp)
 	s[1]=0
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x582)
+	return c:IsFaceup() and c:IsSetCard(0x234)
 end
 function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)

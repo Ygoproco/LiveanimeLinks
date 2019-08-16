@@ -1,4 +1,6 @@
+--剛鬼ザ・パワーロード・オーガ
 --Gouki The Powerload Ogre
+--Fixed by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -39,13 +41,12 @@ function s.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 function s.atkfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSetCard(0xfc)
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0xfc)
 end
 function s.atkval(e,c)
-	local g=Duel.GetMatchingGroup(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,0,c)
+	local g=Duel.GetMatchingGroup(s.atkfilter,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,c)
 	return g:GetSum(Card.GetLink)*200
 end
-
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)
 	if chk==0 then return true end
@@ -80,7 +81,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetTargetCards(e)
-	if dg and #dg>0 then
+	if #dg>0 then
 		Duel.Destroy(dg,REASON_EFFECT)
 	end
 end
