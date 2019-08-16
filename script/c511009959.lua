@@ -1,5 +1,6 @@
 --剛鬼ザ・パワーロード・オーガ
 --Gouki The Powerload Ogre
+--Fixed by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
 	--link summon
@@ -80,7 +81,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetTargetCards(e)
-	if dg and #dg>0 then
+	if #dg>0 then
 		Duel.Destroy(dg,REASON_EFFECT)
 	end
 end
