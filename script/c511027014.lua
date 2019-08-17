@@ -13,15 +13,12 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function s.cfilter(c)
-	return c:IsFaceup()
-end
 function s.filter(c,e,tp,atk)
-	return c:IsType(TYPE_LINK) and c:IsAttackBelow(atk) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_LINK) and c:GetAttack()<tg:GetFirst():GetAttack() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local cg=Duel.GetMatchingGroup(s.cfilter,tp,0,LOCATION_MZONE,nil)
-	local atk=cg:GetSum(Card.GetAttack)
+	local cg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	local atk=cg:GetMaxGroup(Card.GetAttack)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc,e,tp,atk) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,atk) end
