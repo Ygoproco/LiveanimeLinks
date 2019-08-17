@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c,e,tp,atk)
-	return c:IsType(TYPE_LINK) and c:GetAttack()<tg:GetFirst():GetAttack() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_LINK) and c:GetAttack()<atk:GetFirst():GetAttack() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local cg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
