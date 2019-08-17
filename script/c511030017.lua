@@ -25,18 +25,6 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,false,nil,nil,e,ft,tp)
 	e:SetLabelObject(g:GetFirst())
 	Duel.Release(g,REASON_COST)
-	--EFFECT_COUNT_CODE_OATH workaround for anime IDs
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e1:SetTargetRange(1,0)
-	e1:SetValue(s.aclimit)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-end
-function s.aclimit(e,re,tp)
-	return re:GetHandler():IsCode(id) and re:IsActiveType(EFFECT_TYPE_ACTIVATE)
 end
 function s.spfilter(c,e,tp,link,code)
 	return c:IsType(TYPE_LINK) and c:GetLink()==link and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(code)
