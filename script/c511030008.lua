@@ -39,8 +39,9 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and Duel.GetTurnPlayer()==tp
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() end
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and e:GetHandler():IsAbleToHandAsCost() end
 	Duel.SendtoHand(e:GetHandler(),tp,REASON_COST)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function s.filter(c,e,tp)
 	return c:IsSetCard(0x11a) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

@@ -41,7 +41,9 @@ end
 function s.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetMatchingGroupCount(s.cfilter,tp,LOCATION_MZONE,0,nil)
 	local g=Duel.GetDecktopGroup(tp,ct)
-	if chk==0 then return ct>0 and #g>=ct and g:FilterCount(Card.IsAbleToRemove,nil)==ct end
+	if chk==0 then return ct>0 and #g>=ct and g:FilterCount(Card.IsAbleToRemove,nil)==ct
+		and Duel.GetFlagEffect(tp,id)==0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,ct,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,ct,tp,LOCATION_REMOVED)
 end
@@ -90,7 +92,9 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local zone=e:GetHandler():GetLinkedZone(tp)&0x1f
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp,zone) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone) end
+		and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone)
+		and Duel.GetFlagEffect(tp,id-2)==0 end
+	Duel.RegisterFlagEffect(tp,id-2),RESET_PHASE+PHASE_END,0,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,zone)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,LOCATION_GRAVE)
