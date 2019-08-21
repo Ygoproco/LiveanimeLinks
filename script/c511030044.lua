@@ -107,7 +107,8 @@ function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabelObject():GetLabel()==1
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.GetFlagEffect(tp,id)==0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	e:GetLabelObject():SetLabel(0)
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)

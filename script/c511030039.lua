@@ -40,7 +40,9 @@ function s.spfilter(c,e)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e) end
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e)
+		and Duel.GetFlagEffect(tp,id+1)==0 end
+	Duel.RegisterFlagEffect(tp,id+1,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
