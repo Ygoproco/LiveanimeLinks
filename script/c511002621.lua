@@ -3,7 +3,7 @@
 --Scripted by AlphaKretin
 local s,id=GetID()
 function s.initial_effect(c)
-	aux.EnableExtraRule(c,s,s.init)
+	aux.EnableExtraRules(c,s,s.init)
 end
 function s.init(c)
 	--no direct
