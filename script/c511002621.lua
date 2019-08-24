@@ -14,10 +14,9 @@ function s.init(c)
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	Duel.RegisterEffect(e1,0)
 	--summon face-up defense
-	local EFFECT_LIGHT_INTERVENTION=EFFECT_DEVINE_LIGHT
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_LIGHT_INTERVENTION)
+	e2:SetCode(EFFECT_LIGHT_OF_INTERVENTION)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetTargetRange(1,1)
 	Duel.RegisterEffect(e2,0)
