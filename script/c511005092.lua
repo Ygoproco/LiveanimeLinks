@@ -2,29 +2,9 @@
 --rescripted by MLD
 --credits to andre and AlphaKretin
 --tag functionality by senpaizuri
-function c511005092.initial_effect(c)
-	--Pre-draw
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-	e1:SetCountLimit(1)
-	e1:SetOperation(c511005092.op)
-	Duel.RegisterEffect(e1,0)
-	--
-	local eb=Effect.CreateEffect(c)
-	eb:SetType(EFFECT_TYPE_SINGLE)
-	eb:SetCode(EFFECT_CANNOT_TO_DECK)
-	eb:SetRange(LOCATION_REMOVED)
-	c:RegisterEffect(eb)
-	local ec=eb:Clone()
-	ec:SetCode(EFFECT_CANNOT_TO_HAND)
-	c:RegisterEffect(ec)
-	local ed=eb:Clone()
-	ed:SetCode(EFFECT_CANNOT_TO_GRAVE)
-	c:RegisterEffect(ed)
-	local ee=eb:Clone()
-	ee:SetCode(EFFECT_CANNOT_REMOVE)
-	c:RegisterEffect(ee)
+local s,id=GetID()
+function s.initial_effect(c)
+	aux.EnableExtraRules(c,s,s.op)
 end
 --define pack
 --pack[1]=BP01, [2]=BP02, [3]=BPW2, [4]=BP03
@@ -211,18 +191,18 @@ local namechange={
 	[80764541]={ [1]={80764541,511001997}; };
 	
 }
-function c511005092.alternate(code,anime)
+function s.alternate(code,anime)
 	local chk=anime and 1 or 0
 	if not namechange[code] or not namechange[code][chk] then return code end
 	local num=Duel.GetRandomNumber(1,#namechange[code][chk])
 	return namechange[code][chk][num]
 end
-function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,511005092)>0 then return end
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(0,id)>0 then return end
 	if (packopen and not Duel.IsDuelType(DUEL_TAG_MODE)) or (Duel.GetTurnCount()==4) then e:Reset() return end
 	packopen=true
 	Duel.DisableShuffleCheck()
-	Duel.Hint(HINT_CARD,0,511005092)
+	Duel.Hint(HINT_CARD,0,id)
 	--tag variable defining
 	local tp=Duel.GetTurnPlayer()
 	if Duel.IsDuelType(DUEL_TAG_MODE) and Duel.GetTurnCount()>1 then tag=true end
@@ -230,16 +210,10 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 	if tag then o,z=tp,tp end
 	--first turn
 	if Duel.GetTurnCount()==1 then
-		--check if people want to duel
-		if not Duel.SelectYesNo(tp,aux.Stringid(4006,9)) or not Duel.SelectYesNo(1-tp,aux.Stringid(4006,9)) then
-			local sg=Duel.GetMatchingGroup(Card.IsCode,tp,0x7f,0x7f,nil,511005092)
-			Duel.SendtoDeck(sg,nil,-2,REASON_RULE)
-			return
-		end
 		startct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
 		Duel.SendtoDeck(Duel.GetFieldGroup(0,0x43,0x43),nil,-2,REASON_RULE)
 		for p=z,o do
-			local ca=Duel.CreateToken(p,511005092)
+			local ca=Duel.CreateToken(p,id)
 			Duel.Remove(ca,POS_FACEUP,REASON_RULE)
 		end
 		--pack selection
@@ -334,7 +308,7 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 				else
 					code=pack[packnum][rarity][Duel.GetRandomNumber(1,#pack[packnum][rarity])]
 				end
-				local finalcode=c511005092.alternate(code,anime)
+				local finalcode=s.alternate(code,anime)
 				g:AddCard(Duel.CreateToken(p,finalcode))
 			end
 			Duel.SendtoHand(g,nil,REASON_RULE)
@@ -365,5 +339,5 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Draw(p,startct,REASON_RULE)
 		end
 	end
-	Duel.RegisterFlagEffect(0,511005092,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
 end
