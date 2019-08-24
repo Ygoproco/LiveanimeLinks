@@ -3,15 +3,7 @@
 --Updated by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
-	--activate
-	local e1=Effect.CreateEffect(c) 
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_ADJUST)
-	e1:SetCountLimit(1)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_NO_TURN_RESET+EFFECT_FLAG_IGNORE_IMMUNE)
-	e1:SetRange(0xff)
-	e1:SetOperation(s.op)
-	c:RegisterEffect(e1)
+	aux.EnableExtraRules(c,s,s.op)
 	local proc=Duel.SendtoGrave
 	Duel.SendtoGrave=function(tg,r,tp)
 		if tp then
@@ -25,11 +17,8 @@ function s.initial_effect(c)
 		return proc(tg,r,tp)
 	end
 end
-function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+function s.op(c)
 	if Duel.GetFlagEffect(tp,id)==0 and Duel.GetFlagEffect(1-tp,id)==0 then
-		Duel.ConfirmCards(tp,c)
-		Duel.ConfirmCards(1-tp,c)
 		Duel.RegisterFlagEffect(tp,id,0,0,0)
 		--To controler's grave
 		local e1=Effect.GlobalEffect()
@@ -74,7 +63,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		--faceup def
 		local e3=Effect.GlobalEffect()
 		e3:SetType(EFFECT_TYPE_FIELD)
-		e3:SetCode(EFFECT_DEVINE_LIGHT)
+		e3:SetCode(EFFECT_LIGHT_OF_INTERVENTION)
 		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		e3:SetTargetRange(1,1)
 		Duel.RegisterEffect(e3,tp)
@@ -209,11 +198,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 			e22:SetTargetRange(LOCATION_SZONE,LOCATION_SZONE)
 			Duel.RegisterEffect(e22,tp)
 		end
-	end
-	Duel.DisableShuffleCheck()
-	Duel.SendtoDeck(c,nil,-2,REASON_RULE)
-	if c:IsPreviousLocation(LOCATION_HAND) then
-		Duel.Draw(tp,1,REASON_RULE)
 	end
 	local g=Duel.GetMatchingGroup(aux.NOT(Card.IsHasEffect),tp,0xff,0xff,nil,EFFECT_LIMIT_SUMMON_PROC)
 	local g2=Duel.GetMatchingGroup(aux.NOT(Card.IsHasEffect),tp,0xff,0xff,nil,EFFECT_LIMIT_SET_PROC)
