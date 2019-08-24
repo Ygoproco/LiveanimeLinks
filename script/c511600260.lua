@@ -1,8 +1,9 @@
 --海晶乙女 クリスタルハート
 --Marincess Crystal Heart
 --scripted by Larry126
-local s,id=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
+	alias=c:GetOriginalCodeRule()
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_WATER),2,2)
 	c:EnableReviveLimit()
@@ -17,7 +18,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--negate
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(27240101,0))
+	e2:SetDescription(aux.Stringid(alias,0))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)

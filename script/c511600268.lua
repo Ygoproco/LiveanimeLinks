@@ -1,8 +1,9 @@
 --海晶乙女の闘海
 --Marincess Battle Ocean
 --scripted by Larry126
-local s,id=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
+	alias=c:GetOriginalCodeRule()
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -28,8 +29,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--immune
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(alias,0))
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_IMMUNE_EFFECT)
+	e4:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
 	e4:SetTarget(s.etarget)
@@ -37,6 +40,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--equip
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(alias,1))
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e5:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
@@ -58,8 +62,9 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
+s.listed_names={101010040}
 function s.matchk(e,c)
-	if c:GetMaterial():IsExists(Card.IsLinkCode,1,nil,511600260) then
+	if c:GetMaterial():IsExists(Card.IsLinkCode,1,nil,101010040) then
 		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD-RESET_LEAVE-RESET_TEMP_REMOVE,0,1)
 	end
 end
@@ -104,7 +109,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	local tc=Duel.GetFirstTarget()
 	if ft<1 or not tc or not tc:IsRelateToEffect(e) or not tc:IsFaceup() then return end
-	local g=aux.SelectUnselectGroup(Duel.GetMatchingGroup(s.eqfilter,tp,LOCATION_GRAVE,0,nil),e,tp,1,math.min(ft,3),s.eqcon,1,tp,HINTMSG_EQUIP)
+	local g=aux.SelectUnselectGroup(Duel.GetMatchingGroup(aux.NecroValleyFilter(s.eqfilter),tp,LOCATION_GRAVE,0,nil),e,tp,1,math.min(ft,3),s.eqcon,1,tp,HINTMSG_EQUIP)
 	for eqc in aux.Next(g) do
 		Duel.Equip(tp,eqc,tc,true,true)
 		--Equip limit

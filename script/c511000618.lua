@@ -25,7 +25,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
+	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.Draw(p,ct,REASON_EFFECT)
 end
