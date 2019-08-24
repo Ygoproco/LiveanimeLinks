@@ -2,48 +2,28 @@
 --Dimension Duel
 --scripted by Larry126
 --note: Please contact with me if wanting to edit this script
-function c511600002.initial_effect(c)
---Activate
-	local e1=Effect.CreateEffect(c) 
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PREDRAW)
-	e1:SetCountLimit(1)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_NO_TURN_RESET)
-	e1:SetRange(0xff)
-	e1:SetOperation(c511600002.op)
-	c:RegisterEffect(e1)
+local s,id=GetID()
+function s.initial_effect(c)
+	aux.EnableExtraRules(c,s,s.op)
 end
-function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	--check if number of card >20 if speed duel or >40 if other duel
-	if Duel.IsExistingMatchingCard(Card.IsCode,tp,0xff,0xff,1,nil,511004001)
-		and Duel.GetMatchingGroupCount(nil,tp,LOCATION_HAND+LOCATION_DECK,0,c)<20 then
-		return Duel.Win(1-tp,0x60)
-	elseif Duel.GetMatchingGroupCount(nil,tp,LOCATION_HAND+LOCATION_DECK,0,c)<40 
-		and not Duel.IsExistingMatchingCard(Card.IsCode,tp,0xff,0xff,1,nil,511004001) then
-		return Duel.Win(1-tp,0x60)
-	end
-	if Duel.GetFlagEffect(tp,511600002)==0 and Duel.GetFlagEffect(1-tp,511600002)==0 then
-		if c:IsLocation(LOCATION_DECK+LOCATION_EXTRA+LOCATION_REMOVED) and c:IsFacedown() then
-			Duel.ConfirmCards(tp,c)
-		end
-		Duel.ConfirmCards(1-tp,c)
-		Duel.RegisterFlagEffect(tp,511600002,0,0,0)
+function s.op(c)
+	if Duel.GetFlagEffect(tp,id)==0 and Duel.GetFlagEffect(1-tp,id)==0 then
+		Duel.RegisterFlagEffect(tp,id,0,0,0)
 	--limit summon
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_ADJUST)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
-		e1:SetCondition(c511600002.limitcon)
-		e1:SetOperation(c511600002.limitop)
+		e1:SetCondition(s.limitcon)
+		e1:SetOperation(s.limitop)
 		Duel.RegisterEffect(e1,tp)
 	--Damage
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_DESTROYED)
 		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e2:SetTarget(c511600002.damcon)
-		e2:SetOperation(c511600002.damop)
+		e2:SetTarget(s.damcon)
+		e2:SetOperation(s.damop)
 		Duel.RegisterEffect(e2,tp)
 	--no battle damage
 		local e3=Effect.CreateEffect(c)
@@ -51,7 +31,7 @@ function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		e3:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
 		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		e3:SetTargetRange(1,1)
-		e3:SetCondition(c511600002.bcon)
+		e3:SetCondition(s.bcon)
 		Duel.RegisterEffect(e3,tp)
 	--Dimension Summon
 		local e4=Effect.CreateEffect(c)
@@ -60,7 +40,7 @@ function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		e4:SetCode(EFFECT_SUMMON_PROC)
 		e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_IGNORE_RANGE)
 		e4:SetTarget(function(e,c)return c:GetFlagEffect(51160002)==0 end)
-		e4:SetCondition(c511600002.ntcon)
+		e4:SetCondition(s.ntcon)
 		e4:SetValue(6)
 		Duel.RegisterEffect(e4,tp)
 		local e5=e4:Clone()
@@ -72,8 +52,8 @@ function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		local e6=Effect.CreateEffect(c)
 		e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e6:SetCode(EVENT_SUMMON_SUCCESS)
-		e6:SetTarget(c511600002.spttg)
-		e6:SetOperation(c511600002.sptop)
+		e6:SetTarget(s.spttg)
+		e6:SetOperation(s.sptop)
 		e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		Duel.RegisterEffect(e6,tp)
 		local e7=e6:Clone()
@@ -83,21 +63,16 @@ function c511600002.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		e8:SetCode(EVENT_SPSUMMON_SUCCESS)
 		Duel.RegisterEffect(e8,tp)
 	end
-	Duel.DisableShuffleCheck()
-	Duel.SendtoDeck(c,nil,-2,REASON_RULE)
-	if c:IsPreviousLocation(LOCATION_HAND) then
-		Duel.Draw(tp,1,REASON_RULE)
-	end
 end
-function c511600002.limitfilter(c)
+function s.limitfilter(c)
 	return c:IsHasEffect(EFFECT_LIMIT_SUMMON_PROC) and c:GetFlagEffect(51160002)<=0
 end
-function c511600002.limitcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511600002.limitfilter,tp,0xff,0xff,1,nil)
+function s.limitcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.limitfilter,tp,0xff,0xff,1,nil)
 end
-function c511600002.limitop(e,tp,eg,ep,ev,re,r,rp)
+function s.limitop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(c511600002.limitfilter,tp,0xff,0xff,nil)
+	local g=Duel.GetMatchingGroup(s.limitfilter,tp,0xff,0xff,nil)
 	if g:GetCount()>0 then
 		for tc in aux.Next(g) do
 			tc:RegisterFlagEffect(51160002,0,0,0)
@@ -106,20 +81,20 @@ function c511600002.limitop(e,tp,eg,ep,ev,re,r,rp)
 end
 ------------------------------------------------------------------------
 --tribute
-function c511600002.ntcon(e,c,minc)
+function s.ntcon(e,c,minc)
 	if c==nil then return true end
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 ------------------------------------------------------------------------
 --spirit charge
-function c511600002.sptfilter(c)
+function s.sptfilter(c)
 	return c:IsType(TYPE_MONSTER+TYPE_TRAPMONSTER+TYPE_TOKEN) and c:IsOnField()
 end
-function c511600002.spttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(c511600002.sptfilter,1,nil) end
+function s.spttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return eg:IsExists(s.sptfilter,1,nil) end
 end
-function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c511600002.sptfilter,nil)
+function s.sptop(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(s.sptfilter,nil)
 	for tc in aux.Next(g) do
 		local baseAtk=0
 		local baseDef=0
@@ -168,14 +143,14 @@ function c511600002.sptop(e,tp,eg,ep,ev,re,r,rp)
 end
 ------------------------------------------------------------------------
 --inflict battle damage
-function c511600002.damfilter(c)
+function s.damfilter(c)
 	return c:IsType(TYPE_MONSTER+TYPE_TRAPMONSTER+TYPE_TOKEN) and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
-function c511600002.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511600002.damfilter,1,nil)
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.damfilter,1,nil)
 end
-function c511600002.damop(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c511600002.damfilter,nil)
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(s.damfilter,nil)
 	local dam1=0
 	local dam2=0
 	if g:GetCount()<1 then return end
@@ -195,6 +170,6 @@ function c511600002.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 ------------------------------------------------------------------------
 --no battle damaged
-function c511600002.bcon(e,tp,eg,ep,ev,re,r,rp)
+function s.bcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttackTarget()~=nil
 end
