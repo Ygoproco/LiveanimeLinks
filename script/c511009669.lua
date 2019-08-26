@@ -43,10 +43,10 @@ function c511009669.descon(e)
 end
 function c511009669.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009669.filter(chkc,c,true) end
+	if chkc then return chkc:IsOnField() and chkc:IsLocation(LOCATION_MZONE) and c511009669.filter(chkc,c,true) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c511009669.filter,tp,LOCATION_MZONE,0,1,1,nil,c,true)
+	Duel.SelectTarget(tp,c511009669.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c,true)
 end
 function c511009669.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
