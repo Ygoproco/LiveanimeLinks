@@ -59,6 +59,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_CANNOT_SUMMON)
-		Duel.RegisterEffect(e1,tp)
+		Duel.RegisterEffect(e2,tp)
 	end
 end
