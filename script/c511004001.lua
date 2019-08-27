@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	aux.EnableExtraRules(c,s,s.op)
 end
 function s.op(c)
-	local c=e:GetHandler()
+	local tp=c:GetOwner()
 	--todeck
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	local hct=#g-math.ceil(#g/5)
@@ -31,7 +31,7 @@ function s.op(c)
 	Duel.SetLP(1-tp,math.ceil(lp2/2))
 	--half deck
 	local dg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
-	if #dg>30 then
+	if #dg1>30 then
 		local rg1=dg1:Select(tp,#dg1-30,#dg1-20,nil)
 		Duel.SendtoDeck(rg1,nil,-2,REASON_RULE)
 	end
