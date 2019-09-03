@@ -81,8 +81,6 @@ local handnum={[0]=5;[1]=5}
 local skip_effects={}
 
 function s.op(c)
-	if packopen then e:Reset() return end
-	packopen=true
 	Duel.DisableShuffleCheck()
 	--Hint
 	Duel.Hint(HINT_CARD,0,id)
@@ -109,7 +107,6 @@ function s.op(c)
 	local e3=e1:Clone()
 	e3:SetCode(EFFECT_SKIP_BP)
 	Duel.RegisterEffect(e3,0)
-	e:Reset()
 	local e4=e1:Clone()
 	e3:SetCode(EFFECT_SKIP_M2)
 	Duel.RegisterEffect(e4,0)
@@ -136,7 +133,6 @@ function s.op(c)
 	e5:SetCondition(s.nt_cd)
 	e5:SetOperation(s.nt_op)
 	Duel.RegisterEffect(e5,0)
-	e:Reset()
 end
 
 --Checks
