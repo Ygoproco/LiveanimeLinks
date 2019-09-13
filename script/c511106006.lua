@@ -1,6 +1,6 @@
---Egg Clutch (Anime)
+--産卵床
+--Egg Clutch
 --scripted by Hatter
-
 local s,id=GetID()
 function s.initial_effect(c)
 	--activate
@@ -62,7 +62,7 @@ end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
- 	if Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)~=0 then
+	if Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)~=0 then
 		e:GetHandler():CreateRelation(tc,RESET_EVENT+RESETS_STANDARD)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -80,12 +80,12 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_DISABLE)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e3)
 		local e4=e3:Clone()
 		e4:SetCode(EFFECT_DISABLE_EFFECT)
 		tc:RegisterEffect(e4)
-		tc:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000,0,1)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 		end
 	end
 end
@@ -98,7 +98,7 @@ function s.deschk(e,tp,eg,ep,ev,re,r,rp)
 	if tc:GetFlagEffect(id)~=0 then des=des+1 end
 	tc=eg:GetNext()
 	end
-	if des>0 then e:GetHandler():RegisterFlagEffect(id+100,RESET_EVENT+0x1fe0000,0,1)
+	if des>0 then e:GetHandler():RegisterFlagEffect(id+100,RESET_EVENT+RESETS_STANDARD,0,1)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -118,16 +118,16 @@ function s.cos(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,(0x3e|0x537),0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) end
 	local tk=2
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then tk=1 end
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then tk=1 end
 		Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,tk,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,tk,0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
-	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) then return end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,(0x3e|0x537),0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) then return end
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	if ft~=1 then
 		local ct = {}
 		for i=1,math.min(ft,2) do
