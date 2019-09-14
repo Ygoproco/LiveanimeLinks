@@ -15,16 +15,16 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker():IsControler(1-tp)
+	return not Duel.GetAttacker():IsControler(tp)
 end
 function s.filter(c,tid)
 	return c:IsSetCard(0x577) and c:IsType(TYPE_LINK) and c:GetTurnID()==tid
-		and c:GetReason()&REASON_BATTLE~=0 and (not dam or c:GetLink()>0)
+		and c:GetReason()&REASON_BATTLE~=0 and c:GetLink()>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc,Duel.GetTurnCount()) end
 	local tid=Duel.GetTurnCount()
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil,c,tid) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil,tid) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil,tid)
 end

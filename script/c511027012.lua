@@ -48,8 +48,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	   Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.cfilter(c,tp)
-	return c:IsType(TYPE_LINK) and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,c,c:GetCode())
+function s.cfilter(c,e,tp)
+	return c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,c,c:GetCode())
 end
 function s.costfilter(c)
 	return c:IsType(TYPE_LINK) and c:IsAbleToRemoveAsCost()
