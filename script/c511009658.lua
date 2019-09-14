@@ -1,6 +1,9 @@
---Motor Worm Spread Queen
+--電動蟲スプレッド女王
+--Motor Worm Spreader Queen
 --fixed by MLD
-function c511009658.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
+	--link summon
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_INSECT),2)
 	--atkup
@@ -9,7 +12,7 @@ function c511009658.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(c511009658.value)
+	e1:SetValue(s.value)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
@@ -19,9 +22,9 @@ function c511009658.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetCondition(c511009658.spcon)
-	e2:SetTarget(c511009658.sptg)
-	e2:SetOperation(c511009658.spop)
+	e2:SetCondition(s.spcon)
+	e2:SetTarget(s.sptg)
+	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 	--cannot be battle target
 	local e3=Effect.CreateEffect(c)
@@ -32,26 +35,26 @@ function c511009658.initial_effect(c)
 	e3:SetValue(aux.TargetBoolFunction(Card.IsCode,511009659))
 	c:RegisterEffect(e3)
 end
-function c511009658.filter(c)
+function s.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_INSECT)
 end
-function c511009658.value(e,c)
-	return Duel.GetMatchingGroupCount(c511009658.filter,0,LOCATION_MZONE,LOCATION_MZONE,nil)*700
+function s.value(e,c)
+	return Duel.GetMatchingGroupCount(s.filter,0,LOCATION_MZONE,LOCATION_MZONE,nil)*700
 end
-function c511009658.spcon(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.spcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return e:GetHandler():GetLinkedGroupCount()==0
 end
-function c511009658.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local zone=e:GetHandler():GetLinkedZone(tp)
-		return zone~=0 and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) 
+		return zone~=0 and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,(0x3e|0x537),0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) 
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
-function c511009658.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=e:GetHandler():GetLinkedZone(tp)
-	if zone~=0 and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,0x3e,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) then
+	if zone~=0 and Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,(0x3e|0x537),0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT) then
 		local token=Duel.CreateToken(tp,511009659)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
