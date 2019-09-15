@@ -1,4 +1,5 @@
 --Earth Golem @Ignister
+--Scripted by Rundas
 local s,id=GetID()
 function c511600305.initial_effect(c)
 	--fusion material
