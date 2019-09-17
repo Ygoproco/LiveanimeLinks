@@ -1,5 +1,5 @@
---Ａｉラブ融合
---A.I. Love Yousion
+--Ａｉラブ融合 (Anime)
+--A.I. Love Yousion (Anime)
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

@@ -42,6 +42,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.negop)
 	c:RegisterEffect(e4)
 end
+s.listed_series={0x101}
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentPhase()~=PHASE_BATTLE_STEP then return false end
 	local c=Duel.GetAttackTarget()

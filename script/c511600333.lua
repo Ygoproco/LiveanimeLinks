@@ -33,11 +33,13 @@ function s.initial_effect(c)
 	e3:SetOperation(s.damop)
 	c:RegisterEffect(e3)
 end
+s.listed_series={0x119}
+s.listed_names={id}
 function s.atkfilter(c)
 	return c:IsType(TYPE_LINK)
 end
 function s.val(e,c)
-	return Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE,0,nil):GetSum(Card.GetLink)*300
+	return Duel.GetMatchingGroup(s.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetSum(Card.GetLink)*300
 end
 function s.indestg(e,c)
 	local ec=e:GetHandler():GetEquipTarget()

@@ -35,6 +35,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.checkop)
 	c:RegisterEffect(e3)
 end
+s.listed_series={0x119}
 function s.spfilter(c,e,tp,lk)
 	return c:IsSetCard(0x119) and c:IsType(TYPE_LINK) and c:GetLink()<lk
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
