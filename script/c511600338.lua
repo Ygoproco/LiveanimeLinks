@@ -14,6 +14,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
+s.listed_series={0x119}
 function s.filter(c)
 	return c:IsType(TYPE_LINK) and c:IsSetCard(0x119) and c:IsAbleToExtra()
 end

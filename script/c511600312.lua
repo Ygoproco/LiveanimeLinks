@@ -1,5 +1,5 @@
---Ａｉの儀式
---A.I.'s Ritual
+--Ａｉの儀式 (Anime)
+--A.I.'s Ritual (Anime)
 --Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)

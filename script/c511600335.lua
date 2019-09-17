@@ -31,10 +31,8 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
-function s.cfilter(c)
-	return c:IsType(TYPE_LINK) and c:IsSetCard(0x119) and REASON_EFFECT&c:GetReason()>0
-		and c:GetReasonEffect():GetHandlerPlayer()~=c:GetPreviousControler()
-end
+s.listed_series={0x119}
+s.listed_names={id}
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for ec in aux.Next(eg) do
 		if ec:GetPreviousTypeOnField()&TYPE_LINK>0

@@ -1,5 +1,5 @@
---ライトドラゴン＠イグニスター
---Light Dragon @Ignister
+--ライトドラゴン＠イグニスター (Anime)
+--Light Dragon @Ignister (Anime)
 --Scripted by Larry126
 local s,id,alias=GetID()
 function s.initial_effect(c)

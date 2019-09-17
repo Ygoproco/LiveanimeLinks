@@ -51,6 +51,7 @@ function s.initial_effect(c)
 	e6:SetOperation(s.desrepop)
 	c:RegisterEffect(e6)
 end
+s.listed_series={0x119}
 function s.eqfilter(c)
 	return c:IsSetCard(0x119) and c:GetSequence()>4
 end
