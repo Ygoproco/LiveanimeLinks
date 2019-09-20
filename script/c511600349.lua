@@ -78,9 +78,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local reff=e:GetHandler():GetReasonEffect()
+	local reff=c:GetReasonEffect()
 	if reff and reff:GetHandler():IsCode(id) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
