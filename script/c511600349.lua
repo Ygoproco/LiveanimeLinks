@@ -77,6 +77,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.lvop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local reff=e:GetHandler():GetReasonEffect()
 	if reff and reff:GetHandler():IsCode(id) then
 		local e1=Effect.CreateEffect(e:GetHandler())
