@@ -1,6 +1,6 @@
 --集いし願い (Anime)
 --Converging Wishes (Anime)
---initial scripted by MLD, fixed by pyrQ
+--original script by MLD, fixed by pyrQ
 local s,id=GetID()
 function s.initial_effect(c)
 	--activate
