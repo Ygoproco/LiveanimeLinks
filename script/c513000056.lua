@@ -41,7 +41,11 @@ function s.filter(c,e,tp)
 	local tuner=Duel.GetMatchingGroup(s.matfilter1,tp,LOCATION_GRAVE,0,nil,c)
 	local nontuner=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_GRAVE,0,nil,c)
 	if not c:IsType(TYPE_SYNCHRO) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,true,false) then return false end
-	return tuner:IsExists(s.lvfilter,1,nil,c,nontuner)
+	if c:IsSetCard(0x301) then
+		return nontuner:IsExists(s.lvfilter2,1,nil,c,tuner)
+	else
+		return tuner:IsExists(s.lvfilter,1,nil,c,nontuner)
+	end
 end
 function s.lvfilter(c,syncard,nontuner)
 	local code=syncard:GetOriginalCode()
@@ -49,6 +53,13 @@ function s.lvfilter(c,syncard,nontuner)
 	local slv=syncard:GetLevel()
 	local nt=nontuner:Filter(Card.IsCanBeSynchroMaterial,nil,syncard,c)
 	return nt:CheckWithSumEqual(Card.GetSynchroLevel,slv-lv,1,99,syncard)
+end
+function s.lvfilter2(c,syncard,tuner)
+	local code=syncard:GetOriginalCode()
+	local lv=c:GetSynchroLevel(syncard)
+	local slv=syncard:GetLevel()
+	local nt=tuner:Filter(Card.IsCanBeSynchroMaterial,nil,syncard,c)
+	return nt:CheckWithSumEqual(Card.GetSynchroLevel,lv+slv,1,99,syncard)
 end
 function s.matfilter1(c,syncard)
 	local code=syncard:GetOriginalCode()
@@ -91,21 +102,32 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 	Duel.BreakEffect()
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_EXTRA,0,nil,e,tp)
-	if g:GetCount()>0 then
+	if #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=g:Select(tp,1,1,nil):GetFirst()
 		local code=tc:GetOriginalCode()
 		local tuner=Duel.GetMatchingGroup(s.matfilter1,tp,LOCATION_GRAVE,0,nil,tc)
 		local nontuner=Duel.GetMatchingGroup(s.matfilter2,tp,LOCATION_GRAVE,0,nil,tc)
 		local mat1
-		tuner=tuner:Filter(s.lvfilter,nil,tc,nontuner)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		mat1=tuner:Select(tp,1,1,nil)
-		local tlv=mat1:GetFirst():GetSynchroLevel(tc)
-		nontuner=nontuner:Filter(Card.IsCanBeSynchroMaterial,nil,tc,mat1:GetFirst())
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local mat2=nontuner:SelectWithSumEqual(tp,Card.GetSynchroLevel,tc:GetLevel()-tlv,1,99,tc)
-		mat1:Merge(mat2)
+		if tc:IsSetCard(0x301) then
+			nontuner=nontuner:Filter(s.lvfilter2,nil,tc,tuner)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
+			mat1=nontuner:Select(tp,1,1,nil)
+			local tlv=mat1:GetFirst():GetSynchroLevel(tc)
+			tuner=tuner:Filter(Card.IsCanBeSynchroMaterial,nil,tc,mat1:GetFirst())
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
+			local mat2=tuner:SelectWithSumEqual(tp,Card.GetSynchroLevel,tc:GetLevel()+tlv,1,99,tc)
+			mat1:Merge(mat2)
+		else
+			tuner=tuner:Filter(s.lvfilter,nil,tc,nontuner)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
+			mat1=tuner:Select(tp,1,1,nil)
+			local tlv=mat1:GetFirst():GetSynchroLevel(tc)
+			nontuner=nontuner:Filter(Card.IsCanBeSynchroMaterial,nil,tc,mat1:GetFirst())
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
+			local mat2=nontuner:SelectWithSumEqual(tp,Card.GetSynchroLevel,tc:GetLevel()-tlv,1,99,tc)
+			mat1:Merge(mat2)
+		end
 		tc:SetMaterial(mat1)
 		Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_SYNCHRO)
 		Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,true,false,POS_FACEUP)
