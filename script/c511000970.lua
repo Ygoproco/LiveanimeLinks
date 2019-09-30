@@ -1,3 +1,4 @@
+--囚われ鏡
 --Mirror Prison
 function c511000970.initial_effect(c)
 	--attack cost
@@ -20,6 +21,7 @@ function c511000970.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511000970.atcost(e,c,tp)
+	if c:IsRace(RACE_MACHINE+RACE_ZOMBIE) or c:IsImmuneToEffect(e) then return true end
 	local ct=Duel.GetFlagEffect(tp,51100970)
 	return Duel.CheckReleaseGroup(tp,Card.IsRace,ct,c,c:GetRace())
 end
