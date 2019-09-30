@@ -28,7 +28,7 @@ end
 function c511000970.atop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	if Duel.IsAttackCostPaid()~=2 and tc:IsLocation(LOCATION_MZONE) then
-		if tc:IsRace(RACE_MACHINE+RACE_ZOMBIE) then
+		if tc:IsRace(RACE_MACHINE+RACE_ZOMBIE) or tc:IsImmuneToEffect(e) then
 			Duel.AttackCostPaid()
 		else
 			local minc=Duel.GetFlagEffect(tp,511000970)==0 and 0 or 1
