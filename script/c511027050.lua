@@ -16,10 +16,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c)
-   return c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_EXTRA)
+   return c:GetSummonLocation()==LOCATION_EXTRA and c:IsSummonType(SUMMON_TYPE_SPECIAL)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(s.filter,tp,0,LOCATION_MZONE,nil)>0 and Duel.GetMatchingGroupCount(s.filter,tp,LOCATION_MZONE,0,nil)==0 and Duel.GetLP(tp)<Duel.GetLP(1-tp) 
+	return Duel.GetLP(tp)<Duel.GetLP(1-tp) and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)
+        and not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) 
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
