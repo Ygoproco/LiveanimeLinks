@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0x234}
+s.listed_series={0x135}
 function s.matfilter(c,lc,sumtype,tp)
 	return c:IsLevelBelow(4) and c:IsRace(RACE_CYBERSE,lc,sumtype,tp)
 end
@@ -60,7 +60,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c,ft,tp)
-	return c:IsSetCard(0x234) and c:IsControler(tp)
+	return c:IsSetCard(0x135) and c:IsControler(tp)
 	   and c:GetSummonLocation()==LOCATION_EXTRA and (ft>0 or c:GetSequence()<5)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

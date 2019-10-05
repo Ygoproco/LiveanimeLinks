@@ -3,8 +3,8 @@
 --Scripted by Larry126
 local s,id,alias=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(0x234)
-	c:SetCounterLimit(0x234,1)
+	c:EnableCounterPermit(0x135)
+	c:SetCounterLimit(0x135,1)
 	--link summon
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttackAbove,1500),2,nil,s.lcheck)
@@ -84,23 +84,23 @@ function s.atkval(e,c)
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_ONFIELD,0)*1000
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanAddCounter(0x234,1) end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,e:GetHandler(),1,LOCATION_MZONE,0x234)
+	if chk==0 then return e:GetHandler():IsCanAddCounter(0x135,1) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,e:GetHandler(),1,LOCATION_MZONE,0x135)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
-		e:GetHandler():AddCounter(0x234,1)
+		e:GetHandler():AddCounter(0x135,1)
 	end
 end
 function s.econ(e)
-	return e:GetHandler():GetCounter(0x234)>0
+	return e:GetHandler():GetCounter(0x135)>0
 end
 function s.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 function s.imcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x234,1,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x234,1,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x135,1,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x135,1,REASON_COST)
 end
 function s.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT)
@@ -134,7 +134,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) 
 		and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,c:GetLinkedZone())>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511600350,0x234,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511600350,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
@@ -145,7 +145,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,e:GetHandler():GetLinkedZone())>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511600350,0x234,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511600350,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) then
 		local token=Duel.CreateToken(tp,511600350)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,e:GetHandler():GetLinkedZone())
 	end

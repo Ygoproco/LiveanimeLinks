@@ -12,16 +12,16 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 end
-s.listed_series={0x234}
+s.listed_series={0x135}
 function s.excon(c)
-	return c:IsSetCard(0x234) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsFaceup()
+	return c:IsSetCard(0x135) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsFaceup()
 end
 function s.exfilter0(c)
 	return not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-		and c:IsSetCard(0x234) and c:IsLevelAbove(1) and c:IsAbleToRemove()
+		and c:IsSetCard(0x135) and c:IsLevelAbove(1) and c:IsAbleToRemove()
 end
 function s.filter(c,e,tp,m1,m2,ft)
-	if not c:IsSetCard(0x234) or not c:IsRitualMonster()
+	if not c:IsSetCard(0x135) or not c:IsRitualMonster()
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
 	mg:Merge(m2)
@@ -43,7 +43,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		e:SetLabel(0)
-		local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsSetCard,nil,0x234)
+		local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsSetCard,nil,0x135)
 		local mg2=Group.CreateGroup()
 		if Duel.IsExistingMatchingCard(s.excon,tp,LOCATION_MZONE,0,1,nil) then
 			e:SetLabel(1)
@@ -54,7 +54,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsSetCard,nil,0x234)
+	local mg1=Duel.GetRitualMaterial(tp):Filter(Card.IsSetCard,nil,0x135)
 	local mg2=Group.CreateGroup()
 	if e:GetLabel()==1 then
 		e:SetLabel(0)

@@ -32,7 +32,7 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(e1,0)
 	end
 end
-s.listed_series={0x234}
+s.listed_series={0x135}
 function s.chk(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetAttacker():IsType(TYPE_LINK) and Duel.GetAttackTarget()
 		and Duel.GetAttackTarget():IsType(TYPE_LINK) and Duel.GetFlagEffect(tp,id)==0 then
@@ -45,7 +45,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 function s.filter1(c)
-	return c:IsSetCard(0x234) and c:IsFaceup() and c:GetSequence()>4
+	return c:IsSetCard(0x135) and c:IsFaceup() and c:GetSequence()>4
 end
 function s.filter2(c)
 	return c:IsType(TYPE_LINK) and c:GetSequence()<5

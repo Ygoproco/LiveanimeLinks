@@ -25,13 +25,13 @@ function s.initial_effect(c)
 	e2:SetOperation(s.recop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0x234}
+s.listed_series={0x135}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
 end
 function s.cfilter(c,tp)
-	return c:IsType(TYPE_LINK) and c:IsSetCard(0x234)
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0x135)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -51,12 +51,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x234) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x135) end
 	Duel.SetTargetPlayer(tp)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x234)*200)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x135)*200)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x234)
+	local ct=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x135)
 	if ct>0 then
 		Duel.Recover(Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER),ct*200,REASON_EFFECT)
 	end

@@ -23,10 +23,10 @@ function s.initial_effect(c)
 	e2:SetValue(s.atkval)
 	c:RegisterEffect(e2)
 end
-s.material_setcode={0x234}
-s.listed_series={0x234}
+s.material_setcode={0x135}
+s.listed_series={0x135}
 function s.matfilter(c,fcard,sumtype,tp)
-	return c:IsFusionSetCard(0x234) and c:IsAttribute(ATTRIBUTE_EARTH,fcard,sumtype,tp)
+	return c:IsFusionSetCard(0x135) and c:IsAttribute(ATTRIBUTE_EARTH,fcard,sumtype,tp)
 end
 function s.sumsuc(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
