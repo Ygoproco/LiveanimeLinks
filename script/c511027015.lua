@@ -42,6 +42,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.actop)
 	c:RegisterEffect(e3)
 end
+s.listed_series={0x10f}
 function s.filter(c)
 	return c:IsSetCard(0x10f) and c:IsType(TYPE_LINK)
 end
