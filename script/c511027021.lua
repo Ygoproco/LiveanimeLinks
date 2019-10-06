@@ -1,5 +1,6 @@
 --サイコロジック
 --Dice Logic
+--Fixed by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -36,6 +37,7 @@ function s.initial_effect(c)
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_TOSS_DICE)
+		ge1:SetProperty(EFFECT_FLAG_DELAY)
 		ge1:SetOperation(s.checkop)
 		Duel.RegisterEffect(ge1,0)
 		local ge2=Effect.CreateEffect(c)
