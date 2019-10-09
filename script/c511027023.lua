@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,id)--+EFFECT_COUNT_CODE_OATH
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -19,6 +19,11 @@ function s.initial_effect(c)
 end
 function s.counterfilter(c)
 	return c:IsSetCard(0x577)
+end
+function s.relfilter(tp)
+	return function(c)
+		return c:IsSetCard(0x577) and Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,c)
+	end
 end
 function s.filter(c)
 	return c:IsSetCard(0x577) and c:IsType(TYPE_LINK) and c:GetLink()>0 and (not e or c:IsCanBeEffectTarget(e))
@@ -30,8 +35,8 @@ end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil,e)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 
-		and Duel.CheckReleaseGroupCost(tp,s.counterfilter,1,false,aux.ReleaseCheckTarget,nil,dg) end
-	local rc=Duel.SelectReleaseGroupCost(tp,s.counterfilter,1,1,false,aux.ReleaseCheckTarget,nil,dg):GetFirst()
+		and Duel.CheckReleaseGroupCost(tp,s.relfilter(tp),1,false) end
+	local rc=Duel.SelectReleaseGroupCost(tp,s.relfilter(tp),1,1,false):GetFirst()
 	local att=rc:GetAttribute()
 	e:SetLabel(att)
 	Duel.Release(rc,REASON_COST)
