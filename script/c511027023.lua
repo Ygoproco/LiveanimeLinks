@@ -33,7 +33,6 @@ function s.spfilter(c,e,tp,att)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local dg=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil,e)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 
 		and Duel.CheckReleaseGroupCost(tp,s.relfilter(tp),1,false) end
 	local rc=Duel.SelectReleaseGroupCost(tp,s.relfilter(tp),1,1,false):GetFirst()
