@@ -21,13 +21,13 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_LVCHANGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id+100)
+	e2:SetCountLimit(1,id+1)
 	e2:SetCost(s.thcost)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-s.listed_names={101011054}
+s.listed_names={85327820}
 s.listed_series={0x135}
 function s.filter(c)
 	return c:IsType(TYPE_LINK) and c:IsFaceup() and c:GetSequence()>4
@@ -64,7 +64,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabelObject(g:GetFirst())
 end
 function s.thfilter(c)
-	return c:IsCode(101011054) and c:IsAbleToHand()
+	return c:IsCode(85327820) and c:IsAbleToHand()
 end
 function s.thfilter2(c)
 	return c:IsSetCard(0x135) and c:IsRitualMonster() and c:IsAbleToHand()

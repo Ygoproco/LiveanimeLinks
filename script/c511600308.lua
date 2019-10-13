@@ -21,14 +21,14 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_BATTLE_START)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1,alias+100)
+	e2:SetCountLimit(1,alias+1)
 	e2:SetCondition(s.thcon)
 	e2:SetCost(s.thcost)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0x135,0x235}
+s.listed_series={0x135,0x136}
 s.listed_names={alias}
 function s.filter(c,e,tp)
 	return c:IsSetCard(0x135) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -51,10 +51,10 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttackTarget()
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x235) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x136) and c:IsAbleToRemoveAsCost()
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x235) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and not c:IsCode(id)
+	return c:IsSetCard(0x136) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and not c:IsCode(id)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
