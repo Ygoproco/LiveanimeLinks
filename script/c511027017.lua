@@ -122,8 +122,9 @@ end
 function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=s.spzone(Duel.GetMatchingGroup(s.borfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil),tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,zone)
-	if #g>0 then
-		Duel.SpecialSummon(g,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP,zone)
+	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,zone):GetFirst()
+	if tc then
+ 		Duel.SpecialSummon(tc,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP,zone)
+		tc:CompleteProcedure()
 	end
 end
