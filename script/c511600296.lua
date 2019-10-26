@@ -20,7 +20,7 @@ function s.initial_effect(c)
 end
 s.listed_names={101011050}
 function s.thfilter(c)
-	return c:IsCode(101011050) and c:IsAbleToHand()
+	return c:IsCode(59054773) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
