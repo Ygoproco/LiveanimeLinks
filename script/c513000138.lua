@@ -4,9 +4,9 @@
 --scripted by MLD
 --credit to TPD & Cybercatman
 --updated by Larry126
-Duel.LoadScript("c421.lua")
 local s,id=GetID()
 function s.initial_effect(c)
+	aux.CallToken(421)
 	--summon with 3 tribute
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_LIMIT_SUMMON_PROC)
 	e1:SetCondition(s.ttcon)
 	e1:SetOperation(s.ttop)
-	e1:SetValue(SUMMON_TYPE_TRIBUTE)
+	e1:SetValue(SUMMON_TYPE_ADVANCE)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_LIMIT_SET_PROC)
