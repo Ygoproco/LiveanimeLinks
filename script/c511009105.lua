@@ -1,4 +1,5 @@
---Performage Trapeze Force Witch
+--Ｅｍトラピーズ・フォーズ・ウィッチ
+--Performage Trapeze Witch
 local s,id=GetID()
 function s.initial_effect(c)
 	--fusion material
