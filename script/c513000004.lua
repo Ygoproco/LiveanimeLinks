@@ -29,6 +29,12 @@ function s.initial_effect(c)
 	e3:SetTarget(s.thtg)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
+	--Negative Level
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetCode(EFFECT_ALLOW_NEGATIVE)
+	c:RegisterEffect(e4)
 end
 function s.filter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_MONSTER)

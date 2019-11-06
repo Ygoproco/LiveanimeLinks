@@ -46,6 +46,12 @@ function c513000186.initial_effect(c)
 	e4:SetCode(EFFECT_ADD_SETCODE)
 	e4:SetValue(0x601)
 	c:RegisterEffect(e4)
+	--Negative Level
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e5:SetCode(EFFECT_ALLOW_NEGATIVE)
+	c:RegisterEffect(e5)
 end
 function c513000186.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
