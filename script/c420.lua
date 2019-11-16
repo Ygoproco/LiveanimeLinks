@@ -1094,33 +1094,6 @@ function Card.IsRed(c,fbool)
 	end
 end
 
--- Rose ローズ 
--- Fallen Angel of Roses/Queen Angel of Roses/Regenerating Rose/Rose Tentacles
--- Elemental HERO Poison Rose/Koa'ki Meiru Gravirose/Bird of Roses/Aromage Rosemary
--- Rose Paladin/Witch of the Black Rose/Blue Rose Dragon/Rose Witch
--- Rose, Warrior of Revenge/Revival Rose/Twilight Rose Knight/Rose Archer
--- Rose Fairy/Naturia Rosewhip/Crystal Rose/Rose Lover
--- Rose Spectre of dunn/Black Rose Moonlight Dragon/Black Rose Dragon/Splendid Rose
--- Rose Bud/Mark of the rose/rose token/Aromaseraphy Rosemary
--- Crystron Rosenix/Kozmoll Wickedwitch/HERO's Bond/Windrose the Elemental Lord
--- White Rose Dragon/Red Rose Dragon/Rose Bell of Revelation
-c420.OCGRose={
-	49674183,96470883,31986288,41160533,51085303,41201555,75252099,
-	58569561,96385345,17720747,98884569,23087070,1557341,12469386,
-	2986553,51852507,44125452,61049315,79531196,89252157,32485271,
-	33698022,73580471,4290468,25090294,45247637,71645243,38148100,
-	55326322,93302695,94145683,76442616,85854214,53027855,12213463,
-	26118970,80196387
-}
-
-function Card.IsRose(c,fbool)
-	if fbool then
-		return c:IsFusionSetCard(0x544) or c:IsFusionCode(table.unpack(c420.OCGRose))
-	else
-		return c:IsSetCard(0x544) or c:IsCode(table.unpack(c420.OCGRose))
-	end
-end
-
 -- Seal 
 -- 封じ
 -- ふうじ
@@ -1453,8 +1426,8 @@ end
 -- White Aura Monokeros/ White Salvation/White Magical Hat/
 -- White Stingray/White Duston/White Dolphin/
 -- White Night Queen/White ninja/White Howling/
--- White Hole/White-Horned Dragon / White Potan
--- White Moray/Lunalight White Rabbit
+-- White Hole/White-Horned Dragon/White Potan
+-- White Moray/Lunalight White Rabbit/White Rose Cloister
 
 c420.OCGWhite={
 	13429800,46104361,9433350,
@@ -1466,7 +1439,7 @@ c420.OCGWhite={
 	49930315,3557275,92409659,
 	20193924,1571945,62487836,
 	43487744,73891874,98024118,
-	84812868,32825095
+	84812868,32825095,100229011
 }
 function Card.IsWhite(c,fbool)
 	if fbool then
