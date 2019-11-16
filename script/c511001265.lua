@@ -1,34 +1,36 @@
+--カース・オブ・ローズ
 --Rose Curse
-function c511001265.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(511001265)
-	e1:SetCondition(c511001265.condition)
-	e1:SetTarget(c511001265.target)
-	e1:SetOperation(c511001265.activate)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetCondition(s.condition)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	aux.CallToken(419)
 end
-function c511001265.cfilter(c,tp)
+function s.cfilter(c,tp)
 	local val=0
 	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
 	return c:IsControler(1-tp) and c:GetAttack()~=val
 end
-function c511001265.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511001265.cfilter,1,nil,tp)
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter,1,nil,tp)
 end
-function c511001265.diffilter1(c,g)
+function s.diffilter1(c,g)
 	local dif=0
 	local val=0
 	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
 	if c:GetAttack()>val then dif=c:GetAttack()-val
 	else dif=val-c:GetAttack() end
-	return g:IsExists(c511001265.diffilter2,1,c,dif)
+	return g:IsExists(s.diffilter2,1,c,dif)
 end
-function c511001265.diffilter2(c,dif)
+function s.diffilter2(c,dif)
 	local dif2=0
 	local val=0
 	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
@@ -36,10 +38,10 @@ function c511001265.diffilter2(c,dif)
 	else dif2=val-c:GetAttack() end
 	return dif~=dif2
 end
-function c511001265.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ec=eg:GetFirst()
-	local g=eg:Filter(c511001265.diffilter1,nil,eg)
+	local g=eg:Filter(s.diffilter1,nil,eg)
 	local g2=Group.CreateGroup()
 	if g:GetCount()>0 then g2=g:Select(tp,1,1,nil) ec=g2:GetFirst() end
 	if g2:GetCount()>0 then Duel.HintSelection(g2) end
@@ -52,7 +54,7 @@ function c511001265.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetParam(dam)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
-function c511001265.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
