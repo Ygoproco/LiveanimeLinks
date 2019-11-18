@@ -26,7 +26,7 @@ function c100000092.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,Duel.GetLP(tp)/2)
 end
 function c100000092.filter(c,e,tp)
-	return c:IsCode(37115575) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(37115575) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c100000092.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -38,6 +38,6 @@ function c100000092.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c100000092.filter),tp,0x13,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 	end
 end
