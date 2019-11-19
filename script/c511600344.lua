@@ -7,6 +7,9 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetHintTiming(TIMING_DAMAGE_STEP)
+	e1:SetTarget(s.target)
 	c:RegisterEffect(e1)
 	--indes
 	local e2=Effect.CreateEffect(c)
@@ -23,6 +26,8 @@ function s.initial_effect(c)
 	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetHintTiming(TIMING_DAMAGE_STEP)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1)
 	e3:SetCondition(s.atkcon)
@@ -34,8 +39,8 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_GRAVE)
-	e4:SetHintTiming(TIMING_DAMAGE_STEP)
-	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e4:SetHintTiming(TIMING_DAMAGE_STEP+TIMING_DAMAGE_CAL)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetCondition(s.negcon)
 	e4:SetCost(aux.bfgcost)
 	e4:SetTarget(s.negtg)
@@ -43,6 +48,16 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.listed_series={0x101}
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if s.atkcon(e,tp,eg,ep,ev,re,r,rp) and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+		e:SetCategory(CATEGORY_ATKCHANGE)
+		e:SetOperation(s.atkop)
+	else
+		e:SetCategory(0)
+		e:SetOperation(nil)
+	end
+end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentPhase()~=PHASE_BATTLE_STEP then return false end
 	local c=Duel.GetAttackTarget()

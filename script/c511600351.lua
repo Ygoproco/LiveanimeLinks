@@ -83,7 +83,7 @@ function s.btcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	local at=Duel.GetAttackTarget()
 	if not at then return false end
 	if not a:IsControler(tp) then a,at=at,a end
-	return a:IsType(TYPE_LINK) and a:IsSetCard(0x234) and a:IsControler(tp) and not at:IsControler(tp)
+	return a:IsType(TYPE_LINK) and a:IsSetCard(0x135) and a:IsControler(tp) and not at:IsControler(tp)
 end
 function s.bttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()
@@ -91,7 +91,7 @@ function s.bttg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local at=Duel.GetAttackTarget()
 		if not at then return false end
 		if not a:IsControler(tp) then a,at=at,a end
-		return a:IsType(TYPE_LINK) and a:IsSetCard(0x234) and a:IsControler(tp) and not at:IsControler(tp)
+		return a:IsType(TYPE_LINK) and a:IsSetCard(0x135) and a:IsControler(tp) and not at:IsControler(tp)
 	end
 	Duel.SetTargetCard(a)
 end
@@ -121,7 +121,7 @@ function s.btop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter(c,e,tp,lk)
-	return c:IsType(TYPE_LINK) and c:IsSetCard(0x234) and c:GetLink()<lk
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0x135) and c:GetLink()<lk
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
