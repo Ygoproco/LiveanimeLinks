@@ -32,7 +32,6 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 	local ct=Duel.Destroy(g,REASON_EFFECT)
-	Debug.Message(ct)
 	if ct>0 then
 		Duel.Damage(1-tp,ct*500,REASON_EFFECT)
 	end
