@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c,tp)
-	return c:IsPreviousLocation(LOCATION_MZONE)	and c:GetPreviousControler()==tp and c:GetControler()==tp and c:GetAttack()>0
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:GetControler()==tp and c:GetAttack()>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc,tp) and s.filter(chkc,tp) end
