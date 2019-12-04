@@ -6,7 +6,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x577),2,nil,s.matcheck)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x577),2,nil,s.matcheck)
 	--Dice
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DICE)
