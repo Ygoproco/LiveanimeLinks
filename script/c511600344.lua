@@ -97,10 +97,10 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(1-tp,0)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetCurrentPhase()~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
+	if Duel.GetCurrentPhase()&(PHASE_DAMAGE|PHASE_DAMAGE_CAL)==0 or Duel.IsDamageCalculated() then return false end
 	local tc=Duel.GetAttacker()
 	if not tc:IsControler(tp) then tc=Duel.GetAttackTarget() end
-	return tc:IsControler(tp) and tc:IsSetCard(0x101)
+	return tc and tc:IsControler(tp) and tc:IsSetCard(0x101)
 		and ep~=tp and Duel.IsChainNegatable(ev) and re:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
