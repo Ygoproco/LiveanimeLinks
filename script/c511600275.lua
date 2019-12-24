@@ -1,6 +1,6 @@
 --コードブレイク・バインド
 --Codebreak Bind
---scripted by Larry126
+--Scripted by Larry126
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -39,11 +39,12 @@ function s.initial_effect(c)
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e5)
 end
+s.listed_series={0x23b}
 function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x583)
+	return c:IsFaceup() and c:IsSetCard(0x23b)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x583) and c:IsType(TYPE_LINK)
+	return c:IsFaceup() and c:IsSetCard(0x23b) and c:IsType(TYPE_LINK)
 end
 function s.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
