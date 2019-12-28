@@ -36,10 +36,10 @@ function s.spcon(e,c)
 end
 function s.filter1(c,e,tp)
 	return c:IsRace(RACE_PLANT) and c:IsType(TYPE_LINK) and c:IsLinkBelow(2) and c:IsExtraLinked()
-		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetCode())
+		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode())
 end
-function s.filter2(c,e,tp,tc,code)
-	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp) and tc:GetToBeLinkedZone(c,tp,true)>0
+function s.filter2(c,e,tp,code)
+	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_LINK):GetToBeLinkedZone(c,tp,true))
 end
 function s.spextg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.filter1(chkc,e,tp) end
@@ -55,9 +55,9 @@ function s.spexop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		local code=tc:GetCode()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sc=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,code):GetFirst()
+		local sc=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,code):GetFirst()
 		if sc then
-			Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP,tc:GetToBeLinkedZone(sc,tp,true))
+			Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP,Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_LINK):GetToBeLinkedZone(sc,tp,true))
 		end
 	end
 end
