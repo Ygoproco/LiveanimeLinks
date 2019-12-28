@@ -531,11 +531,12 @@ end
 -- Kaminote Blow/The Judgement Hand/Number 106: Giant Hand
 -- Phantom Hand/Fire Hand/Prominence Hand
 -- Magic Hand/Rocket Hand/Hundred Eyes Dragon
+-- Left-Hand Shark/Right-Hand Shark
 
 c420.OCGHand={
 	95929069,40830387,20403123,55888045,19642889,33453260,
 	97570038,28003512,63746411,40555959,68535320,21414674,
-	22530212,13317419,95453143
+	22530212,13317419,95453143,47840168,11845050
 }
 function Card.IsHand(c,fbool)
 	if fbool then
@@ -1084,40 +1085,13 @@ c420.OCGRed={
 	45462639,511001095,511000365,14886469,30494314,81354330,86445415,
 	100000562,34475451,40975574,37132349,61019812,19025379,76547525,
 	55888045,97489701,67030233,65338781,45313993,8706701,21142671,72318602,
-	59975920
+	59975920,66141736
 }
 function Card.IsRed(c,fbool)
 	if fbool then
 		return c:IsFusionSetCard(0x543) or c:IsFusionSetCard(0x3b) or c:IsFusionSetCard(0x1045) or c:IsFusionCode(table.unpack(c420.OCGRed))
 	else
 		return c:IsSetCard(0x543) or c:IsSetCard(0x3b) or c:IsSetCard(0x1045) or c:IsCode(table.unpack(c420.OCGRed))
-	end
-end
-
--- Rose ローズ 
--- Fallen Angel of Roses/Queen Angel of Roses/Regenerating Rose/Rose Tentacles
--- Elemental HERO Poison Rose/Koa'ki Meiru Gravirose/Bird of Roses/Aromage Rosemary
--- Rose Paladin/Witch of the Black Rose/Blue Rose Dragon/Rose Witch
--- Rose, Warrior of Revenge/Revival Rose/Twilight Rose Knight/Rose Archer
--- Rose Fairy/Naturia Rosewhip/Crystal Rose/Rose Lover
--- Rose Spectre of dunn/Black Rose Moonlight Dragon/Black Rose Dragon/Splendid Rose
--- Rose Bud/Mark of the rose/rose token/Aromaseraphy Rosemary
--- Crystron Rosenix/Kozmoll Wickedwitch/HERO's Bond/Windrose the Elemental Lord
--- White Rose Dragon/Red Rose Dragon/Rose Bell of Revelation
-c420.OCGRose={
-	49674183,96470883,31986288,41160533,51085303,41201555,75252099,
-	58569561,96385345,17720747,98884569,23087070,1557341,12469386,
-	2986553,51852507,44125452,61049315,79531196,89252157,32485271,
-	33698022,73580471,4290468,25090294,45247637,71645243,38148100,
-	55326322,93302695,94145683,76442616,85854214,53027855,12213463,
-	26118970,80196387
-}
-
-function Card.IsRose(c,fbool)
-	if fbool then
-		return c:IsFusionSetCard(0x544) or c:IsFusionCode(table.unpack(c420.OCGRose))
-	else
-		return c:IsSetCard(0x544) or c:IsCode(table.unpack(c420.OCGRose))
 	end
 end
 
@@ -1164,14 +1138,14 @@ end
 -- Depth Shark/Number 37: Hope Woven Dragon Spider Shark/Number 32: Shark Drake
 -- Number 71: Rebarian Shark/Number 47: Nightmare Shark/Hammer Shark
 -- Bahamut Shark/Panther Shark/Mermaid Shark
--- Metabo-Shark
+-- Metabo-Shark/Left-Hand Shark/Right-Hand Shark
 c420.OCGShark={
 	7500772,10532969,49221191,14306092,84224627,23536866,
 	32393580,20838380,20358953,50449881,71923655,44223284,
 	69155991,70655556,63193879,5014629,51227866,25484449,
 	64319467,17643265,34290067,37798171,37279508,65676461,
 	59479050,31320433,17201174,440556,70101178,87047161,
-	37792478
+	37792478,47840168,11845050
 }
 function Card.IsShark(c,fbool)
 	if fbool then
@@ -1453,8 +1427,9 @@ end
 -- White Aura Monokeros/ White Salvation/White Magical Hat/
 -- White Stingray/White Duston/White Dolphin/
 -- White Night Queen/White ninja/White Howling/
--- White Hole/White-Horned Dragon / White Potan
--- White Moray/Lunalight White Rabbit
+-- White Hole/White-Horned Dragon/White Potan
+-- White Moray/Lunalight White Rabbit/White Rose Cloister
+-- White Mirror
 
 c420.OCGWhite={
 	13429800,46104361,9433350,
@@ -1466,7 +1441,8 @@ c420.OCGWhite={
 	49930315,3557275,92409659,
 	20193924,1571945,62487836,
 	43487744,73891874,98024118,
-	84812868,32825095
+	84812868,32825095,84335863,
+	19885332
 }
 function Card.IsWhite(c,fbool)
 	if fbool then

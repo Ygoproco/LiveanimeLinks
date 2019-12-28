@@ -1,5 +1,5 @@
---ライトドラゴン＠イグニスター
---Light Dragon @Ignister
+--ライトドラゴン＠イグニスター (Anime)
+--Light Dragon @Ignister (Anime)
 --Scripted by Larry126
 local s,id,alias=GetID()
 function s.initial_effect(c)
@@ -27,13 +27,13 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id+100)
+	e2:SetCountLimit(1,id+1)
 	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0x234}
+s.listed_series={0x135}
 function s.xyzfilter(c,xyz,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT,xyz,SUMMON_TYPE_XYZ,tp)
 end
@@ -46,7 +46,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x234)
+	return c:IsFaceup() and c:IsSetCard(0x135)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
@@ -61,10 +61,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return ep~=tp and tc:IsControler(tp) and tc:IsSetCard(0x234) and tc~=e:GetHandler()
+	return ep~=tp and tc:IsControler(tp) and tc:IsSetCard(0x135) and tc~=e:GetHandler()
 end
 function s.spfilter(c,e,tp)
-	return c:IsType(TYPE_LINK) and c:IsSetCard(0x234) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_LINK) and c:IsSetCard(0x135) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc,e,tp) end

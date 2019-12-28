@@ -1,6 +1,5 @@
---EMミス・ディレクター
---Performapal Miss Director
---updated by Larry126
+--EMミス・ディレクター (Manga)
+--Performapal Miss Director (Manga)
 local s,id,alias=GetID()
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()

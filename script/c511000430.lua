@@ -39,7 +39,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(600)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		if preatk~~=tc:GetAttack() and tc:GetAttack()>=2500 and Duel.Destroy(tc,REASON_EFFECT)>0 then
+		if preatk~=tc:GetAttack() and tc:GetAttack()>=2500 and Duel.Destroy(tc,REASON_EFFECT)>0 then
 			Duel.Recover(tp,500,REASON_EFFECT)
 		end
 	end

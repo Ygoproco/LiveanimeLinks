@@ -62,9 +62,9 @@ function s.initial_effect(c)
 	e5:SetOperation(s.spop)
 	c:RegisterEffect(e5)
 end
-s.listed_names={101010040}
+s.listed_names={67712104}
 function s.matfilter(c)
-	return c:IsCode(101010040)
+	return c:IsCode(67712104)
 end
 function s.spcheck(g,lc,tp)
 	return g:IsExists(s.matfilter,1,nil)
