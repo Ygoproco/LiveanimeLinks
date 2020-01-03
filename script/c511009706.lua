@@ -25,7 +25,7 @@ function c511009706.initial_effect(c)
 	c:RegisterEffect(e2)
 	--position
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(511009706,0))
+	e3:SetDescription(aux.Stringid(511009706,1))
 	e3:SetCategory(CATEGORY_POSITION)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -47,7 +47,7 @@ function c511009706.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c511009706.spfilter(c,e,tp,tid)
-	return c:GetTurnID()==tid and c:GetReason()&REASON_DESTROY~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetTurnID()==tid and c:GetReason()&REASON_BATTLE~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009706.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tid=Duel.GetTurnCount()
