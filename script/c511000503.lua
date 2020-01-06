@@ -12,7 +12,7 @@ function c511000503.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000503.filter(c)
-	return c:IsLevelBelow(4) and c:IsSetCard(0x8)
+	return c:IsLevelAbove(4) and c:IsSetCard(0x8)
 end
 function c511000503.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511000503.filter,tp,LOCATION_GRAVE,0,2,nil)
