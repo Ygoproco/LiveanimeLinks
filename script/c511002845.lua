@@ -1,6 +1,5 @@
---返り咲く薔薇の大輪n(Anime)
+--返り咲く薔薇の大輪 (Anime)
 --Revival Rose (Anime)
---updated by ClaireStanfield
 local s,id,alias=GetID()
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()

@@ -1,6 +1,5 @@
 --コピー・プラント (Anime)
 --Copy Plant (Anime)
---updated by ClaireStanfield
 local s,id,alias=GetID()
 function s.initial_effect(c)
 	alias=c:GetOriginalCodeRule()
