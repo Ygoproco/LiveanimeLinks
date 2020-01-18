@@ -1,10 +1,14 @@
+--カマキリの卵鞘－エッグ・シェル－
 --Mantis Egg
---fixed by MLD
-function c511009032.initial_effect(c)
+--Fixed by MLD
+local s,id=GetID()
+local TOKEN_BABY_MANTIS=id+1
+function s.initial_effect(c)
+	aux.CallToken(420)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCondition(c511009032.condition)
+	e1:SetCondition(s.condition)
 	c:RegisterEffect(e1)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
@@ -13,27 +17,28 @@ function c511009032.initial_effect(c)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e2:SetCountLimit(1)
-	e2:SetTarget(c511009032.sptg)
-	e2:SetOperation(c511009032.spop)
+	e2:SetCondition(s.spcon)
+	e2:SetTarget(s.sptg)
+	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
-	aux.CallToken(420)
 end
-function c511009032.cfilter(c)
-	return c:IsFaceup() and c:IsMantis()
+s.listed_series={0x535}
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsMantis),tp,LOCATION_MZONE,0,1,nil)
 end
-function c511009032.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511009032.cfilter,tp,LOCATION_MZONE,0,1,nil)
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
-function c511009032.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009033,0x535,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_EARTH) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,TOKEN_BABY_MANTIS,0x535,TYPES_TOKEN,500,500,1,RACE_INSECT,ATTRIBUTE_EARTH) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 end
-function c511009032.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511009033,0x535,0x4011,0,0,1,RACE_INSECT,ATTRIBUTE_EARTH) then
-		local token=Duel.CreateToken(tp,511009033)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,TOKEN_BABY_MANTIS,0x535,TYPES_TOKEN,500,500,1,RACE_INSECT,ATTRIBUTE_EARTH) then
+		local token=Duel.CreateToken(tp,TOKEN_BABY_MANTIS)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

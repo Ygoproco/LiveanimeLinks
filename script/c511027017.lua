@@ -1,6 +1,6 @@
 --ヴァレル・ハーフ・リプレイス
 --Borrel Half Replace
---by Messoras
+--Scripted by Messoras
 local s,id=GetID()
 function s.initial_effect(c)
 	--Special Summon
@@ -26,6 +26,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.gyop)
 	c:RegisterEffect(e2)
 end
+s.listed_series={0x10f}
 function s.tgfilter(c,e,tp)
 	return c:IsSetCard(0x10f) and c:IsType(TYPE_LINK) and Duel.IsExistingMatchingCard(s.exfilter,tp,LOCATION_EXTRA,0,1,nil,c,e,tp)
 end
@@ -46,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tg and tg:IsRelateToEffect(e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=Duel.SelectMatchingCard(tp,s.exfilter,tp,LOCATION_EXTRA,0,1,1,nil,tg,e,tp):GetFirst()
-		if tc and Duel.SpecialSummonStep(tc,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP) then
+		if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 			local c=e:GetHandler()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -112,7 +113,7 @@ function s.spzone(g,p)
 end
 function s.spfilter(c,e,tp,zone)
 	return c:IsType(TYPE_LINK) and c:IsLink(2) and c:IsAttribute(ATTRIBUTE_DARK)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false,POS_FACEUP,tp,zone)
 end
 function s.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local zone=s.spzone(Duel.GetMatchingGroup(s.borfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil),tp)
@@ -124,7 +125,7 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,zone):GetFirst()
 	if tc then
- 		Duel.SpecialSummon(tc,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP,zone)
+		Duel.SpecialSummon(tc,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP,zone)
 		tc:CompleteProcedure()
 	end
 end
