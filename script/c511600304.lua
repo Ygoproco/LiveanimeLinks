@@ -48,7 +48,7 @@ function s.tdfilter(c)
 	return c:IsSetCard(0x135) and c:IsType(TYPE_LINK) and c:IsAbleToExtra()
 end
 function s.thfilter(c)
-	return c:IsCode(101011053) and c:IsAbleToHand()
+	return c:IsCode(59332125) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.tdfilter(chkc) end

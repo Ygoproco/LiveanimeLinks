@@ -40,7 +40,7 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.econ)
-	e4:SetValue(s.efilter)
+	e4:SetValue(s.efilter1)
 	c:RegisterEffect(e4)
 	--use counter
 	local e5=Effect.CreateEffect(c)
@@ -96,7 +96,7 @@ end
 function s.econ(e)
 	return e:GetHandler():GetCounter(0x135)>0
 end
-function s.efilter(e,te)
+function s.efilter1(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 function s.imcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -121,13 +121,13 @@ function s.imop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_IMMUNE_EFFECT)
 		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 		e1:SetRange(LOCATION_MZONE)
-		e1:SetValue(s.efilter)
+		e1:SetValue(s.efilter2)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e1:SetOwnerPlayer(tp)
 		tc:RegisterEffect(e1)
 	end
 end
-function s.efilter(e,re)
+function s.efilter2(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

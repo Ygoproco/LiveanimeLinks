@@ -70,11 +70,7 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_DAMAGE)
-	if not ex then ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_RECOVER) end
-	local op=1
-	if cv~=0 then op=Duel.SelectOption(tp,aux.Stringid(16617334,0),aux.Stringid(81524756,0)) end
-	e:SetLabel(op)
+	e:SetLabel(Duel.SelectOption(tp,aux.Stringid(16617334,0),aux.Stringid(81524756,0)))
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local op=e:GetLabel()
