@@ -135,7 +135,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) 
 		and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,c:GetLinkedZone())>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,alias+100,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,alias+1,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
@@ -146,7 +146,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,e:GetHandler():GetLinkedZone())>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,alias+100,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,alias+1,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) then
 		local token=Duel.CreateToken(tp,alias+100)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,e:GetHandler():GetLinkedZone())
 	end
