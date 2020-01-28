@@ -147,7 +147,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,e:GetHandler():GetLinkedZone())>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,alias+1,0x135,0x4011,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK) then
-		local token=Duel.CreateToken(tp,alias+100)
+		local token=Duel.CreateToken(tp,alias+1)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,e:GetHandler():GetLinkedZone())
 	end
 end
