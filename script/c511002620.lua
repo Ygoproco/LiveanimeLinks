@@ -1,26 +1,28 @@
 --Harmonic Synchro Fusion
-function c511002620.initial_effect(c)
+local s,id=GetID()
+function s.initial_effect(c)
 	--synchro effect
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetTarget(c511002620.target)
-	e1:SetOperation(c511002620.activate)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function c511002620.fusfilter(c,e,tp,fe)
+function s.fusfilter(c,e,tp,fe)
 	return c:IsType(TYPE_FUSION) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) 
-		and Duel.IsExistingMatchingCard(c511002620.synfilter,tp,LOCATION_EXTRA,0,1,c,e,tp,c,fe)
+		and Duel.IsExistingMatchingCard(s.synfilter,tp,LOCATION_EXTRA,0,1,c,e,tp,c,fe)
+		and Duel.GetLocationCountFromEx(tp,fe,nil,c)>1
 end
-function c511002620.filter(c,e,fc,sc)
+function s.filter(c,e,fc,sc)
 	return c:IsFaceup() and c:IsCanBeSynchroMaterial(sc) and c:IsCanBeFusionMaterial(fc) and (not e or not c:IsImmuneToEffect(e))
 end
-function c511002620.synfilter(c,e,tp,fc,fe)
-	local g=Duel.GetMatchingGroup(c511002620.filter,tp,LOCATION_MZONE,0,nil,fe,fc,c)
-	return c:IsType(TYPE_SYNCHRO) and aux.SelectUnselectGroup(g,e,tp,fc.min_material_count,fc.max_material_count,c511002620.rescon(fc,c,fe),0)
+function s.synfilter(c,e,tp,fc,fe)
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil,fe,fc,c)
+	return c:IsType(TYPE_SYNCHRO) and aux.SelectUnselectGroup(g,e,tp,fc.min_material_count,fc.max_material_count,s.rescon(fc,c,fe),0)
 end
-function c511002620.rescon(fc,sc,fe)
+function s.rescon(fc,sc,fe)
 	return	function(sg,e,tp,mg)
 				local t={}
 				local tc=sg:GetFirst()
@@ -39,7 +41,7 @@ function c511002620.rescon(fc,sc,fe)
 					t[tc]=e1
 					tc=sg:GetNext()
 				end
-				local res=fc:CheckFusionMaterial(sg,nil,sg) and sc:IsSynchroSummonable(nil,sg) and Duel.GetLocationCountFromEx(tp,tp,sg)>1
+				local res=fc:CheckFusionMaterial(sg,nil,sg) and sc:IsSynchroSummonable(nil,sg)
 				tc=sg:GetFirst()
 				while tc do
 					t[tc]:Reset()
@@ -48,22 +50,22 @@ function c511002620.rescon(fc,sc,fe)
 				return res
 			end
 end
-function c511002620.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	if chk==0 then return (not ect or ect>=2) and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
-		and Duel.IsExistingMatchingCard(c511002620.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_EXTRA)
 end
-function c511002620.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	if Duel.IsPlayerAffectedByEffect(tp,29724053) or (ect and ect<2) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local fc=Duel.SelectMatchingCard(tp,c511002620.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,e):GetFirst()
+	local fc=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,e):GetFirst()
 	if not fc then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sc=Duel.SelectMatchingCard(tp,c511002620.synfilter,tp,LOCATION_EXTRA,0,1,1,fc,e,tp,fc,e):GetFirst()
-	local g=Duel.GetMatchingGroup(c511002620.filter,tp,LOCATION_MZONE,0,nil,e,fc,sc)
-	local mat=aux.SelectUnselectGroup(g,e,tp,fc.min_material_count,fc.max_material_count,c511002620.rescon(fc,sc,e),1,tp,HINTMSG_FMATERIAL,c511002620.rescon(fc,sc,e))
+	local sc=Duel.SelectMatchingCard(tp,s.synfilter,tp,LOCATION_EXTRA,0,1,1,fc,e,tp,fc,e):GetFirst()
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil,e,fc,sc)
+	local mat=aux.SelectUnselectGroup(g,e,tp,fc.min_material_count,fc.max_material_count,s.rescon(fc,sc,e),1,tp,HINTMSG_FMATERIAL,s.rescon(fc,sc,e))
 	fc:SetMaterial(mat)
 	sc:SetMaterial(mat)
 	Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION+REASON_SYNCHRO)
