@@ -64,7 +64,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.thchk(e,tp,eg,ep,ev,re,r,rp)
-	if not (Duel.GetTurnPlayer()==tp) then return end
+	if not (Duel.GetTurnPlayer()==tp) or Duel.GetCurrentPhase()~=PHASE_END then return end
 	if eg:IsExists(s.cfilter,1,nil) then
 		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 	end
