@@ -29,7 +29,7 @@ end
 function s.piercecon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return d and a:IsControler(tp) and d:IsDefensePos() and a:IsSetCard(0x3013) and a:IsChainAttackable()
+	return d and a:IsControler(tp) and d:IsPreviousPosition(POS_DEFENSE) and a:IsSetCard(0x3013) and a:IsChainAttackable()
 end
 function s.piercetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetAttacker()
