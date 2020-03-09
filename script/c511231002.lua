@@ -1,26 +1,29 @@
 --N・アクア・ドルフィン
-function c511231002.initial_effect(c)
+--Neo Spacian Aqua Dolphin (Anime)
+--By Astral
+local s,id=GetID()
+function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(17955766,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCost(c511231002.cost)
-	e1:SetTarget(c511231002.target)
-	e1:SetOperation(c511231002.activate)
+	e1:SetCost(s.cost)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function c511231002.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
-function c511231002.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
 end
-function c511231002.filter(c,atk)
+function s.filter(c,atk)
 	return c:IsFaceup() and c:IsAttackAbove(atk)
 end
-function c511231002.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if g:GetCount()>0 then
 		Duel.ConfirmCards(tp,g)
@@ -29,7 +32,7 @@ function c511231002.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc=tg:GetFirst()
 		if tc then
 			local atk=tc:GetAttack()
-			if atk>=0 and Duel.IsExistingMatchingCard(c511231002.filter,tp,LOCATION_MZONE,0,1,nil,atk) then
+			if atk>=0 and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil,atk) then
 				Duel.Destroy(tc,REASON_EFFECT)
 				Duel.Damage(1-tp,500,REASON_EFFECT)
 			else
