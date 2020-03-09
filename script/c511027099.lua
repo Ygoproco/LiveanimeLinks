@@ -14,7 +14,7 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
-	return at and (a:IsControler(tp) or (at:IsControler(tp) and at:IsFaceup()))
+	return at and (a:IsControler(tp) or at:IsControler(tp))
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
