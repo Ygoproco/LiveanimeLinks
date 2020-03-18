@@ -1,4 +1,5 @@
 --レッドアイズ・ダークネスメタルドラゴン
+--Red-Eyes Darkness Metal Dragon, pre-errata
 local s,id=GetID()
 function s.initial_effect(c)
 	--spsummon proc
