@@ -9,77 +9,83 @@ function c100000237.initial_effect(c)
 	e1:SetOperation(c100000237.activate)
 	c:RegisterEffect(e1)
 	--Reduce
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1)
-	e2:SetCondition(c100000237.con)
-	e2:SetCost(c100000237.cost)
-	e2:SetOperation(c100000237.op)
-	c:RegisterEffect(e2)
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetType(EFFECT_TYPE_QUICK_O)
+	-- e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	-- e2:SetRange(LOCATION_SZONE)
+	-- e2:SetCountLimit(1)
+	-- e2:SetCondition(c100000237.con)
+	-- e2:SetCost(c100000237.cost)
+	-- e2:SetOperation(c100000237.op)
+	-- c:RegisterEffect(e2)
 end
-function c100000237.filter(c,tp,code)
-	local te=c:GetActivateEffect()
-	if not te then return false end
-	return c:IsCode(code) and (te:IsActivatable(tp) or (c:IsControler(1-tp) and te:IsActivatable(1-tp)))
-end 
+-- function c100000237.filter(c,tp,code)
+	-- local te=c:GetActivateEffect()
+	-- if not te then return false end
+	-- return c:IsCode(code) and (te:IsActivatable(tp) or (c:IsControler(1-tp) and te:IsActivatable(1-tp)))
+-- end 
 function c100000237.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
-	local g=Duel.GetMatchingGroup(c100000237.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,tp,c:GetCode())
-	if ft>0 and g:GetCount()>0 and Duel.SelectEffectYesNo(tp,c) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local sg=g:Select(tp,1,math.min(ft,#g),nil)
-		for tc in aux.Next(sg) do
-			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			local te=tc:GetActivateEffect()
-			local tep=tc:GetControler()
-			Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
-		end
-	end
+	local io=require("io")
+	if not io then Duel.SelectOption(tp,1) return end 
+	local testfile=io.open("strings.conf")
+	if not testfile then Duel.SelectOption(tp,2) return end
+	Duel.SelectOption(tp,3)
+	testfile:close()
+	-- local c=e:GetHandler()
+	-- local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
+	-- local g=Duel.GetMatchingGroup(c100000237.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,tp,c:GetCode())
+	-- if ft>0 and g:GetCount()>0 and Duel.SelectEffectYesNo(tp,c) then
+		-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+		-- local sg=g:Select(tp,1,math.min(ft,#g),nil)
+		-- for tc in aux.Next(sg) do
+			-- Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			-- local te=tc:GetActivateEffect()
+			-- local tep=tc:GetControler()
+			-- Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
+		-- end
+	-- end
 end
-function c100000237.cfilter(c,code)
-	return c:IsFaceup() and c:IsCode(code)
-end 
-function c100000237.con(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
-	return tc and Duel.GetBattleDamage(tp)>0
-		and Duel.GetMatchingGroupCount(c100000237.cfilter,tp,LOCATION_ONFIELD,0,nil,e:GetHandler():GetCode())==3 
-end
-function c100000237.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(function(e,c) return c:IsCode(100000237) end)
-	e1:SetValue(aux.TRUE)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-end
-function c100000237.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e1:SetOperation(c100000237.damop)
-	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-	Duel.RegisterEffect(e1,tp)
-	local tc=Duel.GetAttacker()
-	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
-	if tc and tc:IsRelateToBattle() then
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e2:SetValue(1)
-		e2:SetReset(RESET_PHASE+PHASE_DAMAGE+RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e2)
-	end
-end
-function c100000237.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(tp,0)
-end
+-- function c100000237.cfilter(c,code)
+	-- return c:IsFaceup() and c:IsCode(code)
+-- end 
+-- function c100000237.con(e,tp,eg,ep,ev,re,r,rp)
+	-- local tc=Duel.GetAttacker()
+	-- if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
+	-- return tc and Duel.GetBattleDamage(tp)>0
+		-- and Duel.GetMatchingGroupCount(c100000237.cfilter,tp,LOCATION_ONFIELD,0,nil,e:GetHandler():GetCode())==3 
+-- end
+-- function c100000237.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	-- if chk==0 then return true end
+	-- local e1=Effect.CreateEffect(e:GetHandler())
+	-- e1:SetType(EFFECT_TYPE_FIELD)
+	-- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	-- e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+	-- e1:SetTargetRange(1,0)
+	-- e1:SetTarget(function(e,c) return c:IsCode(100000237) end)
+	-- e1:SetValue(aux.TRUE)
+	-- e1:SetReset(RESET_PHASE+PHASE_END)
+	-- Duel.RegisterEffect(e1,tp)
+-- end
+-- function c100000237.op(e,tp,eg,ep,ev,re,r,rp)
+	-- local c=e:GetHandler()
+	-- if not c:IsRelateToEffect(e) then return end
+	-- local e1=Effect.CreateEffect(c)
+	-- e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	-- e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	-- e1:SetOperation(c100000237.damop)
+	-- e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	-- Duel.RegisterEffect(e1,tp)
+	-- local tc=Duel.GetAttacker()
+	-- if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
+	-- if tc and tc:IsRelateToBattle() then
+		-- local e2=Effect.CreateEffect(c)
+		-- e2:SetType(EFFECT_TYPE_SINGLE)
+		-- e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		-- e2:SetValue(1)
+		-- e2:SetReset(RESET_PHASE+PHASE_DAMAGE+RESET_EVENT+RESETS_STANDARD)
+		-- tc:RegisterEffect(e2)
+	-- end
+-- end
+-- function c100000237.damop(e,tp,eg,ep,ev,re,r,rp)
+	-- Duel.ChangeBattleDamage(tp,0)
+-- end
